@@ -1,8 +1,10 @@
+import { GetStaticProps } from "next";
 import Layout from "../components/Layout"
 import type { NextPage } from 'next';
 import Link from "next/link"
-import gql from "graphql-tag"
-import { useQuery } from "@apollo/client"
+//import gql from "graphql-tag"
+import { useQuery, gql } from "@apollo/client"
+import { NexusGenFieldTypes } from '../../backend/src/generated/nexus'
 
 const FeedQuery = gql`
   query FeedQuery {
@@ -19,7 +21,7 @@ const FeedQuery = gql`
   }
 `
 
-const PostItem = ( {post} ) => {
+const PostItem = ( {post}: { post: NexusGenFieldTypes["Post"]} ) => {
   return (
   <Link href="/p/[id]" as={`/p/${post.id}`}>
     <a>
@@ -41,8 +43,8 @@ const PostItem = ( {post} ) => {
 }
 
 
-const IndexPage: NextPage = () => {
-  const { loading, error, data } = useQuery(FeedQuery, {
+const IndexPage = () => {
+  const { loading, error, data } = useQuery<NexusGenFieldTypes["Query"]>(FeedQuery, {
     fetchPolicy: "cache-and-network",
   })
 
@@ -53,7 +55,7 @@ const IndexPage: NextPage = () => {
     return <div>Error: {error.message}</div>
   }
 
-  return (
+  return data && data.feed && (
     <Layout>
       data && data.feed && (
         <div className="page">
@@ -85,5 +87,14 @@ const IndexPage: NextPage = () => {
     </Layout>  
   );
 };
+
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const posts: Post[] = await res.json();
+  return {
+    props: { posts },
+  };
+};
+
 
 export default IndexPage;
