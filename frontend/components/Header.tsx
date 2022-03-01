@@ -1,7 +1,5 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useTranslation } from 'react-i18next';
-import { i18n, Language } from '../lib/i18n';
 import { useApolloClient } from '@apollo/client';
 
 // function isActive(pathname) {
@@ -13,26 +11,23 @@ import { useApolloClient } from '@apollo/client';
 const Header = () => {
   const router = useRouter()
 
-  function isActive(pathname) {
+  function isActive(pathname: string) {
     return router.pathname === pathname
   }
 
-  const [t] = useTranslation('common');
   const apolloClient = useApolloClient();
-  const handleClick: React.MouseEventHandler = () => {
-    const currentLanguage = i18n.language;
-
-    i18n.changeLanguage(
-      currentLanguage === Language.EN ? Language.RU : Language.EN,
-    );
-  };
 
   return (
     <nav>
       <div className="left">
         <Link href="/">
           <a className="bold" data-active={isActive("/")}>
-            Blog
+            Home
+          </a>
+        </Link>
+        <Link href="/posts">
+          <a className="bold" data-active={isActive("/posts")}>
+            Posts
           </a>
         </Link>
         <Link href="/drafts">
@@ -40,10 +35,6 @@ const Header = () => {
         </Link>
       </div>
       <div className="right">
-            {t('greetings', { version: apolloClient.version })}
-      </div>
-      <div className="right">
-        <button onClick={handleClick}>Change language</button>
         <Link href="/signup">
           <a data-active={isActive("/signup")}>Signup</a>
         </Link>
