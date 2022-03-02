@@ -5,7 +5,7 @@ import { gql } from "@apollo/client"
 import client from "../../lib/apollo-client";
 import * as AllTypes from '../../interfaces/nexus'
 
-const PostPage = (post: AllTypes.NexusGenFieldTypes["Post"]) => {
+const PostPage = ({post}: {post: AllTypes.NexusGenFieldTypes["Post"]}) => {
   if (!post) {
     return <div>no post</div>
   }
@@ -15,11 +15,11 @@ const PostPage = (post: AllTypes.NexusGenFieldTypes["Post"]) => {
       <div>
           <p>{post.title }</p>
           <p>{post.content }</p>
+          <p>{post.author!.email }</p>
       </div>
     </Layout>  
   );
 }
-
 
 export const getStaticPaths: GetStaticPaths<any> = async () => {
     const { data } = await client.query<AllTypes.NexusGenFieldTypes["Query"]>({
@@ -61,14 +61,14 @@ const POST_BY_ID_QUERY = gql`
     }
 `
 
-export const getStaticProps: GetStaticProps<AllTypes.NexusGenFieldTypes["Query"], any> = async (params ) => {
-    //const { id } = params
+export const getStaticProps: GetStaticProps = async ({ params } ) => {
+    const { id } = params as AllTypes.NexusGenArgTypes["Query"]["postById"] //as Params
     try {
         const { data } = await client.query({
             query: POST_BY_ID_QUERY,
-            variables: { id: Number(params.id) },
+            variables: { id: Number(id) },
         });
-        //console.log('data', data)
+        console.log('data.postById', data.postById)
         return {
             props: {
                 post: data.postById,
