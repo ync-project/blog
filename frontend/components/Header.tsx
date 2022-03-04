@@ -25,14 +25,6 @@ const Header = () => {
             Home
           </a>
         </Link>
-        <Link href="/posts">
-          <a className="bold" data-active={isActive("/posts")}>
-            Posts
-          </a>
-        </Link>
-        <Link href="/drafts">
-          <a data-active={isActive("/drafts")}>Drafts</a>
-        </Link>
       </div>
       <div className="right">
         <Link href="/signup">

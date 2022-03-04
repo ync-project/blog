@@ -4,6 +4,7 @@ import Layout from "../../components/Layout"
 import { gql } from "@apollo/client"
 import client from "../../lib/apollo-client";
 import * as AllTypes from '../../interfaces/nexus'
+import { ALL_FEEDS, POST_BY_ID } from '../../lib/graphql'
 
 const PostPage = ({post}: {post: AllTypes.NexusGenFieldTypes["Post"]}) => {
   if (!post) {
@@ -13,9 +14,9 @@ const PostPage = ({post}: {post: AllTypes.NexusGenFieldTypes["Post"]}) => {
   return post && (
     <Layout>
       <div>
-          <p>{post.title }</p>
+          <h1>{post.title }</h1>
+          <h4>{post.author!.email }</h4>
           <p>{post.content }</p>
-          <p>{post.author!.email }</p>
       </div>
     </Layout>  
   );
@@ -23,20 +24,7 @@ const PostPage = ({post}: {post: AllTypes.NexusGenFieldTypes["Post"]}) => {
 
 export const getStaticPaths: GetStaticPaths<any> = async () => {
     const { data } = await client.query<AllTypes.NexusGenFieldTypes["Query"]>({
-        query: gql`
-          query FeedQuery {
-            feed {
-              id
-              title
-              content
-              published
-              author {
-                id
-                name
-              }
-            }
-          }
-        `,
+        query: ALL_FEEDS,
       });
     
   const paths = data.feed.map((post) => ({
@@ -45,30 +33,15 @@ export const getStaticPaths: GetStaticPaths<any> = async () => {
   return { paths: paths , fallback: false }
 }
 
-const POST_BY_ID_QUERY = gql`
-    query($id: Int!) {
-        postById(id: $id){
-            id
-            title
-            content
-            published
-            author {
-                id
-                name
-                email
-            }
-        }  
-    }
-`
 
 export const getStaticProps: GetStaticProps = async ({ params } ) => {
     const { id } = params as AllTypes.NexusGenArgTypes["Query"]["postById"] //as Params
     try {
         const { data } = await client.query({
-            query: POST_BY_ID_QUERY,
+            query: POST_BY_ID,
             variables: { id: Number(id) },
         });
-        console.log('data.postById', data.postById)
+        //console.log('data.postById', data.postById)
         return {
             props: {
                 post: data.postById,
