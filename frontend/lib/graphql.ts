@@ -1,156 +1,177 @@
 import { gql } from "@apollo/client"
 
-const FEED = gql` 
-    query {
-        feed {
+
+export const userFragement = gql`
+    fragement userIdentities on User{
         id
-        title
-        content
-        published
-        author {
-            id
-            name
-            email
-        }
-        }
+        name
+        email
     }
 `
-
-const draftsByUser = gql` 
-    query {
-        draftsByUser(
-        userUniqueInput: {
-            email: "mahmoud@prisma.io"
-        }
-        ) {
-        id
-        title
-        content
-        published
-        author {
-            id
-            name
-            email
-        }
-        }
+export const allFeeds = gql`
+    query allFeeds{
+    feed {
+      id
+      title
+      content
+      published
+      author {
+        ${userFragement}
+      }
     }
+  }
 `
 
-const togglePublishPost = gql` 
-    mutation {
-        togglePublishPost(id: 4) {
-        id
-        published
-        }
+export const paginated_feed = gql`
+  query paginated_feed {
+    feed(
+      skip: null
+      take: 2
+      orderBy: { updatedAt: desc }
+    ) {
+      id
+      updatedAt
+      title
+      content
+      published
     }
+  }
 `
 
-const incrementPostViewCount = gql` 
-    mutation {
-        incrementPostViewCount(id: 3) {
-        id
-        viewCount
-        }
+export const filterFeeds = gql`
+  query filterFeeds ($searchString: String) {
+    feed(
+      searchString: $searchString
+    ) {
+      id
+      title
+      content
+      published
     }
+  }
 `
 
-const filter_feed = gql` 
-    query {
-        feed(
-        searchString: "prisma"
-        ) {
+export const postById = gql`
+  query postById ($id: Int!) {
+    postById(id: $id ) {
+      id
+      title
+      content
+      published
+      author {
         id
-        title
-        content
-        published
-        }
+        name
+        email
+      }
     }
+  }
 `
 
-const Paginate_feed = gql` 
-    query {
-        feed(
-        skip: 2
-        take: 2
-        orderBy: { updatedAt: desc }
-        ) {
-        id
-        updatedAt
-        title
-        content
-        published
-        }
+export const togglePublishPost = gql`
+  mutation togglePublishPost {
+    togglePublishPost(id: 4) {
+      id
+      published
     }
+  }
 `
 
-const postById = gql` 
-    query {
-        postById(id: 2 ) {
-        id
-        title
-        content
-        published
-        author {
-            id
-            name
-            email
-        }
-        }
+export const incrementPostViewCount = gql`
+  mutation incrementPostViewCount {
+    incrementPostViewCount(id: 3) {
+      id
+      viewCount
     }
+  }
 `
 
-const signupUser = gql` 
-    mutation {
-        signupUser(name: "Sarah", email: "sarah@prisma.io") {
-        id
-        }
+export const signupUser = gql`
+  mutation signupUser($name: String $email: String!){
+    signupUser(
+      {
+        name: $name,
+        email: $email
+      }
+      
+      ) {
+      id
     }
+  }
 `
 
-const createDraft = gql` 
-    mutation {
-        createDraft(
-        title: "Join the Prisma Slack"
-        content: "https://slack.prisma.io"
-        authorEmail: "alice@prisma.io"
-        ) {
-        id
-        published
-        }
+export const createDraft = gql`
+  mutation {
+    createDraft(
+      title: "Join the Prisma Slack"
+      content: "https://slack.prisma.io"
+      authorEmail: "alice@prisma.io"
+    ) {
+      id
+      published
     }
+  }
 `
 
-const publish = gql` 
-    mutation {
-        publish(postId: "5") {
-        id
-        published
-        }
+export const publish = gql`
+  mutation {
+    publish(postId: "5") {
+      id
+      published
     }
+  }
 `
 
-
-
-const deletePost = gql` 
-    mutation {
-        deletePost(postId: "6") {
-        id
-        }
+export const deletePost = gql`
+  mutation deletePost($postId: Int!) {
+    deletePost(id: $postId) {
+      id
     }
+  }
 `
 
-const addProfileForUser = gql` 
-    mutation {
-        addProfileForUser(
-        email: "mahmoud@prisma.io"
-        bio: "I like turtles"
-        ) {
-        id
-        bio
-        user {
-            id
-            name
-        }
-        }
+export const allUsers = gql`
+  query allUsers{
+    allUsers {
+      id
+      name
+      email
     }
-`    
+  }
+`
+
+export const draftsByUser = gql`
+  query draftsByUser($id: Int, $email: String) {
+    draftsByUser(
+      userUniqueInput: {
+        id : $id
+        email: $email
+      }
+    ) {
+      id
+      title
+      content
+      published
+      author {
+        id
+        name
+        email
+      }
+    }
+  }
+ `
+
+export const addProfileForUser = gql`
+  mutation addProfileForUser(){
+    addProfileForUser(
+      email: "mahmoud@prisma.io"
+      bio: "I like turtles"
+    ) {
+      id
+      bio
+      user {
+        id
+        name
+      }
+    }
+  }
+`  
