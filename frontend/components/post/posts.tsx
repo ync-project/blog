@@ -1,5 +1,5 @@
 import * as AllTypes from '../../interfaces/nexus'
-import PostItem from './postItem'
+import PostItem from './PostItem'
 
 const Posts = ({posts}: {posts: AllTypes.NexusGenFieldTypes["Query"]["feed"]}) => {
   return posts && (

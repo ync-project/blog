@@ -1,18 +1,20 @@
 import {
   makeSchema,
-  inputObjectType,
   asNexusMethod,
-  enumType,
 } from 'nexus'
 import { DateTimeResolver } from 'graphql-scalars'
 import * as types from './graphql/types'
+import * as queries from './graphql/queries'
+import * as mutations from './graphql/mutations'
+
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
-
 
 export const schema = makeSchema({
   types: [
     types,
+    queries,
+    mutations,
     DateTime,
   ],
   outputs: {

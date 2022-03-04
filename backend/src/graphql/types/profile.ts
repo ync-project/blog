@@ -10,14 +10,15 @@ import {
     enumType,
   } from 'nexus'
   import { Context } from '../../context'
+  import { User } from './user'
 
-  const Profile = objectType({
+  export const Profile = objectType({
     name: 'Profile',
     definition(t) {
         t.nonNull.int('id')
         t.string('bio')
         t.field('user', {
-          type: 'User',
+          type: User,
           resolve: (parent, _, context) => {
             return context.prisma.profile
               .findUnique({

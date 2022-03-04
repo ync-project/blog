@@ -10,8 +10,9 @@ import {
     enumType,
   } from 'nexus'
   import { Context } from '../../context'
+  import { User } from './user'
 
-  const Post = objectType({
+  export const Post = objectType({
     name: 'Post',
     definition(t) {
       t.nonNull.int('id')
@@ -22,7 +23,7 @@ import {
       t.nonNull.boolean('published')
       t.nonNull.int('viewCount')
       t.field('author', {
-        type: 'User',
+        type: User,
         resolve: (parent, _, context: Context) => {
           return context.prisma.post
             .findUnique({

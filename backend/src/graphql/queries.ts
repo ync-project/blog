@@ -7,40 +7,43 @@ import {
     arg,
     enumType,
   } from 'nexus'
-  import { Context } from '../context'
+import { Context } from '../context'
+import { User } from './types/user'
+import { Post } from './types/post'
 
-  const SortOrder = enumType({
+export const SortOrder = enumType({
     name: 'SortOrder',
     members: ['asc', 'desc'],
   })
   
-  const PostOrderByUpdatedAtInput = inputObjectType({
+export const PostOrderByUpdatedAtInput = inputObjectType({
     name: 'PostOrderByUpdatedAtInput',
     definition(t) {
-      t.nonNull.field('updatedAt', { type: 'SortOrder' })
+      t.nonNull.field('updatedAt', { type: SortOrder })
     },
   })
   
-  const UserUniqueInput = inputObjectType({
+export const UserUniqueInput = inputObjectType({
     name: 'UserUniqueInput',
     definition(t) {
       t.int('id')
       t.string('email')
     },
   })
+
   
-  const Query = objectType({
+export const Query = objectType({
     name: 'Query',
     definition(t) {
       t.nonNull.list.nonNull.field('allUsers', {
-        type: 'User',
+        type: User,
         resolve: (_parent, _args, context: Context) => {
           return context.prisma.user.findMany()
         },
       })
   
       t.nullable.field('postById', {
-        type: 'Post',
+        type: Post,
         args: {
           id: intArg(),
         },
@@ -52,7 +55,7 @@ import {
       })
   
       t.nonNull.list.nonNull.field('feed', {
-        type: 'Post',
+        type: Post,
         args: {
           searchString: stringArg(),
           skip: intArg(),
@@ -84,7 +87,7 @@ import {
       })
   
       t.list.field('draftsByUser', {
-        type: 'Post',
+        type: Post,
         args: {
           userUniqueInput: nonNull(
             arg({

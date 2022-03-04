@@ -7,8 +7,11 @@ import {
     arg,
   } from 'nexus'
   import { Context } from '../context'
-
-  const PostCreateInput = inputObjectType({
+  import { User } from './types/user'
+  import { Post } from './types/post'
+  import { Profile } from './types/profile'
+  
+  export const PostCreateInput = inputObjectType({
     name: 'PostCreateInput',
     definition(t) {
       t.nonNull.string('title')
@@ -16,29 +19,29 @@ import {
     },
   })
   
-  const UserCreateInput = inputObjectType({
+  export const UserCreateInput = inputObjectType({
     name: 'UserCreateInput',
     definition(t) {
       t.nonNull.string('email')
       t.string('name')
-      t.list.nonNull.field('posts', { type: 'PostCreateInput' })
+      t.list.nonNull.field('posts', { type: PostCreateInput })
     },
   })
   
-    const Mutation = objectType({
+  export const Mutation = objectType({
     name: 'Mutation',
     definition(t) {
       t.nonNull.field('signupUser', {
-        type: 'User',
+        type: User,
         args: {
           data: nonNull(
             arg({
-              type: 'UserCreateInput',
+              type: UserCreateInput,
             }),
           ),
         },
         resolve: (_, args, context: Context) => {
-          const postData = args.data.posts?.map((post) => {
+          const postData = args.data.posts?.map((post: any) => {
             return { title: post.title, content: post.content || undefined }
           })
           return context.prisma.user.create({
@@ -54,7 +57,7 @@ import {
       })
   
       t.field('createDraft', {
-        type: 'Post',
+        type: Post,
         args: {
           data: nonNull(
             arg({
@@ -77,7 +80,7 @@ import {
       })
   
       t.field('togglePublishPost', {
-        type: 'Post',
+        type: Post,
         args: {
           id: nonNull(intArg()),
         },
@@ -102,7 +105,7 @@ import {
       })
   
       t.field('incrementPostViewCount', {
-        type: 'Post',
+        type: Post,
         args: {
           id: nonNull(intArg()),
         },
@@ -119,7 +122,7 @@ import {
       })
   
       t.field('deletePost', {
-        type: 'Post',
+        type: Post,
         args: {
           id: nonNull(intArg()),
         },
@@ -131,7 +134,7 @@ import {
       })
   
       t.field('addProfileForUser', {
-        type: 'Profile',
+        type: Profile,
         args: {
           userUniqueInput: nonNull(
             arg({

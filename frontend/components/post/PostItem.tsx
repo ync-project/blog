@@ -1,6 +1,5 @@
 import Link from "next/link"
 import * as AllTypes from '../../interfaces/nexus'
-//import { gql } from "@apollo/client"
 
 
 const PostItem = ( { post }: {post: AllTypes.NexusGenFieldTypes["Post"]} ) => {
