@@ -1,8 +1,7 @@
 import Link from "next/link"
-import * as AllTypes from '../../interfaces/nexus'
+import { Post } from '../../interfaces/graphql'
 
-
-const PostItem = ( { post }: {post: AllTypes.NexusGenFieldTypes["Post"]} ) => {
+const PostItem = ( { post }: {post: Post} ) => {
   return (
     <li>
       <Link href="/p/[id]" as={`/p/${post.id}`}>

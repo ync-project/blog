@@ -4,12 +4,11 @@ import Layout from "../components/Layout"
 //import { NexusGenFieldTypes } from '../../backend/src/generated/nexus'
 import { GetServerSideProps } from "next"; 
 import client from "../lib/apollo-client";
-import { gql } from "@apollo/client"
-import * as AllTypes from '../interfaces/nexus'
+import { Query } from '../interfaces/graphql'
 import Posts from '../components/post/posts'
 import { ALL_FEEDS } from '../lib/graphql'
 
-const IndexPage = ({posts}: {posts: AllTypes.NexusGenFieldTypes["Query"]["feed"]}) => {
+const IndexPage = ({posts}: {posts: Query["feed"]}) => {
   return (
     <Layout>
         <div className="page">
@@ -22,7 +21,7 @@ const IndexPage = ({posts}: {posts: AllTypes.NexusGenFieldTypes["Query"]["feed"]
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await client.query<AllTypes.NexusGenFieldTypes["Query"]>({
+  const { data } = await client.query<Query>({
     query: ALL_FEEDS
   });
 
