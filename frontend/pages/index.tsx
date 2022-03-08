@@ -4,7 +4,7 @@ import Layout from "../components/Layout"
 //import { NexusGenFieldTypes } from '../../backend/src/generated/nexus'
 import { GetServerSideProps } from "next"; 
 import client from "../lib/apollo-client";
-import { Query } from '../interfaces/graphql'
+import { Query } from '../interfaces/graphql_generated'
 import Posts from '../components/post/posts'
 import { ALL_FEEDS } from '../lib/graphql'
 
