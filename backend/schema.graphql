@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type AuthPayload {
+  token: String
+  user: User
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -12,8 +17,9 @@ type Mutation {
   createDraft(authorEmail: String!, data: PostCreateInput!): Post
   deletePost(id: Int!): Post
   incrementPostViewCount(id: Int!): Post
-  signupUser(data: UserCreateInput!): User!
+  signupUser(bio: String, data: UserCreateInput!): User!
   togglePublishPost(id: Int!): Post
+  updateProfileForUser(bio: String, email: String!): User
 }
 
 type Post {
@@ -47,6 +53,7 @@ type Query {
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
   postById(id: Int): Post
+  user(id: Int): User
 }
 
 enum SortOrder {
@@ -65,6 +72,7 @@ type User {
 input UserCreateInput {
   email: String!
   name: String
+  password: String!
   posts: [PostCreateInput!]
 }
 

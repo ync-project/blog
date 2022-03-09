@@ -39,6 +39,7 @@ export interface NexusGenInputs {
   UserCreateInput: { // input type
     email: string; // String!
     name?: string | null; // String
+    password: string; // String!
     posts?: NexusGenInputs['PostCreateInput'][] | null; // [PostCreateInput!]
   }
   UserUniqueInput: { // input type
@@ -61,6 +62,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AuthPayload: { // root type
+    token?: string | null; // String
+    user?: NexusGenRootTypes['User'] | null; // User
+  }
   Mutation: {};
   Post: { // root type
     content?: string | null; // String
@@ -94,6 +99,10 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  AuthPayload: { // field return type
+    token: string | null; // String
+    user: NexusGenRootTypes['User'] | null; // User
+  }
   Mutation: { // field return type
     addProfileForUser: NexusGenRootTypes['Profile'] | null; // Profile
     createDraft: NexusGenRootTypes['Post'] | null; // Post
@@ -101,6 +110,7 @@ export interface NexusGenFieldTypes {
     incrementPostViewCount: NexusGenRootTypes['Post'] | null; // Post
     signupUser: NexusGenRootTypes['User']; // User!
     togglePublishPost: NexusGenRootTypes['Post'] | null; // Post
+    updateProfileForUser: NexusGenRootTypes['User'] | null; // User
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -122,6 +132,7 @@ export interface NexusGenFieldTypes {
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     feed: NexusGenRootTypes['Post'][]; // [Post!]!
     postById: NexusGenRootTypes['Post'] | null; // Post
+    user: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     email: string; // String!
@@ -133,6 +144,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AuthPayload: { // field return type name
+    token: 'String'
+    user: 'User'
+  }
   Mutation: { // field return type name
     addProfileForUser: 'Profile'
     createDraft: 'Post'
@@ -140,6 +155,7 @@ export interface NexusGenFieldTypeNames {
     incrementPostViewCount: 'Post'
     signupUser: 'User'
     togglePublishPost: 'Post'
+    updateProfileForUser: 'User'
   }
   Post: { // field return type name
     author: 'User'
@@ -161,6 +177,7 @@ export interface NexusGenFieldTypeNames {
     draftsByUser: 'Post'
     feed: 'Post'
     postById: 'Post'
+    user: 'User'
   }
   User: { // field return type name
     email: 'String'
@@ -188,10 +205,15 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     signupUser: { // args
+      bio?: string | null; // String
       data: NexusGenInputs['UserCreateInput']; // UserCreateInput!
     }
     togglePublishPost: { // args
       id: number; // Int!
+    }
+    updateProfileForUser: { // args
+      bio?: string | null; // String
+      email: string; // String!
     }
   }
   Query: {
@@ -205,6 +227,9 @@ export interface NexusGenArgTypes {
       take?: number | null; // Int
     }
     postById: { // args
+      id?: number | null; // Int
+    }
+    user: { // args
       id?: number | null; // Int
     }
   }

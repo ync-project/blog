@@ -24,6 +24,7 @@ import {
     definition(t) {
       t.nonNull.string('email')
       t.string('name')
+      t.nonNull.string('password')
       t.list.nonNull.field('posts', { type: PostCreateInput })
     },
   })
@@ -39,6 +40,7 @@ import {
               type: UserCreateInput,
             }),
           ),
+          bio: (stringArg())
         },
         resolve: (_, args, context: Context) => {
           const postData = args.data.posts?.map((post: any) => {
@@ -48,8 +50,14 @@ import {
             data: {
               name: args.data.name,
               email: args.data.email,
+              password: args.data.password,
               posts: {
                 create: postData,
+              },
+              profile: {
+                create: {
+                   bio: args.bio
+                }
               },
             },
           })
@@ -157,6 +165,27 @@ import {
           })
         }
       })
+
+      t.field('updateProfileForUser', {
+        type: User,
+        args: {
+          email: nonNull(stringArg()),
+          bio: stringArg()
+        }, 
+        resolve: async (_, args, context) => {
+          return context.prisma.user.update({
+            where: { email: args.email},
+            data: {
+              profile: {
+                update: {
+                  bio: args.bio
+                }
+              }
+            }
+          })
+        }
+      })
+
     },
   })
   

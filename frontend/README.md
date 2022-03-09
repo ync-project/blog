@@ -13,29 +13,161 @@ next-advanced-apollo-starter
   <a href="#writing-tests">Writing tests</a> •
   <a href="#docker-usage">Docker usage</a>
 </p>
+# Blog - frontend
 
-## What's included
+# Graphql
 
-### Features
+```
+fragment PostFields on Post{
+  id
+  title
+  content
+  viewCount
+  published
+}
 
-- Latest [Next.js](https://nextjs.org/) version.
-- Latest packages updates.
-- GraphQL [Apollo](https://www.apollographql.com/docs/react/essentials/get-started/) client with built-in
-  cookie-based [JWT](https://jwt.io/) token authentication.
-- Localization via [react-i18next](https://react.i18next.com/).
-- [TypeScript](https://www.typescriptlang.org/) environment.
-- [Normalize.css](https://necolas.github.io/normalize.css/) included.
-- _No custom server_.
+fragment UserIdentities on User{
+    id
+    email
+}
 
-### Developer experience
+fragment UserFields on User{
+    id
+    email
+  	name
+  	posts{
+      id
+      title
+    }
+  	profile{
+      bio
+    }
+}
 
-- Testing environment via [Jest](https://jestjs.io/)
-  and [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro).
-- [Prettier](https://prettier.io/) for code formatting.
-- Debug configuration for [VSCode](https://code.visualstudio.com/).
-- [Docker](https://www.docker.com/) configuration to serve **production-ready** build with Nginx.
+query feed {
+  feed {
+    ...PostFields
+    author {
+      ...UserIdentities
+    }
+  }
+}  
 
-## Getting started
+query feed_search {
+  feed(
+    searchString: "ask"
+  ) {
+    ...PostFields
+    author {
+      ...UserIdentities
+    }
+
+  }
+}  
+
+query feed_paginate {
+  feed(
+    searchString: "ask"
+    skip: 0
+    take: 2
+    orderBy: { updatedAt: desc }
+  ) {
+    ...PostFields
+    author {
+      ...UserIdentities
+    }
+  }
+}
+
+query postById {
+  postById(id: 5 ) {
+    ...PostFields
+  }
+}
+
+query draftsByUser {
+  draftsByUser(
+    userUniqueInput: {
+      email: "mahmoud@prisma.io"
+    }
+  ) {
+    ...PostFields
+    author {
+      ...UserIdentities
+    }
+  }
+}
+
+query allUsers{
+  allUsers{
+   ...UserIdentities
+  }
+}
+
+query user {
+  user(id: 3 ) {
+    ...UserFields
+  }
+}
+
+mutation signupUser {
+  signupUser(data: { name: "Sarah", email: "sarah@prisma.io", password:"" }) {
+    id
+  }
+}
+
+mutation createDraft {
+  createDraft(
+    data: { title: "Join the Prisma Slack", content: "https://slack.prisma.io" }
+    authorEmail: "alice@prisma.io"
+  ) {
+    ...PostFields
+    author {
+      ...UserIdentities
+    }
+  }
+}
+
+mutation togglePublishPost {
+  togglePublishPost(id: 5) {
+    id
+    published
+  }
+}
+
+mutation incrementPostViewCount {
+  incrementPostViewCount(id: 5) {
+    id
+    viewCount
+  }
+}
+
+mutation deletePost {
+  deletePost(id: 5) {
+    id
+  }
+}
+
+mutation addProfileForUser {
+  addProfileForUser(
+    userUniqueInput: {
+      email: "mahmoud@prisma.io"
+    }
+    bio: "I like turtles"
+  ) {
+    id
+    bio
+    user {
+      id
+      email
+    }
+  }
+}
+```
+
+
+
+# Getting started
 
 ### Start development server
 
@@ -51,7 +183,7 @@ After installation is complete, simply start development server:
 npm run dev
 ```
 
-## Apollo usage
+# Apollo usage
 
 ### Client-side rendering (CSR)
 
@@ -116,7 +248,7 @@ export async function getServerSideProps() {
 export default MyPage;
 ```
 
-## Writing tests
+# Writing tests
 
 [Jest](https://jestjs.io/) is a great tool for testing. To run tests located in `/tests` directory, use `test` script
 from `package.json`:
@@ -130,7 +262,7 @@ npm test
 Pretty much everything you need to know about project structure, SSR, etc., you can find in
 the [official Next.js documentation](https://nextjs.org/docs).
 
-## Docker usage
+# Docker usage
 
 To build and run Dockerized **production-ready** container, run:
 

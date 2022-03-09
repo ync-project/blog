@@ -110,6 +110,19 @@ export const Query = objectType({
             })
         },
       })
+
+      t.nullable.field('user', {
+        type: User,
+        args: {
+          id: intArg(),
+        },
+        resolve: (_parent, args, context: Context) => {
+          return context.prisma.user.findUnique({
+            where: { id: args.id || undefined },
+          })
+        },
+      })  
+
     },
   })
   
