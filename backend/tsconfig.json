@@ -2,9 +2,11 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
+    // "module": "commonjs",
+    // "moduleResolution": "node",
     "esModuleInterop": true,
     "lib": ["esnext"],
     "strict": true,
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "tests"]
 }

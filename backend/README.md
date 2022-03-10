@@ -47,16 +47,21 @@ fragment UserIdentities on User{
     id
     email
 }
+fragment UserFields on User{
+    id
+    email
+    name
+}
 ```
 
 ## Query
 
-### 1. feed-all
+### 1. feed_all
 
 Retrieve all published posts and their authors
 
 ```graphql
-query feed {
+query feed_all {
   feed {
     ...PostFields
     author {
@@ -66,7 +71,7 @@ query feed {
 }
 ```
 
-### 2. feed-search
+### 2. feed_search
 
 Search for posts that contain a specific string in their title or content
 
@@ -84,7 +89,7 @@ query feed_search {
 }
 ```
 
-### 3. feed-paginate
+### 3. feed_paginate
 
 Paginate and order the returned posts
 
