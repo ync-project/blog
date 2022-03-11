@@ -14,60 +14,66 @@ export const logger = pino({
 
 describe("Post unit tests", () => {
     it("Retrieve all published posts and their authors ", async () => {
-        const feeds = await ctx.client.request({
-            document: feed_all,
-        });
-        logger.debug(`feeds[0]: ${feeds.feed[0]}`)
-        expect(feeds.feed).not.toBeNull
-        expect(feeds.feed).toHaveLength(3)
-        expect(feeds.feed[0].published).toBeTruthy
-        expect(feeds.feed[0].author).not.toBeNull
-        expect(feeds.feed[2].published).toBeTruthy
-        expect(feeds.feed[2].author).not.toBeNull
+        const feeds = await ctx.client.request(`
+            ${feed_all},
+        `);
+        //logger.debug(`feeds[0]: ${feeds.feed[0]}`)
+        expect(feeds.feed).not.toBe(null)
+        expect(feeds.feed.length === 3)
+        expect(feeds.feed[0].published).toBe(true)
+        expect(feeds.feed[0].author).not.toBe(null)
+        expect(feeds.feed[2].published).toBe(true)
+        expect(feeds.feed[2].author).not.toBe(null)
     });
 
-    it("Delete a post", async () => {
-        const id = 1
-        let op: any = {}
-
-        // read first
-        op = await ctx.client.request({
-            document: postById,
-            variables: { id }
-        });
-        expect(op.postById.id === id)
+    // it("Read a post", async () => {
+    //     // read ok
+    //     const ids = [1, 2, 3, 4]
+    //     let op: any = {}
+    //     ids.map( async id => {
+    //         op = await ctx.client.request({
+    //             document: postById,
+    //             variables: { id }
+    //         });
+    //         expect(op.postById.id).toBe(id)
+    //         expect(op.postById.title).not.toBe(null)
+    //     })
         
-        // checks sum 
-        op = await ctx.client.request({
-            document: feed_all,
-        });
-        logger.debug(`op.feed.length: ${op.feed.length}`)
-        expect(op.feed).not.toBeNull
-        expect(op.feed).toHaveLength(3)
+    //     // read bad
+    //     const id = 5
+    //     op = await ctx.client.request(`
+    //             ${postById}
+    //         `,
+    //         { id }
+    //     );
+    //     expect(op.postById).toBe(null)
+    // });
 
-        // checks sum again
-        op = await ctx.client.request({
-            document: feed_all,
-        });
-        logger.debug(`again, op.feed.length: ${op.feed.length}`)
-        expect(op.feed).not.toBeNull
-        expect(op.feed).toHaveLength(3)
+    // it("Delete a post", async () => {
+    //     const id = 4
+    //     let op: any = {}
 
-        // delete it
-        // op = await ctx.client.request({
-        //     document: deletePost,
-        //     variables: { id }
-        // })
-        // logger.debug(`deletePost.id: ${op.deletePost.id}`)
-        // expect(op.deletePost.id === id)
+    //     // delete it
+    //     op = await ctx.client.request(`
+    //         ${deletePost}
+    //         `,
+    //         { id }
+    //     )
+    //     expect(op.deletePost.id).toBe(id)
 
-        // read again
-        op = await ctx.client.request({
-            document: postById,
-            variables: { id }
-        });
-        expect(op.deletePost.id === id)
+    //     // read again
+    //     op = await ctx.client.request(`
+    //             ${postById}
+    //         `,
+    //         { id }
+    //     );
+    //     expect(op.postById).toBe(null)
 
-    });
+    //     // checks sum again
+    //     op = await ctx.client.request(`
+    //         ${feed_all}
+    //     `);
+    //     expect(op.feed.length === 2)
+    // });
     
 })
