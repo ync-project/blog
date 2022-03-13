@@ -258,3 +258,211 @@ mutation addProfileForUser {
 }
 ```
 
+## playground
+
+```
+PRETTIFY
+HISTORY
+
+http://localhost:4000
+COPY CURL
+
+25
+    email
+26
+  }
+27
+}
+28
+query feed_search($searchString: String!) {
+29
+      feed(
+30
+          searchString: $searchString
+31
+      ) {
+32
+          ...PostFields
+33
+          author {
+34
+              ...UserIdentities
+35
+          }    
+36
+      }
+37
+  }
+38
+query feed_paginate(
+39
+    $searchString: String,
+40
+    $skip: Int,
+41
+    $take: Int,
+42
+    $orderBy: PostOrderByUpdatedAtInput
+43
+) {
+44
+    feed(
+45
+        searchString: $searchString
+46
+        skip: $skip
+47
+        take: $take
+48
+        orderBy: $orderBy
+49
+    ) {
+50
+        ...PostFields
+51
+        updatedAt
+52
+        author {
+53
+        ...UserIdentities
+54
+        }
+55
+    }
+56
+}
+57
+​
+QUERY VARIABLESHTTP HEADERS (1)
+
+prisma
+1
+{
+2
+  "searchString": "prisma"
+3
+}
+
+{
+  "data": {
+    "feed": [
+      {
+        "id": 1,
+        "title": "Join the Prisma Slack",
+        "content": "https://slack.prisma.io",
+        "published": true,
+        "updatedAt": "2022-03-13T00:51:13.599Z",
+        "author": {
+          "id": 1,
+          "email": "alice@prisma.io"
+        }
+      },
+      {
+        "id": 2,
+        "title": "Follow Prisma on Twitter",
+        "content": "https://www.twitter.com/prisma",
+        "published": true,
+        "updatedAt": "2022-03-13T00:51:13.604Z",
+        "author": {
+          "id": 2,
+          "email": "nilu@prisma.io"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Ask a question about Prisma on GitHub",
+        "content": "https://www.github.com/prisma/prisma/discussions",
+        "published": true,
+        "updatedAt": "2022-03-13T00:51:13.607Z",
+        "author": {
+          "id": 3,
+          "email": "mahmoud@prisma.io"
+        }
+      }
+    ]
+  }
+TRACING
+This GraphQL server doesn’t support tracing. See the following page for instructions:
+https://github.com/apollographql/apollo-tracing
+DOCS
+SCHEMA
+SCHEMA
+DOWNLOAD
+
+PostOrderByUpdatedAtInput
+directive @specifiedBy(url: String!) on SCALAR
+type AuthPayload {
+  token: String
+  user: User
+}
+​
+scalar DateTime
+​
+type Mutation {
+  signupUser(data: UserCreateInput!, bio: String): User!
+  createDraft(data: PostCreateInput!, authorEmail: String!): Post
+  togglePublishPost(id: Int!): Post
+  incrementPostViewCount(id: Int!): Post
+  deletePost(id: Int!): Post
+  addProfileForUser(userUniqueInput: UserUniqueInput!, bio: String): Profile
+  updateProfileForUser(email: String!, bio: String): User
+}
+​
+type Post {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  content: String
+  published: Boolean!
+  viewCount: Int!
+  author: User
+}
+​
+input PostCreateInput {
+  title: String!
+  content: String
+}
+​
+input PostOrderByUpdatedAtInput {
+  updatedAt: SortOrder!
+}
+​
+type Profile {
+  id: Int!
+  bio: String
+  user: User
+}
+​
+type Query {
+  allUsers: [User!]!
+  postById(id: Int): Post
+  feed(
+    searchString: String
+    skip: Int
+    take: Int
+    orderBy: PostOrderByUpdatedAtInput
+  ): [Post!]!
+  draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
+  user(id: Int): User
+}
+​
+enum SortOrder {
+  asc
+  desc
+}
+​
+type User {
+  id: Int!
+  name: String
+  email: String!
+  posts: [Post!]!
+  profile: Profile
+}
+​
+input UserCreateInput {
+  email: String!
+  name: String
+
+```
+

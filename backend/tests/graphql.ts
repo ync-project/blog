@@ -13,10 +13,10 @@ export const UserIdentities = `
     }
 `  
 export const UserFields = `
-    fragment UserIdentities on User{
+    fragment UserFields on User{
         id
         email
-        mame
+        name
     }
 `  
   
@@ -34,35 +34,40 @@ export const feed_all = `
     ${UserIdentities}
 `  
 
-//Search for posts that contain a specific string in their title or content
+// Search for posts that contain a specific string in their title or content
 export const feed_search = `
-    query feed_search {
+    query feed_search($searchString: String!) {
         feed(
-        searchString: "ask"
+            searchString: $searchString
         ) {
-        ...PostFields
-        author {
-            ...UserIdentities
-        }
-    
+            ...PostFields
+            author {
+                ...UserIdentities
+            }    
         }
     }
     ${PostFields}
     ${UserIdentities}
 `  
 
-// Paginate and order the returned posts
+// Search posts with paginated and ordered results
 export const feed_paginate = `
-    query feed_paginate {
+    query feed_paginate(
+        $searchString: String,
+        $skip: Int,
+        $take: Int,
+        $orderBy: PostOrderByUpdatedAtInput
+    ) {
         feed(
-            searchString: "ask"
-            skip: 0
-            take: 2
-            orderBy: { updatedAt: desc }
+            searchString: $searchString
+            skip: $skip
+            take: $take
+            orderBy: $orderBy
         ) {
             ...PostFields
+            updatedAt
             author {
-            ...UserIdentities
+                ...UserIdentities
             }
         }
     }

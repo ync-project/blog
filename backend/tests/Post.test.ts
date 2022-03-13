@@ -1,5 +1,6 @@
 import { createTestContext } from "./__helpers";
-import { feed_all, postById, deletePost } from './graphql'
+import { feed_paginate, feed_search, feed_all, 
+    postById, deletePost } from './graphql'
 
 const ctx = createTestContext();
 
@@ -13,17 +14,36 @@ export const logger = pino({
 });
 
 describe("Post unit tests", () => {
-    it("Retrieve all published posts and their authors ", async () => {
+    // it("Retrieve all published posts and their authors ", async () => {
+    //     const feeds = await ctx.client.request(`
+    //         ${feed_all},
+    //     `);
+    //     //logger.debug(`feeds[0]: ${feeds.feed[0]}`)
+    //     expect(feeds.feed).not.toBe(null)
+    //     //expect(feeds.feed.length === 3)
+    //     expect(feeds.feed).toHaveLength(3)
+    //     expect(feeds.feed[0].published).toBe(true)
+    //     expect(feeds.feed[0].author).not.toBe(null)
+    //     expect(feeds.feed[2].published).toBe(true)
+    //     expect(feeds.feed[2].author).not.toBe(null)
+    // });
+
+    // it("Search for posts that contain a specific string in their title or content", async () => {
+    //     const feeds = await ctx.client.request(`
+    //         ${feed_search},
+    //     `, { searchString: 'www'});
+    //     expect(feeds.feed).not.toBe(null)
+    //     expect(feeds.feed).toHaveLength(2)
+    //     expect(feeds.feed[0].published).toBe(true)
+    // });
+
+    it("Search posts Paginated and ordered", async () => {
         const feeds = await ctx.client.request(`
-            ${feed_all},
-        `);
-        //logger.debug(`feeds[0]: ${feeds.feed[0]}`)
+            ${feed_paginate},
+        `, { searchString: 'www'});
         expect(feeds.feed).not.toBe(null)
-        expect(feeds.feed.length === 3)
+        expect(feeds.feed).toHaveLength(2)
         expect(feeds.feed[0].published).toBe(true)
-        expect(feeds.feed[0].author).not.toBe(null)
-        expect(feeds.feed[2].published).toBe(true)
-        expect(feeds.feed[2].author).not.toBe(null)
     });
 
     // it("Read a post", async () => {
@@ -50,7 +70,7 @@ describe("Post unit tests", () => {
     // });
 
     // it("Delete a post", async () => {
-    //     const id = 4
+    //     const id = 3
     //     let op: any = {}
 
     //     // delete it
@@ -73,7 +93,7 @@ describe("Post unit tests", () => {
     //     op = await ctx.client.request(`
     //         ${feed_all}
     //     `);
-    //     expect(op.feed.length === 2)
+    //     expect(op.feed).toHaveLength(2)
     // });
     
 })
