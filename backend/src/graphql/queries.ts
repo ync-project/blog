@@ -119,7 +119,7 @@ export const Query = objectType({
         resolve: (_parent, args, context: Context) => {
           return context.prisma.user.findUnique({
             where: { id: args.id || undefined },
-          })
+        })
         },
       })  
 

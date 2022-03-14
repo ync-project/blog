@@ -17,42 +17,23 @@ export const UserFields = `
         id
         email
         name
+        profile{
+            id
+            bio
+        }
     }
 `  
   
-// Retrieve all published posts and their authors  
-export const feed_all = `
-    query feed {
-        feed {
-            ...PostFields
-            author {
-                ...UserIdentities
-            }
-        }
+export const ProfileFields = `
+    fragment ProfileFields on Profile{
+        id
+        bio
     }
-    ${PostFields}
-    ${UserIdentities}
-`  
-
-// Search for posts that contain a specific string in their title or content
-export const feed_search = `
-    query feed_search($searchString: String!) {
-        feed(
-            searchString: $searchString
-        ) {
-            ...PostFields
-            author {
-                ...UserIdentities
-            }    
-        }
-    }
-    ${PostFields}
-    ${UserIdentities}
 `  
 
 // Search posts with paginated and ordered results
-export const feed_paginate = `
-    query feed_paginate(
+export const feedList = `
+    query feedList(
         $searchString: String,
         $skip: Int,
         $take: Int,
@@ -87,11 +68,11 @@ export const postById = `
 
 // Retrieve the drafts of a user
 export const draftsByUser = `
-    query draftsByUser {
+    query draftsByUser($email: String!) {
         draftsByUser(
-        userUniqueInput: {
-            email: "mahmoud@prisma.io"
-        }
+            userUniqueInput: {
+                email: $email
+            }
         ) {
             ...PostFields
             author {
@@ -103,41 +84,12 @@ export const draftsByUser = `
     ${UserIdentities}
 `
 
-// list all users
-export const allUsers = `
-    query allUsers{
-        allUsers{
-        ...UserIdentities
-        }
-    }
-    ${UserIdentities}
-`  
-
-// display a user
-export const user = `
-    query user {
-        user(id: 1 ) {
-        ...UserFields
-        }
-    }
-    ${UserFields}
-`  
-
-// Create a new user
-export const signupUser = `
-    mutation signupUser {
-        signupUser(data: { name: "Sarah", email: "sarah@prisma.io", password: "" }) {
-            id
-        }
-    }  
-` 
-
 // Create a new draft
 export const createDraft = `
-    mutation createDraft {
+    mutation createDraft($authorEmail: String!, $title: String!, $content: String!) {
         createDraft(
-            data: { title: "Join the Prisma Slack", content: "https://slack.prisma.io" }
-            authorEmail: "alice@prisma.io"
+            data: { title: $title, content: $content }
+            authorEmail: $authorEmail
         ) {
             ...PostFields
             author {
@@ -151,8 +103,8 @@ export const createDraft = `
 
 // Publish/unpublish an existing post
 export const togglePublishPost = `
-    mutation togglePublishPost {
-        togglePublishPost(id: 5) {
+    mutation togglePublishPost($id: Int!) {
+        togglePublishPost(id: $id) {
             id
             published
         }
@@ -161,8 +113,8 @@ export const togglePublishPost = `
 
 // Increment the view count of a post
 export const incrementPostViewCount = `
-    mutation incrementPostViewCount {
-        incrementPostViewCount(id: 5) {
+    mutation incrementPostViewCount($id: Int!) {
+        incrementPostViewCount(id: $id) {
             id
             viewCount
         }
@@ -178,21 +130,76 @@ export const deletePost = `
     }
 `  
 
+// list all users
+export const allUsers = `
+    query allUsers{
+        allUsers{
+        ...UserIdentities
+        }
+    }
+    ${UserIdentities}
+`  
+
+// display a user
+export const user = `
+    query user($id: Int!) {
+        user(id: $id ) {
+        ...UserFields
+        }
+    }
+    ${UserFields}
+`  
+
+// Create a new user
+export const signupUser = `
+    mutation signupUser($email: String!, $name: String = "", $password: String!) {
+        signupUser(data: { name: $name, email: $email, password: $password }) {
+            ...UserIdentities
+        }
+    }  
+    ${UserIdentities}
+` 
+// Create a new user with profile
+export const signupUserAndProfile = `
+    mutation signupUserAndProfile($email: String!, $name: String = "", $password: String!, $bio: String!) {
+        signupUser(data: { name: $name, email: $email, password: $password, bio: $bio }) {
+            ...UserIdentities
+            profile{
+                ...ProfileFields
+            }
+        }
+    }  
+    ${UserIdentities}
+    ${ProfileFields}
+` 
 // Add the `Profile` to a user
 export const addProfileForUser = `
-    mutation addProfileForUser {
+    mutation addProfileForUser($email: String!, $bio: String!) {
         addProfileForUser(
-        userUniqueInput: {
-            email: "mahmoud@prisma.io"
-        }
-        bio: "I like turtles"
-        ) {
-            id
-            bio
-            user {
-                id
-                email
+            userUniqueInput: {
+                email: $email
             }
+            bio: $bio
+        ) {
+            ...ProfileFields 
+            user {
+                ...UserIdentities
+            }
+        }
+    }
+    ${UserIdentities}
+    ${ProfileFields}
+` 
+
+// Update the `Profile` to a user
+export const updateProfileForUser = `
+    mutation updateProfileForUser($email: String!, $bio: String!) {
+        updateProfileForUser(
+            email: $email,
+            bio: $bio
+        ) {
+                id
+            bio
         }
     }
 ` 

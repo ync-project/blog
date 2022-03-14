@@ -1,0 +1,140 @@
+fragment PostFields on Post{
+    id
+    title
+    content
+    published
+}
+fragment UserIdentities on User{
+    id
+    email
+}
+fragment UserFields on User{
+    id
+    email
+    name
+}
+
+## Search posts with paginated and ordered results
+query feedList(
+    $searchString: String,
+    $skip: Int,
+    $take: Int,
+    $orderBy: PostOrderByUpdatedAtInput
+) {
+    feed(
+        searchString: $searchString
+        skip: $skip
+        take: $take
+        orderBy: $orderBy
+    ) {
+        ...PostFields
+        updatedAt
+        author {
+            ...UserIdentities
+        }
+    }
+}
+
+## Retrieve a single post
+query postById($id: Int!) {
+    postById(id: $id ) {
+        ...PostFields
+    }
+}  
+
+## Publish/unpublish an existing post
+    mutation togglePublishPost($id: Int!) {
+        togglePublishPost(id: $id) {
+            id
+            published
+        }
+    }
+
+## Increment the view count of a post
+    mutation incrementPostViewCount($id: Int!) {
+        incrementPostViewCount(id: $id) {
+            id
+            viewCount
+        }
+    }  
+
+## Delete a post
+mutation deletePost($id: Int!) {
+    deletePost(id: $id) {
+        id
+    }
+}
+
+## Retrieve the drafts of a user
+query draftsByUser($email: String!) {
+    draftsByUser(
+        userUniqueInput: {
+            email: $email
+        }
+    ) {
+        ...PostFields
+        author {
+            ...UserIdentities
+        }
+    }
+}
+
+## Create a new draft
+mutation createDraft($authorEmail: String!, $title: String!, $content: String!) {
+    createDraft(
+        data: { title: $title, content: $content }
+        authorEmail: $authorEmail
+    ) {
+        ...PostFields
+        author {
+            ...UserIdentities
+        }
+    }
+}
+
+
+## list all users
+query allUsers{
+    allUsers{
+        ...UserIdentities
+    }
+}
+
+## display a user
+query user {
+    user(id: 1 ) {
+        ...UserFields
+    }
+}
+
+## Create a new user
+mutation signupUser {
+    signupUser(data: { name: "Sarah", email: "sarah@prisma.io", password: "" }) {
+        id
+    }
+}  
+
+## Add the `Profile` to a user
+mutation addProfileForUser {
+    addProfileForUser(
+    userUniqueInput: {
+        email: "mahmoud@prisma.io"
+    }
+    bio: "I like turtles"
+    ) {
+        id
+        bio
+        user {
+            id
+            email
+        }
+    }
+}
+
+## variables
+{
+  "email": "mahmoud@prisma.io",
+  "authorEmail": "mahmoud@prisma.io",
+  "title": "Join the Prisma Slack", 
+  "content": "https://slack.prisma.io"
+}
