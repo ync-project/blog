@@ -1,9 +1,5 @@
 import { createTestContext } from "./__helpers";
-import { 
-    feedList, postById, deletePost,
-    incrementPostViewCount, togglePublishPost, 
-    draftsByUser, createDraft
-  } from './graphql'
+import * as graphql from './graphql'
 
 const ctx = createTestContext();
 
@@ -20,7 +16,7 @@ describe("Post unit tests", () => {
 
     it("Search posts paginate the result with sortable order.", async () => {
         let op = await ctx.client.request(`
-            ${feedList},
+            ${graphql.FEED_LIST},
         `);
         //logger.debug(`feeds[0]: ${feeds.feed[0]}`)
         expect(op.feed).not.toBe(null)
@@ -34,7 +30,7 @@ describe("Post unit tests", () => {
     
         // search text 
         op = await ctx.client.request(`
-            ${feedList},
+            ${graphql.FEED_LIST},
         `, { searchString: 'www'});
         expect(op.feed).not.toBe(null)
         expect(op.feed).toHaveLength(2)
@@ -43,13 +39,13 @@ describe("Post unit tests", () => {
         // udpate data
         const id = 2
         op = await ctx.client.request(`
-            ${incrementPostViewCount},
+            ${graphql.INCREMENT_POST_VIEW_COUNT},
         `, { id });
         expect(op.incrementPostViewCount.viewCount).toBeGreaterThan(0)
 
         // skip
         op = await ctx.client.request(`
-            ${feedList},
+            ${graphql.FEED_LIST},
         `, { 
               searchString: 'prisma',
               skip: 1,
@@ -60,7 +56,7 @@ describe("Post unit tests", () => {
 
         // take
         op = await ctx.client.request(`
-            ${feedList},
+            ${graphql.FEED_LIST},
         `, { 
               searchString: 'prisma',
               take: 1,
@@ -71,7 +67,7 @@ describe("Post unit tests", () => {
 
         // all in one
         op = await ctx.client.request(`
-            ${feedList},
+            ${graphql.FEED_LIST},
         `, { 
               searchString: 'prisma',
               skip: 0,
@@ -89,7 +85,7 @@ describe("Post unit tests", () => {
         let op: any = {}
         ids.map( async id => {
             op = await ctx.client.request({
-                document: postById,
+                document: graphql.POST_BY_ID,
                 variables: { id }
             });
             expect(op.postById.id).toBe(id)
@@ -99,7 +95,7 @@ describe("Post unit tests", () => {
         // read bad
         const id = 5
         op = await ctx.client.request(`
-                ${postById}
+                ${graphql.POST_BY_ID}
             `,
             { id }
         );
@@ -112,7 +108,7 @@ describe("Post unit tests", () => {
 
         // delete it
         op = await ctx.client.request(`
-            ${deletePost}
+            ${graphql.DELETE_POST}
             `,
             { id }
         )
@@ -120,7 +116,7 @@ describe("Post unit tests", () => {
 
         // read again
         op = await ctx.client.request(`
-                ${postById}
+                ${graphql.POST_BY_ID}
             `,
             { id }
         );
@@ -128,7 +124,7 @@ describe("Post unit tests", () => {
 
         // checks sum again
         op = await ctx.client.request(`
-            ${feedList}
+            ${graphql.FEED_LIST}
         `);
         expect(op.feed).toHaveLength(2)
     });
@@ -136,7 +132,7 @@ describe("Post unit tests", () => {
     it("Publish/unpublish an existing post ", async () => {
         const id = 4
         let op = await ctx.client.request(`
-            ${togglePublishPost}
+            ${graphql.TOGGLE_PUBLISH_POST}
             `,
             { id }
         )
@@ -149,7 +145,7 @@ describe("Post unit tests", () => {
       
       // read existing draft
       let op = await ctx.client.request(`
-          ${draftsByUser}
+          ${graphql.DRAFTS_BY_USER}
           `,
           { email }
       )
@@ -159,7 +155,7 @@ describe("Post unit tests", () => {
       const title = "Join the Prisma Slack"
       const content = "https://slack.prisma.io"
       op = await ctx.client.request(`
-          ${createDraft}
+          ${graphql.CREATE_DRAFT}
           `,
           { authorEmail: email, title, content }
       )
@@ -170,7 +166,7 @@ describe("Post unit tests", () => {
 
       // read existing draft
       op = await ctx.client.request(`
-          ${draftsByUser}
+          ${graphql.DRAFTS_BY_USER}
           `,
           { email }
       )

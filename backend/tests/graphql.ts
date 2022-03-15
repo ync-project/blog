@@ -32,7 +32,7 @@ export const ProfileFields = `
 `  
 
 // Search posts with paginated and ordered results
-export const feedList = `
+export const FEED_LIST = `
     query feedList(
         $searchString: String,
         $skip: Int,
@@ -57,17 +57,21 @@ export const feedList = `
 `  
 
 // Retrieve a single post
-export const postById = `
+export const POST_BY_ID = `
     query postById($id: Int!) {
         postById(id: $id ) {
-        ...PostFields
-        }
-    }  
+            ...PostFields
+            author{
+                ...UserIdentities
+            }
+        }  
+    }
     ${PostFields}
+    ${UserIdentities}
 `  
 
 // Retrieve the drafts of a user
-export const draftsByUser = `
+export const DRAFTS_BY_USER = `
     query draftsByUser($email: String!) {
         draftsByUser(
             userUniqueInput: {
@@ -85,7 +89,7 @@ export const draftsByUser = `
 `
 
 // Create a new draft
-export const createDraft = `
+export const CREATE_DRAFT = `
     mutation createDraft($authorEmail: String!, $title: String!, $content: String!) {
         createDraft(
             data: { title: $title, content: $content }
@@ -102,7 +106,7 @@ export const createDraft = `
 `  
 
 // Publish/unpublish an existing post
-export const togglePublishPost = `
+export const TOGGLE_PUBLISH_POST = `
     mutation togglePublishPost($id: Int!) {
         togglePublishPost(id: $id) {
             id
@@ -112,7 +116,7 @@ export const togglePublishPost = `
 `  
 
 // Increment the view count of a post
-export const incrementPostViewCount = `
+export const INCREMENT_POST_VIEW_COUNT = `
     mutation incrementPostViewCount($id: Int!) {
         incrementPostViewCount(id: $id) {
             id
@@ -122,7 +126,7 @@ export const incrementPostViewCount = `
 `
 
 // Delete a post
-export const deletePost = `  
+export const DELETE_POST = `  
     mutation deletePost($id: Int!) {
         deletePost(id: $id) {
             id
@@ -131,7 +135,7 @@ export const deletePost = `
 `  
 
 // list all users
-export const allUsers = `
+export const ALL_USERS = `
     query allUsers{
         allUsers{
         ...UserIdentities
@@ -141,7 +145,7 @@ export const allUsers = `
 `  
 
 // display a user
-export const user = `
+export const USER = `
     query user($id: Int!) {
         user(id: $id ) {
         ...UserFields
@@ -151,7 +155,7 @@ export const user = `
 `  
 
 // Create a new user
-export const signupUser = `
+export const SIGNUP_USER = `
     mutation signupUser($email: String!, $name: String = "", $password: String!) {
         signupUser(data: { name: $name, email: $email, password: $password }) {
             ...UserIdentities
@@ -160,9 +164,9 @@ export const signupUser = `
     ${UserIdentities}
 ` 
 // Create a new user with profile
-export const signupUserAndProfile = `
+export const SIGNUP_USER_AND_PROFILE = `
     mutation signupUserAndProfile($email: String!, $name: String = "", $password: String!, $bio: String!) {
-        signupUser(data: { name: $name, email: $email, password: $password, bio: $bio }) {
+        signupUser(data: { name: $name, email: $email, password: $password}, bio: $bio) {
             ...UserIdentities
             profile{
                 ...ProfileFields
@@ -173,7 +177,7 @@ export const signupUserAndProfile = `
     ${ProfileFields}
 ` 
 // Add the `Profile` to a user
-export const addProfileForUser = `
+export const ADD_PROFILE_FOR_USER = `
     mutation addProfileForUser($email: String!, $bio: String!) {
         addProfileForUser(
             userUniqueInput: {
@@ -192,7 +196,7 @@ export const addProfileForUser = `
 ` 
 
 // Update the `Profile` to a user
-export const updateProfileForUser = `
+export const UPDATE_PROFILE_FOR_USER = `
     mutation updateProfileForUser($email: String!, $bio: String!) {
         updateProfileForUser(
             email: $email,

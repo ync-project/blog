@@ -2,10 +2,10 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import Layout from "../../components/Layout"
 import client from "../../lib/apollo-client";
-import { Post, Query } from '../../interfaces/graphql'
-import { ALL_FEEDS, POST_BY_ID } from '../../lib/graphql'
+import { Query } from '../../lib/graphql_generated'
+import * as graphql from '../../lib/graphql'
 
-const PostPage = ({post}: {post: Post}) => {
+const PostPage = ({post}: {post: Query["postById"]}) => {
   if (!post) {
     return <div>no post</div>
   }
@@ -14,40 +14,39 @@ const PostPage = ({post}: {post: Post}) => {
     <Layout>
       <div>
           <h1>{post.title }</h1>
-          <h4>{post.author!.email }</h4>
+          <h4>{post.author!.email}</h4>
           <p>{post.content }</p>
       </div>
     </Layout>  
   );
 }
 
-export const getStaticPaths: GetStaticPaths<any> = async () => {
-    const { data } = await client.query<Query>({
-        query: ALL_FEEDS,
+export const getStaticPaths: GetStaticPaths = async () => {
+    const { data: { feed } } = await client.query<Query>({
+        query: graphql.FEED_LIST,
       });
     
-  const paths = data.feed.map((post) => ({
+    const paths = feed.map((post) => ({
          params: { id: post.id.toString() },
-  }));
-  return { paths: paths , fallback: false }
+    }));
+    return { paths: paths, fallback: false }
 }
 
 
 export const getStaticProps: GetStaticProps = async ({ params } ) => {
     const post = params as Query["postById"] //as Params
+    //console.log('post', post)
     try {
-        const { data } = await client.query({
-            query: POST_BY_ID,
-            variables: { id: Number(post!.id) },
+        const { data: { postById } } = await client.query<Query>({
+            query: graphql.POST_BY_ID,
+            variables: { id: Number(post?.id) },
         });
-        //console.log('data.postById', data.postById)
         return {
             props: {
-                post: data.postById,
+                post: postById
             },
         }
     } catch (err: any) {
-        //console.log('err', err)
         return {
             props: {
                 id: post!.id,

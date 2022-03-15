@@ -2,27 +2,25 @@ import Layout from "../components/Layout"
 //import type { NextPage } from 'next';
 //import gql from "graphql-tag"
 //import { NexusGenFieldTypes } from '../../backend/src/generated/nexus'
-import { GetServerSideProps } from "next"; 
-import client from "../lib/apollo-client";
-import { Query } from '../interfaces/graphql_generated'
-import Posts from '../components/post/posts'
-import { ALL_FEEDS } from '../lib/graphql'
+import type { NextPage } from 'next'
+import { Post, Query } from '../lib/graphql_generated'
+import Posts from '../components/post'
+import { GetServerSideProps } from "next";
+import client from "../lib/apollo-client"; 
 
-const IndexPage = ({posts}: {posts: Query["feed"]}) => {
+import * as graphql from '../lib/graphql'
+
+const Home = ({posts}: {posts: Query["feed"]}) => {
   return (
     <Layout>
-        <div className="page">
-          <main>
-            <Posts posts={posts}/>
-          </main>
-      </div>
+        <Posts posts={posts as Post[]}/>
     </Layout>  
-  );
-};
+  )
+}
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const { data } = await client.query<Query>({
-    query: ALL_FEEDS
+    query: graphql.FEED_LIST
   });
 
   return {
@@ -32,4 +30,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
  };
 }
 
-export default IndexPage;
+export default Home;

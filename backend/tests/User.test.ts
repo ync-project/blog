@@ -1,7 +1,5 @@
 import { createTestContext } from "./__helpers";
-import { 
-  allUsers, signupUser, user, addProfileForUser, updateProfileForUser
-} from './graphql'
+import * as graphql from './graphql'
 
 const ctx = createTestContext();
 
@@ -17,7 +15,7 @@ export const logger = pino({
 describe("Users unit tests", () => {
     it("list all users", async () => {
         const op = await ctx.client.request(`
-            ${allUsers}
+            ${graphql.ALL_USERS}
             `);
         expect(op.allUsers).toHaveLength(3)
         expect(op.allUsers[0].email).not.toEqual(null)
@@ -30,20 +28,20 @@ describe("Users unit tests", () => {
       const password = 'ttt'
 
       let op = await ctx.client.request(`
-          ${signupUser}
+          ${graphql.SIGNUP_USER}
           `, { email, name, password });
       const id = op.signupUser.id    
       expect(id).not.toEqual(null)
       expect(op.signupUser.email).toEqual(email)
 
       op = await ctx.client.request(`
-          ${user}
+          ${graphql.USER}
           `, { id });
           expect(op.user.email).toEqual(email)
           expect(op.user.name).toEqual(name)
 
       op = await ctx.client.request(`
-          ${allUsers}
+          ${graphql.ALL_USERS}
           `);
       expect(op.allUsers).toHaveLength(4)
       expect(op.allUsers[0].email).not.toEqual(null)
@@ -57,20 +55,20 @@ describe("Users unit tests", () => {
       const bio = 'I like turtles'
 
       let op = await ctx.client.request(`
-          ${signupUser}
+          ${graphql.SIGNUP_USER}
           `, { email, name, password, bio });
       const id = op.signupUser.id    
       expect(id).not.toEqual(null)
       expect(op.signupUser.email).toEqual(email)
 
       op = await ctx.client.request(`
-          ${user}
+          ${graphql.USER}
           `, { id });
           expect(op.user.email).toEqual(email)
           expect(op.user.name).toEqual(name)
 
       op = await ctx.client.request(`
-          ${allUsers}
+          ${graphql.ALL_USERS}
           `);
       expect(op.allUsers).toHaveLength(4)
       expect(op.allUsers[0].email).not.toEqual(null)
@@ -82,7 +80,7 @@ describe("Users unit tests", () => {
       const bio = 'I like turtles'
 
       let op = await ctx.client.request(`
-          ${addProfileForUser}
+          ${graphql.ADD_PROFILE_FOR_USER}
           `, { email, bio });
       const id = op.addProfileForUser.id    
       expect(id).not.toEqual(null)
@@ -95,7 +93,7 @@ describe("Users unit tests", () => {
       let bio = 'I like turtles'
 
       let op = await ctx.client.request(`
-          ${addProfileForUser}
+          ${graphql.ADD_PROFILE_FOR_USER}
           `, { email, bio });
       const id = op.addProfileForUser.id    
       expect(id).not.toEqual(null)
@@ -105,7 +103,7 @@ describe("Users unit tests", () => {
       bio = 'I like turtles and cats'
 
       op = await ctx.client.request(`
-          ${ updateProfileForUser }
+          ${ graphql.UPDATE_PROFILE_FOR_USER }
           `, { email, bio });
       expect(op.updateProfileForUser.id).not.toEqual(null)
     });

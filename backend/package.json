@@ -25,6 +25,7 @@
     "graphql-middleware": "^6.1.15",
     "graphql-scalars": "1.14.1",
     "graphql-shield": "^7.5.0",
+    "graphql-tools": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "nexus": "1.2.0",
     "pino": "^7.8.1",

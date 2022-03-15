@@ -184,8 +184,12 @@ mutation updateProfileForUser($email: String!, $bio: String!) {
 
 ## variables
 {
-  "email": "mahmoud@prisma.io",
+  "id": 3,
+  "name": "Sarah",
+  "email": "sarah@prisma.io",
+  "password": "ttt",
   "authorEmail": "mahmoud@prisma.io",
   "title": "Join the Prisma Slack", 
-  "content": "https://slack.prisma.io"
+  "content": "https://slack.prisma.io",
+  "bio": "I like turtles and cat"
 }

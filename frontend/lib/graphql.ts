@@ -1,203 +1,210 @@
 import { gql } from "@apollo/client"
 
-const PostFields = gql`
+export const PostFields = gql`
     fragment PostFields on Post{
-      id
-      title
-      content
-      published
-    }
-`;
-
-const UserIdentities = gql`
-    fragment UserIdentities on User{
         id
-        name
-        email
+        title
+        content
+        published
     }
-`;
-
-const ProfileFields = gql`
+`  
+export const UserIdentities = gql`
+    fragment UserIdentities on User{
+      id
+      email
+    }
+`  
+export const UserFields = gql`
+    fragment UserFields on User{
+        id
+        email
+        name
+        profile{
+            id
+            bio
+        }
+    }
+`  
+  
+export const ProfileFields = gql`
     fragment ProfileFields on Profile{
         id
         bio
     }
-`;
+`  
 
-const UserFields = gql`
-    fragment UserFields on User{
-        ...UserIdentities
-        posts{
-          ...PostFields
+// Search posts with paginated and ordered results
+export const FEED_LIST = gql`
+    query feedList(
+        $searchString: String,
+        $skip: Int,
+        $take: Int,
+        $orderBy: PostOrderByUpdatedAtInput
+    ) {
+        feed(
+            searchString: $searchString
+            skip: $skip
+            take: $take
+            orderBy: $orderBy
+        ) {
+            ...PostFields
+            updatedAt
+            author {
+                ...UserIdentities
+            }
         }
-        profile{
-          ...ProfileFields
+    }
+    ${PostFields}
+    ${UserIdentities}
+`  
+
+// Retrieve a single post
+export const POST_BY_ID = gql`
+    query postById($id: Int!) {
+        postById(id: $id ) {
+            ...PostFields
+            author{
+                ...UserIdentities
+            }
+        }  
+    }
+    ${PostFields}
+    ${UserIdentities}
+`  
+
+// Retrieve the drafts of a user
+export const DRAFTS_BY_USER = gql`
+    query draftsByUser($email: String!) {
+        draftsByUser(
+            userUniqueInput: {
+                email: $email
+            }
+        ) {
+            ...PostFields
+            author {
+                ...UserIdentities
+            }
+        }
+    }
+    ${PostFields}
+    ${UserIdentities}
+`
+
+// Create a new draft
+export const CREATE_DRAFT = gql`
+    mutation createDraft($authorEmail: String!, $title: String!, $content: String!) {
+        createDraft(
+            data: { title: $title, content: $content }
+            authorEmail: $authorEmail
+        ) {
+            ...PostFields
+            author {
+                ...UserIdentities
+            }
+        }
+    }
+    ${PostFields}
+    ${UserIdentities}
+`  
+
+// Publish/unpublish an existing post
+export const TOGGLE_PUBLISH_POST = gql`
+    mutation togglePublishPost($id: Int!) {
+        togglePublishPost(id: $id) {
+            id
+            published
+        }
+    }
+`  
+
+// Increment the view count of a post
+export const INCREMENT_POST_VIEW_COUNT = gql`
+    mutation incrementPostViewCount($id: Int!) {
+        incrementPostViewCount(id: $id) {
+            id
+            viewCount
+        }
+    }  
+`
+
+// Delete a post
+export const DELETE_POST = gql`  
+    mutation deletePost($id: Int!) {
+        deletePost(id: $id) {
+            id
+        }
+    }
+`  
+
+// list all users
+export const ALL_USERS = gql`
+    query allUsers{
+        allUsers{
+        ...UserIdentities
+        }
+    }
+    ${UserIdentities}
+`  
+
+// display a user
+export const USER = gql`
+    query user($id: Int!) {
+        user(id: $id ) {
+        ...UserFields
+        }
+    }
+    ${UserFields}
+`  
+
+// Create a new user
+export const SIGNUP_USER = gql`
+    mutation signupUser($email: String!, $name: String = "", $password: String!) {
+        signupUser(data: { name: $name, email: $email, password: $password }) {
+            ...UserIdentities
+        }
+    }  
+    ${UserIdentities}
+` 
+// Create a new user with profile
+export const SIGNUP_USER_AND_PROFILE = gql`
+    mutation signupUserAndProfile($email: String!, $name: String = "", $password: String!, $bio: String!) {
+        signupUser(data: { name: $name, email: $email, password: $password}, bio: $bio ) {
+            ...UserIdentities
+            profile{
+                ...ProfileFields
+            }
+        }
+    }  
+    ${UserIdentities}
+    ${ProfileFields}
+` 
+// Add the `Profile` to a user
+export const ADD_PROFILE_FOR_USER = gql`
+    mutation addProfileForUser($email: String!, $bio: String!) {
+        addProfileForUser(
+            userUniqueInput: {
+                email: $email
+            }
+            bio: $bio
+        ) {
+            ...ProfileFields 
+            user {
+                ...UserIdentities
+            }
         }
     }
     ${UserIdentities}
     ${ProfileFields}
-`;
+` 
 
-export const ALL_FEEDS = gql`
-query allFeeds {
-    feed{
-      ...PostFields
-      author {
-        ...UserIdentities
-      }
+// Update the `Profile` to a user
+export const UPDATE_PROFILE_FOR_USER = gql`
+    mutation updateProfileForUser($email: String!, $bio: String!) {
+        updateProfileForUser(
+            email: $email,
+            bio: $bio
+        ) {
+            id
+        }
     }
-  }
-  ${PostFields}
-  ${UserIdentities}
-`;
-
-export const POST_BY_ID = gql`
-  query postById ($id: Int!) {
-    postById(id: $id ) {
-      ...PostFields
-      author {
-        ...UserFields
-      }
-    }
-  }
-  ${PostFields}
-  ${UserFields}
-`
-
-// export const paginated_feed = gql`
-//   query paginated_feed {
-//     feed(
-//       skip: null
-//       take: 2
-//       orderBy: { updatedAt: desc }
-//     ) {
-//       id
-//       updatedAt
-//       title
-//       content
-//       published
-//     }
-//   }
-// `
-
-// export const filterFeeds = gql`
-//   query filterFeeds ($searchString: String) {
-//     feed(
-//       searchString: $searchString
-//     ) {
-//       id
-//       title
-//       content
-//       published
-//     }
-//   }
-// `
-
-// export const togglePublishPost = gql`
-//   mutation togglePublishPost {
-//     togglePublishPost(id: 4) {
-//       id
-//       published
-//     }
-//   }
-// `
-
-// export const incrementPostViewCount = gql`
-//   mutation incrementPostViewCount {
-//     incrementPostViewCount(id: 3) {
-//       id
-//       viewCount
-//     }
-//   }
-// `
-
-// export const signupUser = gql`
-//   mutation signupUser($name: String $email: String!){
-//     signupUser(
-//       {
-//         name: $name,
-//         email: $email
-//       }
-      
-//       ) {
-//       id
-//     }
-//   }
-// `
-
-// export const createDraft = gql`
-//   mutation {
-//     createDraft(
-//       title: "Join the Prisma Slack"
-//       content: "https://slack.prisma.io"
-//       authorEmail: "alice@prisma.io"
-//     ) {
-//       id
-//       published
-//     }
-//   }
-// `
-
-// export const publish = gql`
-//   mutation {
-//     publish(postId: "5") {
-//       id
-//       published
-//     }
-//   }
-// `
-
-// export const deletePost = gql`
-//   mutation deletePost($postId: Int!) {
-//     deletePost(id: $postId) {
-//       id
-//     }
-//   }
-// `
-
-// export const allUsers = gql`
-//   query allUsers{
-//     allUsers {
-//       id
-//       name
-//       email
-//     }
-//   }
-// `
-
-// export const draftsByUser = gql`
-//   query draftsByUser($id: Int, $email: String) {
-//     draftsByUser(
-//       userUniqueInput: {
-//         id : $id
-//         email: $email
-//       }
-//     ) {
-//       id
-//       title
-//       content
-//       published
-//       author {
-//         id
-//         name
-//         email
-//       }
-//     }
-//   }
-//  `
-
-// export const addProfileForUser = gql`
-//   mutation addProfileForUser(){
-//     addProfileForUser(
-//       email: "mahmoud@prisma.io"
-//       bio: "I like turtles"
-//     ) {
-//       id
-//       bio
-//       user {
-//         id
-//         name
-//       }
-//     }
-//   }
-// `  
+` 
