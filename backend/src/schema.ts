@@ -4,8 +4,8 @@ import {
 } from 'nexus'
 import { DateTimeResolver } from 'graphql-scalars'
 import * as types from './graphql/types'
-import * as queries from './graphql/queries'
-import * as mutations from './graphql/mutations'
+import * as query from './graphql/query'
+import * as mutation from './graphql/mutation'
 
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
@@ -13,8 +13,8 @@ export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 export const schema = makeSchema({
   types: [
     types,
-    queries,
-    mutations,
+    query,
+    mutation,
     DateTime,
   ],
   outputs: {

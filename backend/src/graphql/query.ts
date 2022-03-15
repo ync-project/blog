@@ -23,24 +23,17 @@ export const PostOrderByUpdatedAtInput = inputObjectType({
     },
   })
   
-export const UserUniqueInput = inputObjectType({
-    name: 'UserUniqueInput',
-    definition(t) {
-      t.int('id')
-      t.string('email')
-    },
-  })
-
+export const PostCreateInput = inputObjectType({
+  name: 'PostCreateInput',
+  definition(t) {
+    t.nonNull.string('title')
+    t.string('content')
+  },
+})
   
 export const Query = objectType({
     name: 'Query',
     definition(t) {
-      t.nonNull.list.nonNull.field('allUsers', {
-        type: User,
-        resolve: (_parent, _args, context: Context) => {
-          return context.prisma.user.findMany()
-        },
-      })
   
       t.nullable.field('postById', {
         type: Post,
@@ -111,6 +104,13 @@ export const Query = objectType({
         },
       })
 
+      t.nonNull.list.nonNull.field('allUsers', {
+        type: User,
+        resolve: (_parent, _args, context: Context) => {
+          return context.prisma.user.findMany()
+        },
+      })
+    
       t.nullable.field('user', {
         type: User,
         args: {
@@ -119,9 +119,10 @@ export const Query = objectType({
         resolve: (_parent, args, context: Context) => {
           return context.prisma.user.findUnique({
             where: { id: args.id || undefined },
-        })
+          })
         },
       })  
+
 
     },
   })

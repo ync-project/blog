@@ -10,15 +10,16 @@ import {
   import { User } from './types/user'
   import { Post } from './types/post'
   import { Profile } from './types/profile'
+  import { PostCreateInput } from './query'
   
-  export const PostCreateInput = inputObjectType({
-    name: 'PostCreateInput',
+  export const UserUniqueInput = inputObjectType({
+    name: 'UserUniqueInput',
     definition(t) {
-      t.nonNull.string('title')
-      t.string('content')
+      t.int('id')
+      t.string('email')
     },
   })
-  
+
   export const UserCreateInput = inputObjectType({
     name: 'UserCreateInput',
     definition(t) {
@@ -32,38 +33,7 @@ import {
   export const Mutation = objectType({
     name: 'Mutation',
     definition(t) {
-      t.nonNull.field('signupUser', {
-        type: User,
-        args: {
-          data: nonNull(
-            arg({
-              type: UserCreateInput,
-            }),
-          ),
-          bio: (stringArg())
-        },
-        resolve: (_, args, context: Context) => {
-          const postData = args.data.posts?.map((post: any) => {
-            return { title: post.title, content: post.content || undefined }
-          })
-          return context.prisma.user.create({
-            data: {
-              name: args.data.name,
-              email: args.data.email,
-              password: args.data.password,
-              posts: {
-                create: postData,
-              },
-              profile: {
-                create: {
-                   bio: args.bio
-                }
-              },
-            },
-          })
-        },
-      })
-  
+
       t.field('createDraft', {
         type: Post,
         args: {
@@ -86,7 +56,7 @@ import {
           })
         },
       })
-  
+
       t.field('togglePublishPost', {
         type: Post,
         args: {
@@ -137,6 +107,37 @@ import {
         resolve: (_, args, context: Context) => {
           return context.prisma.post.delete({
             where: { id: args.id },
+          })
+        },
+      })
+      t.nonNull.field('signupUser', {
+        type: User,
+        args: {
+          data: nonNull(
+            arg({
+              type: UserCreateInput,
+            }),
+          ),
+          bio: (stringArg())
+        },
+        resolve: (_, args, context: Context) => {
+          const postData = args.data.posts?.map((post: any) => {
+            return { title: post.title, content: post.content || undefined }
+          })
+          return context.prisma.user.create({
+            data: {
+              name: args.data.name,
+              email: args.data.email,
+              password: args.data.password,
+              posts: {
+                create: postData,
+              },
+              profile: {
+                create: {
+                   bio: args.bio
+                }
+              },
+            },
           })
         },
       })

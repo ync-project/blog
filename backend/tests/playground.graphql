@@ -12,10 +12,40 @@ fragment UserFields on User{
     id
     email
     name
+  	profile{
+      id
+      bio
+    }
+}
+fragment ProfileFields on Profile{
+    id
+    bio
+}
+  
+## Retrieve all published posts and their authors  
+query feed {
+    feed {
+        ...PostFields
+        author {
+            ...UserIdentities
+        }
+    }
+}
+
+## Search for posts that contain a specific string in their title or content
+query feed_search($searchString: String!) {
+    feed(
+        searchString: $searchString
+    ) {
+        ...PostFields
+        author {
+            ...UserIdentities
+        }    
+    }
 }
 
 ## Search posts with paginated and ordered results
-query feedList(
+query feed_paginate(
     $searchString: String,
     $skip: Int,
     $take: Int,
@@ -39,6 +69,9 @@ query feedList(
 query postById($id: Int!) {
     postById(id: $id ) {
         ...PostFields
+    	author{
+        ...UserIdentities
+      }
     }
 }  
 
@@ -108,26 +141,44 @@ query user {
 }
 
 ## Create a new user
-mutation signupUser {
-    signupUser(data: { name: "Sarah", email: "sarah@prisma.io", password: "" }) {
-        id
+mutation signupUser($email: String!, $name: String = "", $password: String = "") {
+    signupUser(data: { name: $name, email: $email, password: $password }) {
+        ...UserIdentities
+    }
+}  
+
+## Create a new user with profile
+mutation signupUserAndProfile($email: String!, $name: String = "", $password: String!, $bio: String!) {
+    signupUser(data: { name: $name, email: $email, password: $password}, bio: $bio) {
+        ...UserIdentities
+        profile{
+            ...ProfileFields
+        }
     }
 }  
 
 ## Add the `Profile` to a user
-mutation addProfileForUser {
+mutation addProfileForUser($email: String!, $bio: String) {
     addProfileForUser(
-    userUniqueInput: {
-        email: "mahmoud@prisma.io"
-    }
-    bio: "I like turtles"
+        userUniqueInput: {
+            email: $email
+        }
+        bio: $bio
     ) {
         id
         bio
         user {
-            id
-            email
+            ...UserIdentities
         }
+    }
+}
+
+mutation updateProfileForUser($email: String!, $bio: String!) {
+    updateProfileForUser(
+        email: $email,
+      	bio: $bio
+    ) {
+        id
     }
 }
 

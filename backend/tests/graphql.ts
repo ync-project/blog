@@ -198,8 +198,7 @@ export const updateProfileForUser = `
             email: $email,
             bio: $bio
         ) {
-                id
-            bio
+            id
         }
     }
 ` 
