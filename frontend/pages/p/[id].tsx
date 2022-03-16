@@ -2,8 +2,9 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import Layout from "../../components/Layout"
 import client from "../../lib/apollo-client";
-import { Query } from '../../lib/graphql_generated'
+import { Query } from '../../interfaces/graphql_generated'
 import * as graphql from '../../lib/graphql'
+import { TODOPageErr } from '../../interfaces/app_types'
 
 const PostPage = ({post}: {post: Query["postById"]}) => {
   if (!post) {
@@ -46,11 +47,12 @@ export const getStaticProps: GetStaticProps = async ({ params } ) => {
                 post: postById
             },
         }
-    } catch (err: any) {
+    } catch (err: unknown ) {
+        const errors = err as TODOPageErr
         return {
             props: {
                 id: post!.id,
-                errors: err.message,
+                errors: errors.message,
             },
         }
     }
