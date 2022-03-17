@@ -1,3 +1,4 @@
+import '../styles/tailwind.css';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';

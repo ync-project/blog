@@ -4,30 +4,18 @@ import Layout from "../components/Layout"
 //import { NexusGenFieldTypes } from '../../backend/src/generated/nexus'
 import type { NextPage } from 'next'
 import { Post, Query } from '../interfaces/graphql_generated'
-import Posts from '../components/post/PostList'
+import PostList from '../components/post/PostList'
 import { GetStaticProps } from "next";
 import client from "../lib/apollo-client"; 
 
 import * as graphql from '../lib/graphql'
 
-const Home = ({posts}: {posts: Query["feed"]}) => {
+const Home = () => {
   return (
     <Layout>
-        <Posts posts={posts as Post[]}/>
+        <PostList />
     </Layout>  
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await client.query<Query>({
-    query: graphql.FEED_LIST
-  });
-
-  return {
-    props: { 
-      posts: data.feed.slice(0, 6),
-    },
- };
 }
 
 export default Home;

@@ -2,6 +2,7 @@ import {
     intArg,
     nonNull,
     objectType,
+    extendType,
     stringArg,
     inputObjectType,
     arg,
@@ -31,8 +32,8 @@ export const PostCreateInput = inputObjectType({
   },
 })
   
-export const Query = objectType({
-    name: 'Query',
+export const Query = extendType({
+    type: 'Query',
     definition(t) {
   
       t.nullable.field('postById', {
@@ -47,37 +48,37 @@ export const Query = objectType({
         },
       })
   
-      t.nonNull.list.nonNull.field('feed', {
-        type: Post,
-        args: {
-          searchString: stringArg(),
-          skip: intArg(),
-          take: intArg(),
-          orderBy: arg({
-            type: 'PostOrderByUpdatedAtInput',
-          }),
-        },
-        resolve: (_parent, args, context: Context) => {
-          const or = args.searchString
-            ? {
-                OR: [
-                  { title: { contains: args.searchString } },
-                  { content: { contains: args.searchString } },
-                ],
-              }
-            : {}
+      // t.nonNull.list.nonNull.field('feed', {
+      //   type: Post,
+      //   args: {
+      //     searchString: stringArg(),
+      //     skip: intArg(),
+      //     take: intArg(),
+      //     orderBy: arg({
+      //       type: 'PostOrderByUpdatedAtInput',
+      //     }),
+      //   },
+      //   resolve: (_parent, args, context: Context) => {
+      //     const or = args.searchString
+      //       ? {
+      //           OR: [
+      //             { title: { contains: args.searchString } },
+      //             { content: { contains: args.searchString } },
+      //           ],
+      //         }
+      //       : {}
   
-          return context.prisma.post.findMany({
-            where: {
-              published: true,
-              ...or,
-            },
-            take: args.take || undefined,
-            skip: args.skip || undefined,
-            orderBy: args.orderBy || undefined,
-          })
-        },
-      })
+      //     return context.prisma.post.findMany({
+      //       where: {
+      //         published: true,
+      //         ...or,
+      //       },
+      //       take: args.take || undefined,
+      //       skip: args.skip || undefined,
+      //       orderBy: args.orderBy || undefined,
+      //     })
+      //   },
+      // })
   
       t.list.field('draftsByUser', {
         type: Post,
@@ -123,7 +124,100 @@ export const Query = objectType({
         },
       })  
 
+      t.field('feeds', {
+        type: Response,
+        args: {
+          searchString: stringArg(),
+          page: nonNull(intArg()),
+          take: intArg(),
+          orderBy: arg({
+            type: 'PostOrderByUpdatedAtInput',
+          }),
+        },
+        resolve: async (_parent, args, context: Context) => {
+          const or = args.searchString
+            ? {
+                OR: [
+                  { title: { contains: args.searchString } },
+                  { content: { contains: args.searchString } },
+                ],
+              }
+            : {}
+  
+          const where = {
+              published: true,
+              ...or,
+          }
+
+          let page = args.page ?? 1
+          page = (page <= 0) ? 1 : page          
+          const defaultPerPage = 10
+          let perPage = args.take ?? defaultPerPage
+          perPage <= 0 ? defaultPerPage : perPage
+          const start = (page - 1) * perPage
+          console.log('page', page)
+          console.log('start', start)
+
+          const results = await context.prisma.post.findMany({
+            where,
+            take: perPage,
+            skip: start,
+            orderBy: args.orderBy || undefined,
+          })
+          console.log('results', results)
+          const totalCount = await context.prisma.post.count({
+            where
+          })
+          const pageCount = Math.ceil(totalCount / perPage)
+
+
+          return {
+            pageInfo: {
+              totalCount,
+              pageCount,
+              currentPage: page,
+              perPage,
+              hasNextPage: pageCount > page
+            },
+            posts: results,
+          }  
+  
+        },
+      })
 
     },
   })
+  
+  // export const Edge = objectType({
+  //   name: 'Edge',
+  //   definition(t) {
+  //     t.string('cursor')
+  //     t.field('node', {
+  //       type: Post,
+  //     })
+  //   },
+  // })
+
+  export const PageInfo = objectType({
+    name: 'PageInfo',
+    definition(t) {
+      //t.string('endCursor')
+      //t.boolean('hasNextPage')
+      t.int('totalCount')
+      t.int('pageCount')
+      t.int('currentPage')
+      t.int('perPage')
+      t.boolean('hasNextPage')
+    },
+  })
+  
+  export const Response = objectType({
+    name: 'Response',
+    definition(t) {
+      t.field('pageInfo', { type: PageInfo })
+      t.list.field('posts', {
+        type: Post,
+      })
+    },
+  })  
   

@@ -67,6 +67,13 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: {};
+  PageInfo: { // root type
+    currentPage?: number | null; // Int
+    hasNextPage?: boolean | null; // Boolean
+    pageCount?: number | null; // Int
+    perPage?: number | null; // Int
+    totalCount?: number | null; // Int
+  }
   Post: { // root type
     content?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -81,6 +88,10 @@ export interface NexusGenObjects {
     id: number; // Int!
   }
   Query: {};
+  Response: { // root type
+    pageInfo?: NexusGenRootTypes['PageInfo'] | null; // PageInfo
+    posts?: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+  }
   User: { // root type
     email: string; // String!
     id: number; // Int!
@@ -112,6 +123,13 @@ export interface NexusGenFieldTypes {
     togglePublishPost: NexusGenRootTypes['Post'] | null; // Post
     updateProfileForUser: NexusGenRootTypes['User'] | null; // User
   }
+  PageInfo: { // field return type
+    currentPage: number | null; // Int
+    hasNextPage: boolean | null; // Boolean
+    pageCount: number | null; // Int
+    perPage: number | null; // Int
+    totalCount: number | null; // Int
+  }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
     content: string | null; // String
@@ -130,9 +148,13 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
-    feed: NexusGenRootTypes['Post'][]; // [Post!]!
+    feeds: NexusGenRootTypes['Response'] | null; // Response
     postById: NexusGenRootTypes['Post'] | null; // Post
     user: NexusGenRootTypes['User'] | null; // User
+  }
+  Response: { // field return type
+    pageInfo: NexusGenRootTypes['PageInfo'] | null; // PageInfo
+    posts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
   }
   User: { // field return type
     email: string; // String!
@@ -157,6 +179,13 @@ export interface NexusGenFieldTypeNames {
     togglePublishPost: 'Post'
     updateProfileForUser: 'User'
   }
+  PageInfo: { // field return type name
+    currentPage: 'Int'
+    hasNextPage: 'Boolean'
+    pageCount: 'Int'
+    perPage: 'Int'
+    totalCount: 'Int'
+  }
   Post: { // field return type name
     author: 'User'
     content: 'String'
@@ -175,9 +204,13 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     allUsers: 'User'
     draftsByUser: 'Post'
-    feed: 'Post'
+    feeds: 'Response'
     postById: 'Post'
     user: 'User'
+  }
+  Response: { // field return type name
+    pageInfo: 'PageInfo'
+    posts: 'Post'
   }
   User: { // field return type name
     email: 'String'
@@ -220,10 +253,10 @@ export interface NexusGenArgTypes {
     draftsByUser: { // args
       userUniqueInput: NexusGenInputs['UserUniqueInput']; // UserUniqueInput!
     }
-    feed: { // args
+    feeds: { // args
       orderBy?: NexusGenInputs['PostOrderByUpdatedAtInput'] | null; // PostOrderByUpdatedAtInput
+      page: number; // Int!
       searchString?: string | null; // String
-      skip?: number | null; // Int
       take?: number | null; // Int
     }
     postById: { // args

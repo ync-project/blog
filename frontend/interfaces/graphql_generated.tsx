@@ -73,6 +73,15 @@ export type MutationUpdateProfileForUserArgs = {
   email: Scalars['String'];
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  currentPage?: Maybe<Scalars['Int']>;
+  hasNextPage?: Maybe<Scalars['Boolean']>;
+  pageCount?: Maybe<Scalars['Int']>;
+  perPage?: Maybe<Scalars['Int']>;
+  totalCount?: Maybe<Scalars['Int']>;
+};
+
 export type Post = {
   __typename?: 'Post';
   author?: Maybe<User>;
@@ -105,7 +114,7 @@ export type Query = {
   __typename?: 'Query';
   allUsers: Array<User>;
   draftsByUser?: Maybe<Array<Maybe<Post>>>;
-  feed: Array<Post>;
+  feeds?: Maybe<Response>;
   postById?: Maybe<Post>;
   user?: Maybe<User>;
 };
@@ -116,10 +125,10 @@ export type QueryDraftsByUserArgs = {
 };
 
 
-export type QueryFeedArgs = {
+export type QueryFeedsArgs = {
   orderBy?: InputMaybe<PostOrderByUpdatedAtInput>;
+  page: Scalars['Int'];
   searchString?: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -131,6 +140,12 @@ export type QueryPostByIdArgs = {
 
 export type QueryUserArgs = {
   id?: InputMaybe<Scalars['Int']>;
+};
+
+export type Response = {
+  __typename?: 'Response';
+  pageInfo?: Maybe<PageInfo>;
+  posts?: Maybe<Array<Maybe<Post>>>;
 };
 
 export enum SortOrder {
@@ -167,15 +182,15 @@ export type UserFieldsFragment = { __typename?: 'User', id: number, email: strin
 
 export type ProfileFieldsFragment = { __typename?: 'Profile', id: number, bio?: string | null };
 
-export type FeedListQueryVariables = Exact<{
+export type FeedsQueryVariables = Exact<{
   searchString?: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  page: Scalars['Int'];
   take?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PostOrderByUpdatedAtInput>;
 }>;
 
 
-export type FeedListQuery = { __typename?: 'Query', feed: Array<{ __typename?: 'Post', updatedAt: any, id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null }> };
+export type FeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'Response', pageInfo?: { __typename?: 'PageInfo', totalCount?: number | null, pageCount?: number | null, currentPage?: number | null, hasNextPage?: boolean | null } | null, posts?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null } | null };
 
 export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -299,13 +314,20 @@ export const ProfileFieldsFragmentDoc = gql`
   bio
 }
     `;
-export const FeedListDocument = gql`
-    query feedList($searchString: String, $skip: Int, $take: Int, $orderBy: PostOrderByUpdatedAtInput) {
-  feed(searchString: $searchString, skip: $skip, take: $take, orderBy: $orderBy) {
-    ...PostFields
-    updatedAt
-    author {
-      ...UserIdentities
+export const FeedsDocument = gql`
+    query feeds($searchString: String, $page: Int!, $take: Int, $orderBy: PostOrderByUpdatedAtInput) {
+  feeds(searchString: $searchString, page: $page, take: $take, orderBy: $orderBy) {
+    pageInfo {
+      totalCount
+      pageCount
+      currentPage
+      hasNextPage
+    }
+    posts {
+      ...PostFields
+      author {
+        ...UserIdentities
+      }
     }
   }
 }
@@ -313,35 +335,35 @@ export const FeedListDocument = gql`
 ${UserIdentitiesFragmentDoc}`;
 
 /**
- * __useFeedListQuery__
+ * __useFeedsQuery__
  *
- * To run a query within a React component, call `useFeedListQuery` and pass it any options that fit your needs.
- * When your component renders, `useFeedListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFeedsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFeedsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFeedListQuery({
+ * const { data, loading, error } = useFeedsQuery({
  *   variables: {
  *      searchString: // value for 'searchString'
- *      skip: // value for 'skip'
+ *      page: // value for 'page'
  *      take: // value for 'take'
  *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
-export function useFeedListQuery(baseOptions?: Apollo.QueryHookOptions<FeedListQuery, FeedListQueryVariables>) {
+export function useFeedsQuery(baseOptions: Apollo.QueryHookOptions<FeedsQuery, FeedsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FeedListQuery, FeedListQueryVariables>(FeedListDocument, options);
+        return Apollo.useQuery<FeedsQuery, FeedsQueryVariables>(FeedsDocument, options);
       }
-export function useFeedListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedListQuery, FeedListQueryVariables>) {
+export function useFeedsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedsQuery, FeedsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FeedListQuery, FeedListQueryVariables>(FeedListDocument, options);
+          return Apollo.useLazyQuery<FeedsQuery, FeedsQueryVariables>(FeedsDocument, options);
         }
-export type FeedListQueryHookResult = ReturnType<typeof useFeedListQuery>;
-export type FeedListLazyQueryHookResult = ReturnType<typeof useFeedListLazyQuery>;
-export type FeedListQueryResult = Apollo.QueryResult<FeedListQuery, FeedListQueryVariables>;
+export type FeedsQueryHookResult = ReturnType<typeof useFeedsQuery>;
+export type FeedsLazyQueryHookResult = ReturnType<typeof useFeedsLazyQuery>;
+export type FeedsQueryResult = Apollo.QueryResult<FeedsQuery, FeedsQueryVariables>;
 export const PostByIdDocument = gql`
     query postById($id: Int!) {
   postById(id: $id) {

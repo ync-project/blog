@@ -1,46 +1,72 @@
 import { useState } from 'react'
-import { Post, FeedListQuery, useFeedListQuery} from '../../interfaces/graphql_generated'
+import { Post, FeedsQuery, useFeedsQuery } from '../../interfaces/graphql_generated'
 import PostItem from './PostItem'
 import ErrorMessage from '../error-message'
+import { gql, useQuery, NetworkStatus } from '@apollo/client'
+import { FEED_LIST } from '../../lib/graphql'
+import { GetStaticProps } from "next";
+import client from "../../lib/apollo-client"; 
 
 export type TODOResult = any
 
-export const allPostsQueryOptions = (skip = 0) => ({
-    variables: { skip, first: 10 },
-    updateData: (prevResult: TODOResult, result: TODOResult ) => ({
-      ...result,
-      allPosts: prevResult
-        ? [...prevResult.allPosts, ...result.allPosts]
-        : result.allPosts,
-    }),
-})
-
-function Posts({ posts }: { posts: FeedListQuery["feed"] }) {
+function Posts({ posts }: { posts: FeedsQuery["feeds"] }) {
   return (
     <ul>
-      {posts.map((post) => (
-        <PostItem key={post.id} post={post as Post} />
+      {posts?.posts?.map((post) => (
+        <PostItem key={post?.id} post={post as Post} />
       ))}
     </ul>
   );
 }
 
-export default function WrappedPosts({posts}: {posts: Post[]}){
-    const [skip, setSkip] = useState(0)
-    const {loading, error, data } = useFeedListQuery();
+export const allPostsQueryVars = {
+    page: 1,
+    take: 3
+}
+
+  
+export default function WrappedPosts(){
+    const { data, loading, error, fetchMore, networkStatus } = useQuery(
+        FEED_LIST, 
+        {
+            variables: allPostsQueryVars,
+            notifyOnNetworkStatusChange: true
+        })
+    
+    const loadingMorePosts = networkStatus === NetworkStatus.fetchMore
 
     if (error) return <ErrorMessage message="Error loading posts." />
-    if (!data) return <div>Loading</div>
+    if (loading && !loadingMorePosts) return <div>Loading</div>
 
-    //const { allPosts, _allPostsMeta } = data
-    //const areMorePosts = allPosts.length < _allPostsMeta.count
+    const {hasNextPage, page}: { hasNextPage: boolean, page: number} = data?.feeds.pageInfo
+    const loadMorePosts = () => {
+      fetchMore({
+        variables: {
+          page: page + 1, take: 3 
+        },
+      })
+    }
+
 
     return (
-        <div>
+      <section>
+        <div className="container mx-auto max-w-5xl my-20 px-5">
             <h1>Posts</h1>
-            <Posts posts={data.feed} />
-        </div> 
+
+            <ul>
+              {data?.feeds?.posts?.map((post: any) => (
+                <PostItem key={post?.id} post={post as Post} />
+              ))}
+            </ul>
+
+            {hasNextPage && (
+              <button onClick={() => loadMorePosts(page)} disabled={loadingMorePosts}>
+              {loadingMorePosts ? 'Loading...' : 'Show More'}
+              </button>
+            )}
+
+        </div>
+      </section>
     )
 }
 
-//export default WrappedPosts;
