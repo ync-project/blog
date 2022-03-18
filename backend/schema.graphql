@@ -22,6 +22,14 @@ type Mutation {
   updateProfileForUser(bio: String, email: String!): User
 }
 
+type PageInfo {
+  currentPage: Int
+  hasNextPage: Boolean
+  pageCount: Int
+  perPage: Int
+  totalCount: Int
+}
+
 type Post {
   author: User
   content: String
@@ -52,8 +60,14 @@ type Query {
   allUsers: [User!]!
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
+  feeds(orderBy: PostOrderByUpdatedAtInput, page: Int!, searchString: String, take: Int): Response
   postById(id: Int): Post
   user(id: Int): User
+}
+
+type Response {
+  pageInfo: PageInfo
+  posts: [Post]
 }
 
 enum SortOrder {

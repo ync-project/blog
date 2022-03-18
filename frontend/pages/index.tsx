@@ -1,33 +1,37 @@
 import Layout from "../components/Layout"
-//import type { NextPage } from 'next';
-//import gql from "graphql-tag"
-//import { NexusGenFieldTypes } from '../../backend/src/generated/nexus'
-import type { NextPage } from 'next'
-import { Post, Query } from '../interfaces/graphql_generated'
-import Posts from '../components/post/PostList'
+import PostList from '../components/post/PostList'
+import ErrorMessage from '../components/error-message'
 import { GetStaticProps } from "next";
 import client from "../lib/apollo-client"; 
+import { Post, FeedsQuery, useFeedsQuery, Response, FeedsDocument} from '../interfaces/graphql_generated'
 
-import * as graphql from '../lib/graphql'
+export const allPostsQueryVars = {
+  page: 1,
+  take: 3
+}
 
-const Home = ({posts}: {posts: Query["feed"]}) => {
+const Home = ({posts} : {posts: Response["posts"]}) => {
   return (
     <Layout>
-        <Posts posts={posts as Post[]}/>
+      <PostList posts={posts}/>
     </Layout>  
   )
 }
 
+export default Home;
+
 export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await client.query<Query>({
-    query: graphql.FEED_LIST
+  const { data, loading, error} = await client.query({
+    query: FeedsDocument,
+    variables: allPostsQueryVars,
   });
+
+  if (error) return <ErrorMessage message="Error loading posts." />
+  if (!data) return <div>Loading</div>
 
   return {
     props: { 
-      posts: data.feed.slice(0, 6),
+      posts: data.feeds.posts as Response["posts"]
     },
- };
+  }
 }
-
-export default Home;

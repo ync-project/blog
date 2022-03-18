@@ -1,12 +1,14 @@
 
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Layout from "../../components/Layout"
 import client from "../../lib/apollo-client";
-import { Query } from '../../interfaces/graphql_generated'
+//import { Query } from '../../interfaces/graphql_generated'
 import * as graphql from '../../lib/graphql'
 import { TODOPageErr } from '../../interfaces/app_types'
+import { Post, FeedsQuery, PostByIdQuery} from '../../interfaces/graphql_generated'
+import { ParsedUrlQuery } from 'querystring';
 
-const PostPage = ({post}: {post: Query["postById"]}) => {
+const PostPage: NextPage= ({post}: {post: PostByIdQuery["postById"]}) => {
   if (!post) {
     return <div>no post</div>
   }
@@ -14,7 +16,7 @@ const PostPage = ({post}: {post: Query["postById"]}) => {
   return post && (
     <Layout>
       <div>
-          <h1>{post.title }</h1>
+          <h1>{post.id}. {post.title }</h1>
           <h4>{post.author!.email}</h4>
           <p>{post.content }</p>
       </div>
@@ -22,25 +24,32 @@ const PostPage = ({post}: {post: Query["postById"]}) => {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    const { data: { feed } } = await client.query<Query>({
+type Props = {
+    posts: Post[]
+ }
+ 
+interface Params extends ParsedUrlQuery {
+    id: string,
+ }
+
+export const getStaticPaths: GetStaticPaths = async ( ) => {
+    const { data } = await client.query<FeedsQuery>({
         query: graphql.FEED_LIST,
+        variables: { page: 1}
       });
     
-    const paths = feed.map((post) => ({
-         params: { id: post.id.toString() },
-    }));
+    const paths = data.feeds?.posts?.map((post) => ({
+        params: { id: post!.id.toString() },
+    }))
     return { paths: paths, fallback: false }
 }
 
-
 export const getStaticProps: GetStaticProps = async ({ params } ) => {
-    const post = params as Query["postById"] //as Params
-    //console.log('post', post)
+    const id = params?.id
     try {
-        const { data: { postById } } = await client.query<Query>({
+        const { data: { postById } } = await client.query<PostByIdQuery>({
             query: graphql.POST_BY_ID,
-            variables: { id: Number(post?.id) },
+            variables: { id: Number(id) },
         });
         return {
             props: {
@@ -51,7 +60,7 @@ export const getStaticProps: GetStaticProps = async ({ params } ) => {
         const errors = err as TODOPageErr
         return {
             props: {
-                id: post!.id,
+                id: id,
                 errors: errors.message,
             },
         }

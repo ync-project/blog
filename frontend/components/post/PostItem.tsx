@@ -6,6 +6,7 @@ const PostItem = ( { post }: {post: Post} ) => {
     <li>
       <Link href="/p/[id]" as={`/p/${post.id}`}>
         <a>
+          {post.id}.
           <h2>{post.title}</h2>
           {post.author &&
           <small>By {post.author.name}</small>}

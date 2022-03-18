@@ -35,25 +35,31 @@ export const ProfileFields = gql`
 
 // Search posts with paginated and ordered results
 export const FEED_LIST = gql`
-    query feedList(
-        $searchString: String,
-        $skip: Int,
-        $take: Int,
-        $orderBy: PostOrderByUpdatedAtInput
-    ) {
-        feed(
-            searchString: $searchString
-            skip: $skip
-            take: $take
-            orderBy: $orderBy
-        ) {
+    query feeds(
+        $searchString: String, 
+        $page: Int!, 
+        $take: Int, 
+        $orderBy: PostOrderByUpdatedAtInput) {
+      feeds(
+          searchString: $searchString, 
+          page: $page, 
+          take: $take,
+          orderBy: $orderBy
+      ){
+          pageInfo{
+            totalCount
+            pageCount
+            currentPage
+            hasNextPage
+          }
+          posts {
             ...PostFields
-            updatedAt
             author {
-                ...UserIdentities
+              ...UserIdentities
             }
-        }
-    }
+          } 
+      }
+    }  
     ${PostFields}
     ${UserIdentities}
 `  
