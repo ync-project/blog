@@ -3,7 +3,7 @@ import PostList from '../components/post/PostList'
 import ErrorMessage from '../components/error-message'
 import { GetStaticProps } from "next";
 import client from "../lib/apollo-client"; 
-import { Post, FeedsQuery, useFeedsQuery, Response, FeedsDocument} from '../interfaces/graphql_generated'
+import { Response, FeedsDocument} from '../interfaces/graphql_generated'
 
 export const allPostsQueryVars = {
   page: 1,
