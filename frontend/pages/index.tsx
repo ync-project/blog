@@ -10,10 +10,10 @@ export const allPostsQueryVars = {
   take: 3
 }
 
-const Home = ({posts} : {posts: Response["posts"]}) => {
+const Home = ({response} : {response: Response}) => {
   return (
     <Layout>
-      <PostList posts={posts}/>
+      <PostList response={response}/>
     </Layout>  
   )
 }
@@ -31,7 +31,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: { 
-      posts: data.feeds.posts as Response["posts"]
+      response: data.feeds as Response
     },
   }
 }
