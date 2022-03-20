@@ -1,57 +1,55 @@
-import { useState } from 'react'
 import { Post, Response} from '../../interfaces/graphql_generated'
 import PostItem from './PostItem'
 export type TODOResult = any
 import client from "../../lib/apollo-client"; 
 import { FeedsDocument} from '../../interfaces/graphql_generated'
-import { allPostsQueryVars } from '../../pages';
+import ReactPaginate from 'react-paginate';
 
-const fetchMore = async ( page: number) => {
-  const { data, loading, error} = await client.query({
-    query: FeedsDocument,
-    variables: { 
-        page: page + 1,
-        take: 3
-      }, 
-  });
-  if (data) return data.feeds
-  return null
-  
+type Page = {
+  selected: number
 }
 
-type Props = {
-  response: Response
-}
 
 const loadingMorePosts = false
-export default function Posts( { response }: Props) {
-  //co{response: {pageInfo, posts} } : {response: Response}
-  const [posts, setPosts] = useState(response.posts);
-  const [currentPage, setCurrentPage] = useState(response.pageInfo?.currentPage);
-  const {hasNextPage} = response.pageInfo!
+export default function Posts( { response, pagginationHandler }: 
+        {response: Response, pagginationHandler:(page: Page)=>void}) {
+  const { pageInfo, posts} = response
 
-  const loadMorePosts = async () => {
-    const newFeeds = await fetchMore(currentPage!);
-    if (newFeeds){
-      //console.log(newPosts, newPosts)
-      setPosts([...newFeeds.posts]);
-      setCurrentPage(newFeeds.pageInfo.currentPage)
 
-    }  
+  //Conditional rendering of the posts list or loading indicator
+  let content = null;
+  if (posts) {
+      //Generating posts list
+      content = (
+          <ul>
+              {posts.map(post => {
+                  return <li key={post?.id}>{post?.title}</li>;
+              })}
+          </ul>
+      );
   }
-    return (
-    <>
-      <ul>
-        {posts?.map((post) => (
-          <PostItem key={post?.id} post={post as Post} />
-        ))}
-      </ul>
-      {hasNextPage && (
-          <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
-            {loadingMorePosts ? 'Loading...' : 'Show More'}
-          </button>
-        )}
-    </>
-  );
+  return (
+    <div className="container">
+        <h1>Posts List with Pagination in Next.js</h1>
+        <div className="posts">
+            {content}
+        </div>
+
+        <ReactPaginate
+            previousLabel={'previous'}
+            nextLabel={'next'}
+            breakLabel={'...'}
+            breakClassName={'break-me'}
+            activeClassName={'active'}
+            containerClassName={'pagination'}
+            //subContainerClassName={'pages pagination'}
+            initialPage={Number(pageInfo?.currentPage) - 1}
+            pageCount={Number(pageInfo?.pageCount)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={pagginationHandler}
+        />
+    </div>
+  )
 }
 

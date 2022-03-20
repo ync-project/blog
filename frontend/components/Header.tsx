@@ -20,7 +20,7 @@ const Header = () => {
   return (
     <nav>
       <div className="left">
-        <Link href="/">
+        <Link href="/" prefetch={true} >
           <a className="bold" data-active={isActive("/")}>
             Home
           </a>

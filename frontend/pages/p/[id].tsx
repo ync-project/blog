@@ -8,7 +8,7 @@ import { TODOPageErr } from '../../interfaces/app_types'
 import { Post, FeedsQuery, PostByIdQuery} from '../../interfaces/graphql_generated'
 import { ParsedUrlQuery } from 'querystring';
 
-const PostPage: NextPage= ({post}: {post: PostByIdQuery["postById"]}) => {
+const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
   if (!post) {
     return <div>no post</div>
   }
@@ -32,12 +32,23 @@ interface Params extends ParsedUrlQuery {
     id: string,
  }
 
-export const getStaticPaths: GetStaticPaths = async ( ) => {
+// export const getStaticPaths: GetStaticPaths = async ( ) => {
+//     const { data } = await client.query<FeedsQuery>({
+//         query: graphql.FEED_LIST,
+//         variables: { page: 1}
+//       });
+    
+//     const paths = data.feeds?.posts?.map((post) => ({
+//         params: { id: post!.id.toString() },
+//     }))
+//     return { paths: paths, fallback: false }
+// }
+
+export const getStaticPaths = async () => {
     const { data } = await client.query<FeedsQuery>({
         query: graphql.FEED_LIST,
         variables: { page: 1}
       });
-    
     const paths = data.feeds?.posts?.map((post) => ({
         params: { id: post!.id.toString() },
     }))
