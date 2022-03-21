@@ -3,11 +3,9 @@ import { Post } from '../../interfaces/graphql_generated'
 
 const PostItem = ( { post }: {post: Post} ) => {
   return (
-    <li>
       <Link href="/p/[id]" as={`/p/${post.id}`}>
         <a>
-          {post.id}.
-          <h2>{post.title}</h2>
+          <h2>{post.id}. {post.title}</h2>
           {post.author &&
           <small>By {post.author.name}</small>}
           <p>{post.content}</p>
@@ -21,7 +19,6 @@ const PostItem = ( { post }: {post: Post} ) => {
           `}</style>
         </a>
       </Link>
-  </li>
   )
 }
 

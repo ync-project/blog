@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { useRouter } from "next/router"
+import {useRouter } from "next/router"
 import { useApolloClient } from '@apollo/client';
 
 // function isActive(pathname) {
@@ -20,9 +20,22 @@ const Header = () => {
   return (
     <nav>
       <div className="left">
-        <Link href="/" prefetch={true} >
+        <Link href="/" shallow={false}>
           <a className="bold" data-active={isActive("/")}>
             Home
+          </a>
+        </Link>
+        <Link href="/" shallow={true}>
+          <a className="bold" data-active={isActive("/")}>
+            Home11
+          </a>
+        </Link>
+        <Link  href={{
+          pathname: '/',
+          query: { page: 1 }
+        }} >
+          <a className="bold" data-active={isActive("/")}>
+            Home2
           </a>
         </Link>
       </div>

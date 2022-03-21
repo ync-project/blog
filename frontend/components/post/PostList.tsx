@@ -74,19 +74,13 @@ export default function Posts( { response, pagginationHandler }:
         <div className="posts">
             {content}
         </div>
-        <MyPaginate
-          pageCount={20}
-          onPageChange={pagginationHandler}
-          forcePage={pageInfo?.currentPage}
-        />
-        <nav aria-label="Page navigation comments" className="mt-4">
         <ReactPaginate
             previousLabel="previous"
             nextLabel="next"
             breakLabel="..."
             breakClassName="page-item"
             breakLinkClassName="page-link"
-            pageCount={20}
+            pageCount={pageInfo.pageCount}
             pageRangeDisplayed={4}
             marginPagesDisplayed={2}
             onPageChange={pagginationHandler}
@@ -103,17 +97,7 @@ export default function Posts( { response, pagginationHandler }:
               page >= 1 && page <= pageCount ? `/page/${page}` : '#'
             }
             hrefAllControls
-            forcePage={pageInfo?.currentPage}
-            onClick={(clickEvent) => {
-              console.log('onClick', clickEvent);
-              // Return false to prevent standard page change,
-              // return false; // --> Will do nothing.
-              // return a number to choose the next page,
-              // return 4; --> Will go to page 5 (index 4)
-              // return nothing (undefined) to let standard behavior take place.
-            }}
           />  
-        </nav>  
     </div>
     </>
   )

@@ -68,11 +68,11 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   PageInfo: { // root type
-    currentPage?: number | null; // Int
-    hasNextPage?: boolean | null; // Boolean
-    pageCount?: number | null; // Int
-    perPage?: number | null; // Int
-    totalCount?: number | null; // Int
+    currentPage: number; // Int!
+    hasNextPage: boolean; // Boolean!
+    pageCount: number; // Int!
+    perPage: number; // Int!
+    totalCount: number; // Int!
   }
   Post: { // root type
     content?: string | null; // String
@@ -89,8 +89,8 @@ export interface NexusGenObjects {
   }
   Query: {};
   Response: { // root type
-    pageInfo?: NexusGenRootTypes['PageInfo'] | null; // PageInfo
-    posts?: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+    posts: Array<NexusGenRootTypes['Post'] | null>; // [Post]!
   }
   User: { // root type
     email: string; // String!
@@ -124,11 +124,11 @@ export interface NexusGenFieldTypes {
     updateProfileForUser: NexusGenRootTypes['User'] | null; // User
   }
   PageInfo: { // field return type
-    currentPage: number | null; // Int
-    hasNextPage: boolean | null; // Boolean
-    pageCount: number | null; // Int
-    perPage: number | null; // Int
-    totalCount: number | null; // Int
+    currentPage: number; // Int!
+    hasNextPage: boolean; // Boolean!
+    pageCount: number; // Int!
+    perPage: number; // Int!
+    totalCount: number; // Int!
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -154,8 +154,8 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Response: { // field return type
-    pageInfo: NexusGenRootTypes['PageInfo'] | null; // PageInfo
-    posts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
+    posts: Array<NexusGenRootTypes['Post'] | null>; // [Post]!
   }
   User: { // field return type
     email: string; // String!

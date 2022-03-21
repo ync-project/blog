@@ -23,11 +23,11 @@ type Mutation {
 }
 
 type PageInfo {
-  currentPage: Int
-  hasNextPage: Boolean
-  pageCount: Int
-  perPage: Int
-  totalCount: Int
+  currentPage: Int!
+  hasNextPage: Boolean!
+  pageCount: Int!
+  perPage: Int!
+  totalCount: Int!
 }
 
 type Post {
@@ -66,8 +66,8 @@ type Query {
 }
 
 type Response {
-  pageInfo: PageInfo
-  posts: [Post]
+  pageInfo: PageInfo!
+  posts: [Post]!
 }
 
 enum SortOrder {

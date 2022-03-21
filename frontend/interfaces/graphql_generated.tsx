@@ -75,11 +75,11 @@ export type MutationUpdateProfileForUserArgs = {
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  currentPage?: Maybe<Scalars['Int']>;
-  hasNextPage?: Maybe<Scalars['Boolean']>;
-  pageCount?: Maybe<Scalars['Int']>;
-  perPage?: Maybe<Scalars['Int']>;
-  totalCount?: Maybe<Scalars['Int']>;
+  currentPage: Scalars['Int'];
+  hasNextPage: Scalars['Boolean'];
+  pageCount: Scalars['Int'];
+  perPage: Scalars['Int'];
+  totalCount: Scalars['Int'];
 };
 
 export type Post = {
@@ -153,8 +153,8 @@ export type QueryUserArgs = {
 
 export type Response = {
   __typename?: 'Response';
-  pageInfo?: Maybe<PageInfo>;
-  posts?: Maybe<Array<Maybe<Post>>>;
+  pageInfo: PageInfo;
+  posts: Array<Maybe<Post>>;
 };
 
 export enum SortOrder {
@@ -199,7 +199,7 @@ export type FeedsQueryVariables = Exact<{
 }>;
 
 
-export type FeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'Response', pageInfo?: { __typename?: 'PageInfo', totalCount?: number | null, pageCount?: number | null, currentPage?: number | null, hasNextPage?: boolean | null } | null, posts?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null } | null };
+export type FeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'Response', pageInfo: { __typename?: 'PageInfo', totalCount: number, pageCount: number, currentPage: number, hasNextPage: boolean }, posts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> } | null };
 
 export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int'];

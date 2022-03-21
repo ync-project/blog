@@ -1,64 +1,90 @@
 import Layout from "../components/Layout"
-import PostList from '../components/post/PostList'
+import Posts from '../components/post'
 import { GetStaticProps } from "next";
+import Link from 'next/link'
 import ErrorMessage from '../components/error-message'
 import client from "../lib/apollo-client"; 
 import { FeedsDocument, Response } from '../interfaces/graphql_generated'
 import { useState, useEffect } from 'react'
-import Router, { withRouter, NextRouter } from 'next/router'
+import Router from 'next/router'
 
-export const allPostsQueryVars = {
-  page: 1,
-  take: 5
-}
+//if (ENV === 'development' || process.env === 'local') {
+  // Router.events.on('routeChangeComplete', (url) => {
+  //   const fileName = url.split('/')[1];
+  //   const linkTag = document.createElement('link');
+  //   linkTag.setAttribute('rel', 'stylesheet');
+  //   linkTag.setAttribute('href', `/_next/static/css/static/development/pages/${fileName}.js.css?ts=${new Date().valueOf()}`);
+  //   document.head.appendChild(linkTag);
+  // });
+//}
+
 type Props = {
   response: Response
-  router: NextRouter, //{pathname: string, query: {page: number}},
 }
 
 type Page = {
   selected: number
 }
 
-const Home = ( { response, router }: Props) => {
-  const [isLoading, setLoading] = useState(false); //State for the loading indicator
-  const startLoading = () => setLoading(true);
-  const stopLoading = () => setLoading(false);
+const Home = ( {response} : {response: Response }) => {
+  const [posts, setPosts] = useState(response.posts);
+  const [page, setPage] = useState(response.pageInfo.currentPage);
 
-  /*
-    Posts fetching happens after page navigation, 
-    so we need to switch Loading state on Router events.
-  */
-  useEffect(() => { //After the component is mounted set router event handlers
-    Router.events.on('routeChangeStart', startLoading); 
-    Router.events.on('routeChangeComplete', stopLoading);
-
-    return () => {
-        Router.events.off('routeChangeStart', startLoading);
-        Router.events.off('routeChangeComplete', stopLoading);
-    }
-  }, [])
-
-  const pagginationHandler = (page: Page) => {
-    const currentPath = router.pathname;
-    const currentQuery = router.query;
-    currentQuery.page = String(page.selected + 1);
-  };
-
-  return (
+  return (posts && 
     <Layout>
-      <PostList response={response} pagginationHandler={pagginationHandler}/>
+      <div>
+        <Posts posts={posts} />
+        <button onClick={ async () => {
+            const newFeeds = await goPage(page - 1)
+            if (newFeeds){
+              setPosts([...newFeeds.posts])
+              setPage(newFeeds.pageInfo.currentPage)
+            }
+        }}
+        disabled={page <= 1}>
+          PREV {page - 1}
+        </button>
+        page : {page }
+        <button onClick={ async () => {
+            const newFeeds = await goPage(page + 1)
+            if (newFeeds){
+              if (newFeeds){
+                setPosts([...newFeeds.posts])
+                setPage(newFeeds.pageInfo.currentPage)
+              }
+              }
+        }}
+        disabled={page >= 100}>
+          NEXT {page + 1}
+        </button>
+        <Link href="/">
+          <a>First page</a>
+        </Link>
+      </div>
     </Layout>  
   )
+  
 }
 
-export default withRouter(Home);
+const goPage = async (page: number) => {
+  const { data, loading, error} = await getPostsFromBackend({
+    page: page, take: 2
+  })
+  return data?.feeds
+}
+
+const getPostsFromBackend = async ({page, take}: {page: number, take: number}) => {
+  return await client.query({
+    query: FeedsDocument,
+    variables: {page, take},
+  });
+}
+
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data, loading, error} = await client.query({
-    query: FeedsDocument,
-    variables: allPostsQueryVars,
-  });
+  const { data, loading, error} = await getPostsFromBackend({
+    page: 1 , take: 2
+  })
 
   if (error) return <ErrorMessage message="Error loading posts." />
   if (!data) return <div>Loading</div>
@@ -69,3 +95,5 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   }
 }
+
+export default Home;

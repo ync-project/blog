@@ -34,7 +34,7 @@ export const PostCreateInput = inputObjectType({
 export const Query = objectType({
     name: 'Query',
     definition(t) {
-  
+
       t.nullable.field('postById', {
         type: Post,
         args: {
@@ -148,14 +148,14 @@ export const Query = objectType({
               ...or,
           }
 
-          let page = args.page ?? 1
+          let page = args.page 
           page = (page <= 0) ? 1 : page          
           const defaultPerPage = 10
           let perPage = args.take ?? defaultPerPage
           perPage <= 0 ? defaultPerPage : perPage
           const start = (page - 1) * perPage
           console.log('page', page)
-          console.log('start', start)
+          //console.log('start', start)
 
           const results = await context.prisma.post.findMany({
             where,
@@ -163,7 +163,8 @@ export const Query = objectType({
             skip: start,
             orderBy: args.orderBy || undefined,
           })
-          console.log('results', results)
+
+          console.log('results', results.map(p => p.id))
           const totalCount = await context.prisma.post.count({
             where
           })
@@ -201,19 +202,19 @@ export const Query = objectType({
     definition(t) {
       //t.string('endCursor')
       //t.boolean('hasNextPage')
-      t.int('totalCount')
-      t.int('pageCount')
-      t.int('currentPage')
-      t.int('perPage')
-      t.boolean('hasNextPage')
+      t.nonNull.int('totalCount')
+      t.nonNull.int('pageCount')
+      t.nonNull.int('currentPage')
+      t.nonNull.int('perPage')
+      t.nonNull.boolean('hasNextPage')
     },
   })
   
   export const Response = objectType({
     name: 'Response',
     definition(t) {
-      t.field('pageInfo', { type: PageInfo })
-      t.list.field('posts', {
+      t.nonNull.field('pageInfo', { type: PageInfo })
+      t.nonNull.list.field('posts', {
         type: Post,
       })
     },
