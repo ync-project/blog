@@ -27,32 +27,34 @@ type Page = {
 }
 
 const Home = ( {response} : {response: Response }) => {
-  const [posts, setPosts] = useState(response.posts);
-  const [page, setPage] = useState(response.pageInfo.currentPage);
+  const [posts, setPosts] = useState(null);
+  const [page, setPage] = useState(1);
+
+  useEffect( () => {
+    console.log('useEffect')
+    if (response && response.posts){
+      setPosts([...response!.posts!])
+      setPage(response.pageInfo.currentPage)
+    }
+  }, []);
 
   return (posts && 
     <Layout>
       <div>
         <Posts posts={posts} />
         <button onClick={ async () => {
-            const newFeeds = await goPage(page - 1)
-            if (newFeeds){
-              setPosts([...newFeeds.posts])
-              setPage(newFeeds.pageInfo.currentPage)
-            }
-        }}
+            const resp = await getPostsFromBackend({page: page - 1, take: 3})
+            if (resp){
+              setPosts([...resp.posts])
+              setPage(resp.pageInfo.currentPage)
+          }
+      }}
         disabled={page <= 1}>
           PREV {page - 1}
         </button>
         page : {page }
         <button onClick={ async () => {
-            const newFeeds = await goPage(page + 1)
-            if (newFeeds){
-              if (newFeeds){
-                setPosts([...newFeeds.posts])
-                setPage(newFeeds.pageInfo.currentPage)
-              }
-              }
+                setPage(3)
         }}
         disabled={page >= 100}>
           NEXT {page + 1}
@@ -66,24 +68,19 @@ const Home = ( {response} : {response: Response }) => {
   
 }
 
-const goPage = async (page: number) => {
-  const { data, loading, error} = await getPostsFromBackend({
-    page: page, take: 2
-  })
-  return data?.feeds
-}
-
 const getPostsFromBackend = async ({page, take}: {page: number, take: number}) => {
-  return await client.query({
+  const {data, error, loading} = await client.query({
     query: FeedsDocument,
     variables: {page, take},
   });
+  return data.feeds as Response
 }
 
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data, loading, error} = await getPostsFromBackend({
-    page: 1 , take: 2
+  const {data, error, loading} = await client.query({
+    query: FeedsDocument,
+    variables: {page: 1, take: 3},
   })
 
   if (error) return <ErrorMessage message="Error loading posts." />
