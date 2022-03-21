@@ -27,13 +27,13 @@ type Page = {
 }
 
 const Home = ( {response} : {response: Response }) => {
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState(response.posts);
   const [page, setPage] = useState(1);
 
   useEffect( () => {
     console.log('useEffect')
     if (response && response.posts){
-      setPosts([...response!.posts!])
+      setPosts([...response!.posts])
       setPage(response.pageInfo.currentPage)
     }
   }, []);
@@ -47,14 +47,18 @@ const Home = ( {response} : {response: Response }) => {
             if (resp){
               setPosts([...resp.posts])
               setPage(resp.pageInfo.currentPage)
-          }
-      }}
+            }
+        }}
         disabled={page <= 1}>
           PREV {page - 1}
         </button>
         page : {page }
         <button onClick={ async () => {
-                setPage(3)
+            const resp = await getPostsFromBackend({page: page + 1, take: 3})
+            if (resp){
+              setPosts([...resp.posts])
+              setPage(resp.pageInfo.currentPage)
+            }
         }}
         disabled={page >= 100}>
           NEXT {page + 1}
