@@ -33,8 +33,24 @@ export const ProfileFields = gql`
     }
 `  
 
+export const ALL_FEEDS = gql`
+    query allFeeds(
+        $searchString: String,
+        $take: Int)
+    {
+        allFeeds(searchString: $searchString, take: $take){
+            totalCount
+            pageCount
+            perPage
+            topPosts{
+                ...PostFields
+            }
+        }
+    }
+`    
+
 // Search posts with paginated and ordered results
-export const FEED_LIST = gql`
+export const FEEDS = gql`
     query feeds(
         $searchString: String, 
         $page: Int!, 

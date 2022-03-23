@@ -57,6 +57,7 @@ type Profile {
 }
 
 type Query {
+  allFeeds(searchString: String, take: Int): TopInfo
   allUsers: [User!]!
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
@@ -67,12 +68,19 @@ type Query {
 
 type Response {
   pageInfo: PageInfo!
-  posts: [Post]!
+  posts: [Post!]!
 }
 
 enum SortOrder {
   asc
   desc
+}
+
+type TopInfo {
+  pageCount: Int!
+  perPage: Int!
+  topPosts: [Post!]!
+  totalCount: Int!
 }
 
 type User {

@@ -123,6 +123,49 @@ export const Query = objectType({
         },
       })  
 
+      t.field('allFeeds', {
+        type: TopInfo,
+        args: {
+          searchString: stringArg(),
+          take: intArg(),
+        },
+        resolve: async (_parent, args, context: Context) => {
+          const or = args.searchString
+            ? {
+                OR: [
+                  { title: { contains: args.searchString } },
+                  { content: { contains: args.searchString } },
+                ],
+              }
+            : {}
+  
+          const where = {
+              published: true,
+              ...or,
+          }
+
+          const defaultPerPage = 10
+          let perPage = args.take ?? defaultPerPage
+          perPage <= 0 ? defaultPerPage : perPage
+
+          const topPosts = await context.prisma.post.findMany({
+            where,
+            take: perPage,
+          })
+          const totalCount = await context.prisma.post.count({
+            where
+          })
+          const pageCount = Math.ceil(totalCount / perPage)
+
+          return {
+              totalCount,
+              pageCount,
+              perPage,
+              topPosts
+          }
+        },
+      })
+
       t.field('feeds', {
         type: Response,
         args: {
@@ -183,11 +226,10 @@ export const Query = objectType({
         },
       })
 
-
     },
   })
 
-    // export const Edge = objectType({
+  // export const Edge = objectType({
   //   name: 'Edge',
   //   definition(t) {
   //     t.string('cursor')
@@ -214,8 +256,18 @@ export const Query = objectType({
     name: 'Response',
     definition(t) {
       t.nonNull.field('pageInfo', { type: PageInfo })
-      t.nonNull.list.field('posts', {
+      t.nonNull.list.nonNull.field('posts', {
         type: Post,
       })
+    },
+  })  
+  export const TopInfo = objectType({
+    name: 'TopInfo',
+    definition(t) {
+      t.nonNull.int('totalCount')
+      t.nonNull.int('pageCount')
+      t.nonNull.int('perPage')
+      t.nonNull.list.nonNull.field('topPosts', {
+         type: Post })
     },
   })  

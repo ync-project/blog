@@ -3,9 +3,8 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Layout from "../../components/Layout"
 import client from "../../lib/apollo-client";
 //import { Query } from '../../interfaces/graphql_generated'
-import * as graphql from '../../lib/graphql'
 import { TODOPageErr } from '../../interfaces/app_types'
-import { Post, FeedsQuery, PostByIdQuery} from '../../interfaces/graphql_generated'
+import { Post, FeedsDocument, FeedsQuery, PostByIdDocument, PostByIdQuery} from '../../interfaces/graphql_generated'
 import { ParsedUrlQuery } from 'querystring';
 
 const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
@@ -32,21 +31,9 @@ interface Params extends ParsedUrlQuery {
     id: string,
  }
 
-// export const getStaticPaths: GetStaticPaths = async ( ) => {
-//     const { data } = await client.query<FeedsQuery>({
-//         query: graphql.FEED_LIST,
-//         variables: { page: 1}
-//       });
-    
-//     const paths = data.feeds?.posts?.map((post) => ({
-//         params: { id: post!.id.toString() },
-//     }))
-//     return { paths: paths, fallback: false }
-// }
-
 export const getStaticPaths = async () => {
     const { data } = await client.query<FeedsQuery>({
-        query: graphql.FEED_LIST,
+        query: FeedsDocument,
         variables: { page: 1}
       });
     const paths = data.feeds?.posts?.map((post) => ({
@@ -59,7 +46,7 @@ export const getStaticProps: GetStaticProps = async ({ params } ) => {
     const id = params?.id
     try {
         const { data: { postById } } = await client.query<PostByIdQuery>({
-            query: graphql.POST_BY_ID,
+            query: PostByIdDocument,
             variables: { id: Number(id) },
         });
         return {

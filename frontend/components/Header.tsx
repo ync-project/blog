@@ -20,22 +20,9 @@ const Header = () => {
   return (
     <nav>
       <div className="left">
-        <Link href="/" shallow={false}>
+        <Link href="/">
           <a className="bold" data-active={isActive("/")}>
             Home
-          </a>
-        </Link>
-        <Link href="/" shallow={true}>
-          <a className="bold" data-active={isActive("/")}>
-            Home11
-          </a>
-        </Link>
-        <Link  href={{
-          pathname: '/',
-          query: { page: 1 }
-        }} >
-          <a className="bold" data-active={isActive("/")}>
-            Home2
           </a>
         </Link>
       </div>

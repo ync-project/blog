@@ -90,7 +90,13 @@ export interface NexusGenObjects {
   Query: {};
   Response: { // root type
     pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
-    posts: Array<NexusGenRootTypes['Post'] | null>; // [Post]!
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+  }
+  TopInfo: { // root type
+    pageCount: number; // Int!
+    perPage: number; // Int!
+    topPosts: NexusGenRootTypes['Post'][]; // [Post!]!
+    totalCount: number; // Int!
   }
   User: { // root type
     email: string; // String!
@@ -146,6 +152,7 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
+    allFeeds: NexusGenRootTypes['TopInfo'] | null; // TopInfo
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     feed: NexusGenRootTypes['Post'][]; // [Post!]!
@@ -155,7 +162,13 @@ export interface NexusGenFieldTypes {
   }
   Response: { // field return type
     pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
-    posts: Array<NexusGenRootTypes['Post'] | null>; // [Post]!
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+  }
+  TopInfo: { // field return type
+    pageCount: number; // Int!
+    perPage: number; // Int!
+    topPosts: NexusGenRootTypes['Post'][]; // [Post!]!
+    totalCount: number; // Int!
   }
   User: { // field return type
     email: string; // String!
@@ -203,6 +216,7 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Query: { // field return type name
+    allFeeds: 'TopInfo'
     allUsers: 'User'
     draftsByUser: 'Post'
     feed: 'Post'
@@ -213,6 +227,12 @@ export interface NexusGenFieldTypeNames {
   Response: { // field return type name
     pageInfo: 'PageInfo'
     posts: 'Post'
+  }
+  TopInfo: { // field return type name
+    pageCount: 'Int'
+    perPage: 'Int'
+    topPosts: 'Post'
+    totalCount: 'Int'
   }
   User: { // field return type name
     email: 'String'
@@ -252,6 +272,10 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    allFeeds: { // args
+      searchString?: string | null; // String
+      take?: number | null; // Int
+    }
     draftsByUser: { // args
       userUniqueInput: NexusGenInputs['UserUniqueInput']; // UserUniqueInput!
     }
