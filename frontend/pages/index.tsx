@@ -1,4 +1,5 @@
 import Layout from "../components/Layout"
+import { useQuery } from "@apollo/client"; 
 import { GetStaticProps } from "next";
 import client from "../lib/apollo-client"; 
 import { AllFeedsDocument, TopInfo, AllFeedsQuery, useAllFeedsQuery } from '../interfaces/graphql_generated'
@@ -16,10 +17,11 @@ const Home = ({topInfo: {topPosts, pageCount}, page=1}: {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data, error } = await client.query<AllFeedsQuery>({
-      query: AllFeedsDocument,
-      variables: {take: DEFAULT_PAGE_TAKE}  //@todo: take to real number 
-  })
+  // const { data, error } = await client.query<AllFeedsQuery>({
+  //     query: AllFeedsDocument,
+  //     variables: {take: DEFAULT_PAGE_TAKE}  //@todo: take to real number 
+  // })
+  const { data, loading, error} = useQuery(AllFeedsDocument)
 
   if (error) return <ErrorMessage message="Error loading posts." />
   if (!data) return <div>Loading</div>
