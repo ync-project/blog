@@ -103,6 +103,9 @@ export interface NexusGenObjects {
     id: number; // Int!
     name?: string | null; // String
   }
+  _QueryMeta: { // root type
+    count?: number | null; // Int
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -152,12 +155,15 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    allFeeds: NexusGenRootTypes['TopInfo'] | null; // TopInfo
+    _allPostsMeta: NexusGenRootTypes['_QueryMeta'] | null; // _QueryMeta
+    _allUsersMeta: NexusGenRootTypes['_QueryMeta'] | null; // _QueryMeta
+    allPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     feed: NexusGenRootTypes['Post'][]; // [Post!]!
     feeds: NexusGenRootTypes['Response'] | null; // Response
     postById: NexusGenRootTypes['Post'] | null; // Post
+    topFeeds: NexusGenRootTypes['TopInfo'] | null; // TopInfo
     user: NexusGenRootTypes['User'] | null; // User
   }
   Response: { // field return type
@@ -176,6 +182,9 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     profile: NexusGenRootTypes['Profile'] | null; // Profile
+  }
+  _QueryMeta: { // field return type
+    count: number | null; // Int
   }
 }
 
@@ -216,12 +225,15 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Query: { // field return type name
-    allFeeds: 'TopInfo'
+    _allPostsMeta: '_QueryMeta'
+    _allUsersMeta: '_QueryMeta'
+    allPosts: 'Post'
     allUsers: 'User'
     draftsByUser: 'Post'
     feed: 'Post'
     feeds: 'Response'
     postById: 'Post'
+    topFeeds: 'TopInfo'
     user: 'User'
   }
   Response: { // field return type name
@@ -240,6 +252,9 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     posts: 'Post'
     profile: 'Profile'
+  }
+  _QueryMeta: { // field return type name
+    count: 'Int'
   }
 }
 
@@ -272,8 +287,12 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    allFeeds: { // args
-      searchString?: string | null; // String
+    allPosts: { // args
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+    allUsers: { // args
+      skip?: number | null; // Int
       take?: number | null; // Int
     }
     draftsByUser: { // args
@@ -293,6 +312,10 @@ export interface NexusGenArgTypes {
     }
     postById: { // args
       id?: number | null; // Int
+    }
+    topFeeds: { // args
+      searchString?: string | null; // String
+      take?: number | null; // Int
     }
     user: { // args
       id?: number | null; // Int

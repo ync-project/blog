@@ -92,6 +92,51 @@ const userData: Prisma.UserCreateInput[] = [
       ],
     },
   },
+  {
+    name: 'Alice2',
+    email: 'alice2@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice3',
+    email: 'alice3@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice4',
+    email: 'alice4@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice5',
+    email: 'alice5@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice6',
+    email: 'alice6@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice7',
+    email: 'alice7@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice8',
+    email: 'alice8@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice9',
+    email: 'alice2@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
+  {
+    name: 'Alice9',
+    email: 'alice2@prisma.io',
+    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
+  },
 ]
 
 async function main() {

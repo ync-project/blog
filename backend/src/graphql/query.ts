@@ -1,3 +1,5 @@
+// after update this file, run 
+// $ npx prisma migrate dev 
 import {
     intArg,
     nonNull,
@@ -106,8 +108,26 @@ export const Query = objectType({
 
       t.nonNull.list.nonNull.field('allUsers', {
         type: User,
-        resolve: (_parent, _args, context: Context) => {
-          return context.prisma.user.findMany()
+        args:{
+          skip: intArg(),
+          take: intArg(),
+        },
+        resolve: async (_parent, args, context: Context) => {
+           const results = await context.prisma.user.findMany({
+            take: args.take || undefined,
+            skip: args.skip || undefined,
+          })
+          console.log('results', results.map(p => p.id))
+          return results
+        },
+      })
+
+      t.field("_allUsersMeta", {
+        type: "_QueryMeta",
+        async resolve(_root, _args, context: Context) {
+          return {
+            count: await context.prisma.user.count(),
+          }
         },
       })
     
@@ -123,7 +143,30 @@ export const Query = objectType({
         },
       })  
 
-      t.field('allFeeds', {
+      t.nonNull.list.nonNull.field('allPosts', {
+        type: Post,
+        args:{
+          skip: intArg(),
+          take: intArg(),
+        },
+        resolve: (_parent, args, context: Context) => {
+          return context.prisma.post.findMany({
+            take: args.take || undefined,
+            skip: args.skip || undefined,
+          })
+        },
+      })
+
+      t.field("_allPostsMeta", {
+        type: "_QueryMeta",
+        async resolve(_root, _args, context: Context) {
+          return {
+            count: await context.prisma.post.count(),
+          }
+        },
+      })
+
+      t.field('topFeeds', {
         type: TopInfo,
         args: {
           searchString: stringArg(),
@@ -270,4 +313,13 @@ export const Query = objectType({
       t.nonNull.list.nonNull.field('topPosts', {
          type: Post })
     },
-  })  
+  }) 
+  
+  export const QueryMeta = objectType({
+    name: '_QueryMeta',
+    definition(t) {
+      t.int('count')
+    }
+  })
+  
+  

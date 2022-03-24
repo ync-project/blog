@@ -1,7 +1,7 @@
 
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Layout from "../../components/Layout"
-import client from "../../lib/apollo-client";
+import client from "../../lib/apolloClient";
 //import { Query } from '../../interfaces/graphql_generated'
 import { TODOPageErr } from '../../interfaces/app_types'
 import { Post, FeedsDocument, FeedsQuery, PostByIdDocument, PostByIdQuery} from '../../interfaces/graphql_generated'

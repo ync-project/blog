@@ -34,11 +34,26 @@ export const ProfileFields = gql`
 `  
 
 export const ALL_FEEDS = gql`
-    query allFeeds(
+query allPosts($take: Int!, $skip: Int!) {
+    allPosts(take: $take, skip: $skip) {
+      id
+      title
+      viewCount
+      content
+      createdAt
+    }
+    _allPostsMeta {
+      count
+    }
+  }
+`
+
+export const TOP_FEEDS = gql`
+    query topFeeds(
         $searchString: String,
         $take: Int)
     {
-        allFeeds(searchString: $searchString, take: $take){
+        topFeeds(searchString: $searchString, take: $take){
             totalCount
             pageCount
             perPage
@@ -160,11 +175,16 @@ export const DELETE_POST = gql`
 
 // list all users
 export const ALL_USERS = gql`
-    query allUsers{
-        allUsers{
-        ...UserIdentities
-        }
+  query allUsers($skip: Int!, $take: Int!) {
+    allUsers(skip: $skip, take: $take) {
+      id
+      email
+      name
     }
+    _allUsersMeta{
+      count
+    }
+  }
     ${UserIdentities}
 `  
 

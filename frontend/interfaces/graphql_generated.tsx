@@ -112,18 +112,27 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
-  allFeeds?: Maybe<TopInfo>;
+  _allPostsMeta?: Maybe<_QueryMeta>;
+  _allUsersMeta?: Maybe<_QueryMeta>;
+  allPosts: Array<Post>;
   allUsers: Array<User>;
   draftsByUser?: Maybe<Array<Maybe<Post>>>;
   feed: Array<Post>;
   feeds?: Maybe<Response>;
   postById?: Maybe<Post>;
+  topFeeds?: Maybe<TopInfo>;
   user?: Maybe<User>;
 };
 
 
-export type QueryAllFeedsArgs = {
-  searchString?: InputMaybe<Scalars['String']>;
+export type QueryAllPostsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryAllUsersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -151,6 +160,12 @@ export type QueryFeedsArgs = {
 
 export type QueryPostByIdArgs = {
   id?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryTopFeedsArgs = {
+  searchString?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -198,6 +213,11 @@ export type UserUniqueInput = {
   id?: InputMaybe<Scalars['Int']>;
 };
 
+export type _QueryMeta = {
+  __typename?: '_QueryMeta';
+  count?: Maybe<Scalars['Int']>;
+};
+
 export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean };
 
 export type UserIdentitiesFragment = { __typename?: 'User', id: number, email: string };
@@ -206,13 +226,21 @@ export type UserFieldsFragment = { __typename?: 'User', id: number, email: strin
 
 export type ProfileFieldsFragment = { __typename?: 'Profile', id: number, bio?: string | null };
 
-export type AllFeedsQueryVariables = Exact<{
+export type AllPostsQueryVariables = Exact<{
+  take: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+
+export type AllPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, title: string, viewCount: number, content?: string | null, createdAt: any }>, _allPostsMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
+
+export type TopFeedsQueryVariables = Exact<{
   searchString?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type AllFeedsQuery = { __typename?: 'Query', allFeeds?: { __typename?: 'TopInfo', totalCount: number, pageCount: number, perPage: number, topPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean }> } | null };
+export type TopFeedsQuery = { __typename?: 'Query', topFeeds?: { __typename?: 'TopInfo', totalCount: number, pageCount: number, perPage: number, topPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean }> } | null };
 
 export type FeedsQueryVariables = Exact<{
   searchString?: InputMaybe<Scalars['String']>;
@@ -268,10 +296,13 @@ export type DeletePostMutationVariables = Exact<{
 
 export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number } | null };
 
-export type AllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type AllUsersQueryVariables = Exact<{
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+}>;
 
 
-export type AllUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', id: number, email: string }> };
+export type AllUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', id: number, email: string, name?: string | null }>, _allUsersMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -346,9 +377,52 @@ export const ProfileFieldsFragmentDoc = gql`
   bio
 }
     `;
-export const AllFeedsDocument = gql`
-    query allFeeds($searchString: String, $take: Int) {
-  allFeeds(searchString: $searchString, take: $take) {
+export const AllPostsDocument = gql`
+    query allPosts($take: Int!, $skip: Int!) {
+  allPosts(take: $take, skip: $skip) {
+    id
+    title
+    viewCount
+    content
+    createdAt
+  }
+  _allPostsMeta {
+    count
+  }
+}
+    `;
+
+/**
+ * __useAllPostsQuery__
+ *
+ * To run a query within a React component, call `useAllPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllPostsQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useAllPostsQuery(baseOptions: Apollo.QueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllPostsQuery, AllPostsQueryVariables>(AllPostsDocument, options);
+      }
+export function useAllPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllPostsQuery, AllPostsQueryVariables>(AllPostsDocument, options);
+        }
+export type AllPostsQueryHookResult = ReturnType<typeof useAllPostsQuery>;
+export type AllPostsLazyQueryHookResult = ReturnType<typeof useAllPostsLazyQuery>;
+export type AllPostsQueryResult = Apollo.QueryResult<AllPostsQuery, AllPostsQueryVariables>;
+export const TopFeedsDocument = gql`
+    query topFeeds($searchString: String, $take: Int) {
+  topFeeds(searchString: $searchString, take: $take) {
     totalCount
     pageCount
     perPage
@@ -360,33 +434,33 @@ export const AllFeedsDocument = gql`
     ${PostFieldsFragmentDoc}`;
 
 /**
- * __useAllFeedsQuery__
+ * __useTopFeedsQuery__
  *
- * To run a query within a React component, call `useAllFeedsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllFeedsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTopFeedsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopFeedsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAllFeedsQuery({
+ * const { data, loading, error } = useTopFeedsQuery({
  *   variables: {
  *      searchString: // value for 'searchString'
  *      take: // value for 'take'
  *   },
  * });
  */
-export function useAllFeedsQuery(baseOptions?: Apollo.QueryHookOptions<AllFeedsQuery, AllFeedsQueryVariables>) {
+export function useTopFeedsQuery(baseOptions?: Apollo.QueryHookOptions<TopFeedsQuery, TopFeedsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AllFeedsQuery, AllFeedsQueryVariables>(AllFeedsDocument, options);
+        return Apollo.useQuery<TopFeedsQuery, TopFeedsQueryVariables>(TopFeedsDocument, options);
       }
-export function useAllFeedsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllFeedsQuery, AllFeedsQueryVariables>) {
+export function useTopFeedsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopFeedsQuery, TopFeedsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AllFeedsQuery, AllFeedsQueryVariables>(AllFeedsDocument, options);
+          return Apollo.useLazyQuery<TopFeedsQuery, TopFeedsQueryVariables>(TopFeedsDocument, options);
         }
-export type AllFeedsQueryHookResult = ReturnType<typeof useAllFeedsQuery>;
-export type AllFeedsLazyQueryHookResult = ReturnType<typeof useAllFeedsLazyQuery>;
-export type AllFeedsQueryResult = Apollo.QueryResult<AllFeedsQuery, AllFeedsQueryVariables>;
+export type TopFeedsQueryHookResult = ReturnType<typeof useTopFeedsQuery>;
+export type TopFeedsLazyQueryHookResult = ReturnType<typeof useTopFeedsLazyQuery>;
+export type TopFeedsQueryResult = Apollo.QueryResult<TopFeedsQuery, TopFeedsQueryVariables>;
 export const FeedsDocument = gql`
     query feeds($searchString: String, $page: Int!, $take: Int, $orderBy: PostOrderByUpdatedAtInput) {
   feeds(searchString: $searchString, page: $page, take: $take, orderBy: $orderBy) {
@@ -656,12 +730,17 @@ export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutati
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
 export const AllUsersDocument = gql`
-    query allUsers {
-  allUsers {
-    ...UserIdentities
+    query allUsers($skip: Int!, $take: Int!) {
+  allUsers(skip: $skip, take: $take) {
+    id
+    email
+    name
+  }
+  _allUsersMeta {
+    count
   }
 }
-    ${UserIdentitiesFragmentDoc}`;
+    `;
 
 /**
  * __useAllUsersQuery__
@@ -675,10 +754,12 @@ export const AllUsersDocument = gql`
  * @example
  * const { data, loading, error } = useAllUsersQuery({
  *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
  *   },
  * });
  */
-export function useAllUsersQuery(baseOptions?: Apollo.QueryHookOptions<AllUsersQuery, AllUsersQueryVariables>) {
+export function useAllUsersQuery(baseOptions: Apollo.QueryHookOptions<AllUsersQuery, AllUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<AllUsersQuery, AllUsersQueryVariables>(AllUsersDocument, options);
       }

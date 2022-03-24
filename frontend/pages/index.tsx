@@ -1,36 +1,34 @@
-import Layout from "../components/Layout"
-import { useQuery } from "@apollo/client"; 
+import App from '../components/App'
+import Header from '../components/Header'
+import InfoBox from '../components/InfoBox'
+import Search from '../components/Search'
+import UserList, { ALL_USERS_QUERY, allUsersQueryVars } from '../components/UserList'
+import { AllUsersDocument, AllPostsQueryVariables } from '../interfaces/graphql_generated'
+
 import { GetStaticProps } from "next";
-import client from "../lib/apollo-client"; 
-import { AllFeedsDocument, TopInfo, AllFeedsQuery, useAllFeedsQuery } from '../interfaces/graphql_generated'
-import PostList from '../components/post'
-import ErrorMessage from '../components/error-message'
-import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'
+import { initializeApollo, addApolloState } from '../lib/apolloClient'
 
-const Home = ({topInfo: {topPosts, pageCount}, page=1}: {
-        topInfo: TopInfo, page: number}) => {
-  return ( 
-    <Layout>
-      <PostList posts={topPosts} page={page} pageCount={pageCount}/>
-    </Layout>  
-  )  
-}
+const Home = () => (
+    <App>
+      <Header />
+      <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
+      <Search />
+      <UserList />
+    </App>  
+) 
 
-export const getStaticProps: GetStaticProps = async () => {
-  // const { data, error } = await client.query<AllFeedsQuery>({
-  //     query: AllFeedsDocument,
-  //     variables: {take: DEFAULT_PAGE_TAKE}  //@todo: take to real number 
-  // })
-  const { data, loading, error} = useQuery(AllFeedsDocument)
+export async function getStaticProps() {
+  const apolloClient = initializeApollo()
 
-  if (error) return <ErrorMessage message="Error loading posts." />
-  if (!data) return <div>Loading</div>
-    
-  return {
-    props: { 
-      topInfo: data.allFeeds
-    }
-  }
+  await apolloClient.query({
+    query: AllUsersDocument,
+    variables: allUsersQueryVars,
+  })
+
+  return addApolloState(apolloClient, {
+    props: {},
+    revalidate: 1,
+  })
 }
 
 export default Home;

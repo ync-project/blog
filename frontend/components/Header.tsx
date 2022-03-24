@@ -1,76 +1,41 @@
-import Link from "next/link"
-import {useRouter } from "next/router"
-import { useApolloClient } from '@apollo/client';
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
-// function isActive(pathname) {
-//   return (
-//     typeof document !== "undefined" && document.location.pathname === pathname
-//   )
-// }
-
-const Header = () => {
-  const router = useRouter()
-
-  function isActive(pathname: string) {
-    return router.pathname === pathname
-  }
-
-  const apolloClient = useApolloClient();
+export default function Header() {
+  const { pathname } = useRouter()
 
   return (
-    <nav>
-      <div className="left">
-        <Link href="/">
-          <a className="bold" data-active={isActive("/")}>
-            Home
-          </a>
-        </Link>
-      </div>
-      <div className="right">
-        <Link href="/signup">
-          <a data-active={isActive("/signup")}>Signup</a>
-        </Link>
-        <Link href="/create">
-          <a data-active={isActive("/create")}>+ Create draft</a>
-        </Link>
-      </div>
+    <header>
+      <Link href="/">
+        <a className={pathname === '/' ? 'is-active' : ''}>Home</a>
+      </Link>
+      <Link href="/post">
+        <a className={pathname === '/post' ? 'is-active' : ''}>Post</a>
+      </Link>
+      <Link href="/about">
+        <a className={pathname === '/about' ? 'is-active' : ''}>About</a>
+      </Link>
+      <Link href="/client-only">
+        <a className={pathname === '/client-only' ? 'is-active' : ''}>
+          Client-Only
+        </a>
+      </Link>
+      <Link href="/ssr">
+        <a className={pathname === '/ssr' ? 'is-active' : ''}>SSR</a>
+      </Link>
       <style jsx>{`
-        nav {
-          display: flex;
-          padding: 2rem;
-          align-items: center;
+        header {
+          margin-bottom: 25px;
         }
-
-        .bold {
-          font-weight: bold;
-        }
-
         a {
+          font-size: 14px;
+          margin-right: 15px;
           text-decoration: none;
-          color: #000;
-          display: inline-block;
         }
-
-        .left a[data-active="true"] {
-          color: gray;
-        }
-
-        a + a {
-          margin-left: 1rem;
-        }
-
-        .right {
-          margin-left: auto;
-        }
-
-        .right a {
-          border: 1px solid black;
-          padding: 0.5rem 1rem;
-          border-radius: 3px;
+        .is-active {
+          text-decoration: underline;
         }
       `}</style>
-    </nav>
+    </header>
   )
 }
-
-export default Header
