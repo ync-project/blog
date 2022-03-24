@@ -1,7 +1,7 @@
 
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Layout from "../../components/Layout"
-import client from "../../lib/apolloClient";
+import {initializeApollo} from "../../lib/apolloClient";
 //import { Query } from '../../interfaces/graphql_generated'
 import { TODOPageErr } from '../../interfaces/app_types'
 import { Post, FeedsDocument, FeedsQuery, PostByIdDocument, PostByIdQuery} from '../../interfaces/graphql_generated'
@@ -32,7 +32,8 @@ interface Params extends ParsedUrlQuery {
  }
 
 export const getStaticPaths = async () => {
-    const { data } = await client.query<FeedsQuery>({
+    const apolloClient = initializeApollo()
+    const { data } = await apolloClient.query<FeedsQuery>({
         query: FeedsDocument,
         variables: { page: 1}
       });

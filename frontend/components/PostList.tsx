@@ -1,6 +1,7 @@
 import { gql, useQuery, NetworkStatus } from '@apollo/client'
 import ErrorMessage from './ErrorMessage'
 import PostUpvoter from './PostUpvoter'
+import Link from 'next/link'
 
 export const ALL_POSTS_QUERY = gql`
   query allPosts($take: Int!, $skip: Int!) {
@@ -58,7 +59,9 @@ export default function PostList() {
           <li key={post.id}>
             <div>
               <span>{index + 1}. </span>
-              <a>{post.title}</a>
+              <Link href="/p/[id]" as={`/p/${post.id}`}>
+                <a>{post.title}</a>
+              </Link>
               <PostUpvoter id={post.id} viewCount={post.viewCount} />
             </div>
           </li>

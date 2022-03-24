@@ -53,7 +53,7 @@ export default function Search() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Submit</h1>
+      <h1>Search</h1>
       <input placeholder="title" name="title" type="text" required />
       <input placeholder="content" name="content" type="text" required/>
       <input placeholder="authorEmail" name="authorEmail" type="text" required/>
