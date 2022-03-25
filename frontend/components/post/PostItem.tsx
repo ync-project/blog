@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Post } from '../../interfaces/graphql_generated'
 
-const PostItem = ( { post }: {post: Post} ) => {
+const PostItem = ({post} : {post: Post}) => {
   return (
       <Link href="/p/[id]" as={`/p/${post.id}`}>
         <a>

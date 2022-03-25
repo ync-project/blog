@@ -1,33 +1,15 @@
-import { gql, useQuery, NetworkStatus } from '@apollo/client'
+import { useQuery, NetworkStatus } from '@apollo/client'
 import ErrorMessage from './ErrorMessage'
 import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
-
-export const ALL_POSTS_QUERY = gql`
-  query allPosts($take: Int!, $skip: Int!) {
-    allPosts(take: $take, skip: $skip) {
-      id
-      title
-      viewCount
-      content
-      createdAt
-    }
-    _allPostsMeta {
-      count
-    }
-  }
-`
-
-export const allPostsQueryVars = {
-  skip: 0,
-  take: 3,
-}
+import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated'
+import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
 
 export default function PostList() {
-  const { loading, error, data, fetchMore, networkStatus } = useQuery(
-    ALL_POSTS_QUERY,
+  const { loading, error, data, fetchMore, networkStatus } = useQuery<AllPostsQuery>(
+    AllPostsDocument,
     {
-      variables: allPostsQueryVars,
+      variables: { take: DEFAULT_PAGE_TAKE },
       // Setting this value to true will make the component rerender when
       // the "networkStatus" changes, so we are able to know if it is fetching
       // more data
@@ -48,8 +30,8 @@ export default function PostList() {
   if (error) return <ErrorMessage message="Error loading posts." />
   if (loading && !loadingMorePosts) return <div>Loading</div>
 
-  const { allPosts, _allPostsMeta } = data
-  const areMorePosts = allPosts.length < _allPostsMeta.count
+  const { allPosts, _allPostsMeta } = data!
+  const areMorePosts = allPosts.length < _allPostsMeta?.count!
 
   return (
     <section>
@@ -62,7 +44,7 @@ export default function PostList() {
               <Link href="/p/[id]" as={`/p/${post.id}`}>
                 <a>{post.title}</a>
               </Link>
-              <PostUpvoter id={post.id} viewCount={post.viewCount} />
+              <PostUpvoter id={post.id} votes={post.votes} />
             </div>
           </li>
         ))}

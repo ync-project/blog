@@ -1,7 +1,8 @@
 import { gql, useMutation } from '@apollo/client'
+import { Post } from '../interfaces/graphql_generated'
 
 const UPDATE_POST_MUTATION = gql`
-  mutation votePost($id: String!) {
+  mutation votePost($id: Int!) {
     votePost(id: $id) {
       id
       votes
@@ -10,10 +11,11 @@ const UPDATE_POST_MUTATION = gql`
   }
 `
 
-export default function PostUpvoter({ votes, id }) {
+export default function PostUpvoter({ votes, id }: Post) {
   const [updatePost] = useMutation(UPDATE_POST_MUTATION)
 
   const upvotePost = () => {
+    //console.log('upvotePost', id, typeof(id))
     updatePost({
       variables: {
         id,
@@ -23,7 +25,7 @@ export default function PostUpvoter({ votes, id }) {
         votePost: {
           __typename: 'Post',
           id,
-          votes: votes + 1,
+          votes: votes,
         },
       },
     })

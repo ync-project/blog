@@ -5,6 +5,8 @@ export const PostFields = gql`
         id
         title
         content
+        viewCount
+        votes
         published
     }
 `  
@@ -34,12 +36,13 @@ export const ProfileFields = gql`
 `  
 
 export const ALL_FEEDS = gql`
-query allPosts($take: Int!, $skip: Int!) {
+query allPosts($take: Int, $skip: Int) {
     allPosts(take: $take, skip: $skip) {
       id
       title
-      viewCount
       content
+      viewCount
+      votes
       createdAt
     }
     _allPostsMeta {
@@ -150,6 +153,16 @@ export const TOGGLE_PUBLISH_POST = gql`
         togglePublishPost(id: $id) {
             id
             published
+        }
+    }
+`  
+
+// vote to an existing post
+export const VOTE_POST = gql`
+    mutation votePost($id: Int!) {
+        votePost(id: $id) {
+            id
+            votes
         }
     }
 `  

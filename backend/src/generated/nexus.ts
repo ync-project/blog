@@ -82,6 +82,7 @@ export interface NexusGenObjects {
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     viewCount: number; // Int!
+    votes: number; // Int!
   }
   Profile: { // root type
     bio?: string | null; // String
@@ -131,6 +132,7 @@ export interface NexusGenFieldTypes {
     signupUser: NexusGenRootTypes['User']; // User!
     togglePublishPost: NexusGenRootTypes['Post'] | null; // Post
     updateProfileForUser: NexusGenRootTypes['User'] | null; // User
+    votePost: NexusGenRootTypes['Post'] | null; // Post
   }
   PageInfo: { // field return type
     currentPage: number; // Int!
@@ -148,6 +150,7 @@ export interface NexusGenFieldTypes {
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     viewCount: number; // Int!
+    votes: number; // Int!
   }
   Profile: { // field return type
     bio: string | null; // String
@@ -201,6 +204,7 @@ export interface NexusGenFieldTypeNames {
     signupUser: 'User'
     togglePublishPost: 'Post'
     updateProfileForUser: 'User'
+    votePost: 'Post'
   }
   PageInfo: { // field return type name
     currentPage: 'Int'
@@ -218,6 +222,7 @@ export interface NexusGenFieldTypeNames {
     title: 'String'
     updatedAt: 'DateTime'
     viewCount: 'Int'
+    votes: 'Int'
   }
   Profile: { // field return type name
     bio: 'String'
@@ -284,6 +289,9 @@ export interface NexusGenArgTypes {
     updateProfileForUser: { // args
       bio?: string | null; // String
       email: string; // String!
+    }
+    votePost: { // args
+      id: number; // Int!
     }
   }
   Query: {

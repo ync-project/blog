@@ -98,6 +98,25 @@ import {
           })
         },
       })
+
+      t.field("votePost", {
+        type: Post,
+        args: {
+          id: nonNull(intArg()),//({ required: true }),
+        },
+        async resolve(_root, args, context: Context) {
+          const currentPost = await context.prisma.post.findUnique({
+            where: { id: args.id },
+           })
+
+          const updatePost = await context.prisma.post.update({
+            where: { id: args.id },
+            data: { votes: Number(currentPost?.votes) + 1 },
+          })
+
+          return updatePost
+        },
+      })  
   
       t.field('deletePost', {
         type: Post,

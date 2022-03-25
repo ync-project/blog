@@ -1,11 +1,13 @@
 
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Layout from "../../components/Layout"
-import {initializeApollo} from "../../lib/apolloClient";
-//import { Query } from '../../interfaces/graphql_generated'
+import { GetStaticProps } from "next";
+import { client } from "../../lib/apolloClient";
 import { TODOPageErr } from '../../interfaces/app_types'
-import { Post, FeedsDocument, FeedsQuery, PostByIdDocument, PostByIdQuery} from '../../interfaces/graphql_generated'
-import { ParsedUrlQuery } from 'querystring';
+import { Post, AllPostsDocument, AllPostsQuery,
+    PostByIdDocument, PostByIdQuery} from '../../interfaces/graphql_generated'
+import Header from '../../components/Header'
+import InfoBox from '../../components/InfoBox'
+import App from '../../components/App'
+import PostItem from '../../components/post/PostItem'
 
 const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
   if (!post) {
@@ -13,53 +15,43 @@ const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
   }
 
   return post && (
-    <Layout>
-      <div>
-          <h1>{post.id}. {post.title }</h1>
-          <h4>{post.author!.email}</h4>
-          <p>{post.content }</p>
-      </div>
-    </Layout>  
+    <App>
+      <Header />
+      <InfoBox>Post detail</InfoBox>
+      <PostItem post={post as Post}/>
+    </App>  
   );
 }
 
-type Props = {
-    posts: Post[]
- }
- 
-interface Params extends ParsedUrlQuery {
-    id: string,
- }
-
-export const getStaticPaths = async () => {
-    const apolloClient = initializeApollo()
-    const { data } = await apolloClient.query<FeedsQuery>({
-        query: FeedsDocument,
-        variables: { page: 1}
-      });
-    const paths = data.feeds?.posts?.map((post) => ({
+ export const getStaticPaths = async () => {
+    const { data } = await client.query<AllPostsQuery>({
+        query: AllPostsDocument
+    });
+    const paths = data?.allPosts.map((post) => ({
         params: { id: post!.id.toString() },
     }))
+    //console.log('paths', paths)
     return { paths: paths, fallback: false }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params } ) => {
-    const id = params?.id
+export const getStaticProps: GetStaticProps = async ({params}) => {
+    //console.log('params?.id', params?.id)
     try {
-        const { data: { postById } } = await client.query<PostByIdQuery>({
+        const { data } = await client.query<PostByIdQuery>({
             query: PostByIdDocument,
-            variables: { id: Number(id) },
+            variables: {id: Number(params?.id)}
         });
+        //console.log('data', data)
         return {
             props: {
-                post: postById
+                post: data?.postById
             },
         }
     } catch (err: unknown ) {
         const errors = err as TODOPageErr
         return {
             props: {
-                id: id,
+                id: params?.id,
                 errors: errors.message,
             },
         }

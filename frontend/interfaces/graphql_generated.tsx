@@ -32,6 +32,7 @@ export type Mutation = {
   signupUser: User;
   togglePublishPost?: Maybe<Post>;
   updateProfileForUser?: Maybe<User>;
+  votePost?: Maybe<Post>;
 };
 
 
@@ -73,6 +74,11 @@ export type MutationUpdateProfileForUserArgs = {
   email: Scalars['String'];
 };
 
+
+export type MutationVotePostArgs = {
+  id: Scalars['Int'];
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   currentPage: Scalars['Int'];
@@ -92,6 +98,7 @@ export type Post = {
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   viewCount: Scalars['Int'];
+  votes: Scalars['Int'];
 };
 
 export type PostCreateInput = {
@@ -218,7 +225,7 @@ export type _QueryMeta = {
   count?: Maybe<Scalars['Int']>;
 };
 
-export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean };
+export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean };
 
 export type UserIdentitiesFragment = { __typename?: 'User', id: number, email: string };
 
@@ -227,12 +234,12 @@ export type UserFieldsFragment = { __typename?: 'User', id: number, email: strin
 export type ProfileFieldsFragment = { __typename?: 'Profile', id: number, bio?: string | null };
 
 export type AllPostsQueryVariables = Exact<{
-  take: Scalars['Int'];
-  skip: Scalars['Int'];
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type AllPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, title: string, viewCount: number, content?: string | null, createdAt: any }>, _allPostsMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
+export type AllPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, createdAt: any }>, _allPostsMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
 
 export type TopFeedsQueryVariables = Exact<{
   searchString?: InputMaybe<Scalars['String']>;
@@ -240,7 +247,7 @@ export type TopFeedsQueryVariables = Exact<{
 }>;
 
 
-export type TopFeedsQuery = { __typename?: 'Query', topFeeds?: { __typename?: 'TopInfo', totalCount: number, pageCount: number, perPage: number, topPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean }> } | null };
+export type TopFeedsQuery = { __typename?: 'Query', topFeeds?: { __typename?: 'TopInfo', totalCount: number, pageCount: number, perPage: number, topPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean }> } | null };
 
 export type FeedsQueryVariables = Exact<{
   searchString?: InputMaybe<Scalars['String']>;
@@ -250,21 +257,21 @@ export type FeedsQueryVariables = Exact<{
 }>;
 
 
-export type FeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'Response', pageInfo: { __typename?: 'PageInfo', totalCount: number, pageCount: number, currentPage: number, hasNextPage: boolean }, posts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null }> } | null };
+export type FeedsQuery = { __typename?: 'Query', feeds?: { __typename?: 'Response', pageInfo: { __typename?: 'PageInfo', totalCount: number, pageCount: number, currentPage: number, hasNextPage: boolean }, posts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null }> } | null };
 
 export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type PostByIdQuery = { __typename?: 'Query', postById?: { __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
+export type PostByIdQuery = { __typename?: 'Query', postById?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
 
 export type DraftsByUserQueryVariables = Exact<{
   email: Scalars['String'];
 }>;
 
 
-export type DraftsByUserQuery = { __typename?: 'Query', draftsByUser?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null };
+export type DraftsByUserQuery = { __typename?: 'Query', draftsByUser?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null };
 
 export type CreateDraftMutationVariables = Exact<{
   authorEmail: Scalars['String'];
@@ -273,7 +280,7 @@ export type CreateDraftMutationVariables = Exact<{
 }>;
 
 
-export type CreateDraftMutation = { __typename?: 'Mutation', createDraft?: { __typename?: 'Post', id: number, title: string, content?: string | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
+export type CreateDraftMutation = { __typename?: 'Mutation', createDraft?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
 
 export type TogglePublishPostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -281,6 +288,13 @@ export type TogglePublishPostMutationVariables = Exact<{
 
 
 export type TogglePublishPostMutation = { __typename?: 'Mutation', togglePublishPost?: { __typename?: 'Post', id: number, published: boolean } | null };
+
+export type VotePostMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type VotePostMutation = { __typename?: 'Mutation', votePost?: { __typename?: 'Post', id: number, votes: number } | null };
 
 export type IncrementPostViewCountMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -351,6 +365,8 @@ export const PostFieldsFragmentDoc = gql`
   id
   title
   content
+  viewCount
+  votes
   published
 }
     `;
@@ -378,12 +394,13 @@ export const ProfileFieldsFragmentDoc = gql`
 }
     `;
 export const AllPostsDocument = gql`
-    query allPosts($take: Int!, $skip: Int!) {
+    query allPosts($take: Int, $skip: Int) {
   allPosts(take: $take, skip: $skip) {
     id
     title
-    viewCount
     content
+    viewCount
+    votes
     createdAt
   }
   _allPostsMeta {
@@ -409,7 +426,7 @@ export const AllPostsDocument = gql`
  *   },
  * });
  */
-export function useAllPostsQuery(baseOptions: Apollo.QueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
+export function useAllPostsQuery(baseOptions?: Apollo.QueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<AllPostsQuery, AllPostsQueryVariables>(AllPostsDocument, options);
       }
@@ -662,6 +679,40 @@ export function useTogglePublishPostMutation(baseOptions?: Apollo.MutationHookOp
 export type TogglePublishPostMutationHookResult = ReturnType<typeof useTogglePublishPostMutation>;
 export type TogglePublishPostMutationResult = Apollo.MutationResult<TogglePublishPostMutation>;
 export type TogglePublishPostMutationOptions = Apollo.BaseMutationOptions<TogglePublishPostMutation, TogglePublishPostMutationVariables>;
+export const VotePostDocument = gql`
+    mutation votePost($id: Int!) {
+  votePost(id: $id) {
+    id
+    votes
+  }
+}
+    `;
+export type VotePostMutationFn = Apollo.MutationFunction<VotePostMutation, VotePostMutationVariables>;
+
+/**
+ * __useVotePostMutation__
+ *
+ * To run a mutation, you first call `useVotePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVotePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [votePostMutation, { data, loading, error }] = useVotePostMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useVotePostMutation(baseOptions?: Apollo.MutationHookOptions<VotePostMutation, VotePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VotePostMutation, VotePostMutationVariables>(VotePostDocument, options);
+      }
+export type VotePostMutationHookResult = ReturnType<typeof useVotePostMutation>;
+export type VotePostMutationResult = Apollo.MutationResult<VotePostMutation>;
+export type VotePostMutationOptions = Apollo.BaseMutationOptions<VotePostMutation, VotePostMutationVariables>;
 export const IncrementPostViewCountDocument = gql`
     mutation incrementPostViewCount($id: Int!) {
   incrementPostViewCount(id: $id) {

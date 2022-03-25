@@ -8,6 +8,12 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
 let apolloClient
 
+// normal apollo client (no features like loadMore)
+export const client = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
+  cache: new InMemoryCache(),
+});
+
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
@@ -17,15 +23,15 @@ function createApolloClient() {
     }),
     cache: new InMemoryCache(
       {
-      typePolicies: {
-        Query: {
-          fields: {
-            allUsers: concatPagination(),
-            allPosts: concatPagination(),
+        typePolicies: {
+          Query: {
+            fields: {
+              allUsers: concatPagination(),
+              allPosts: concatPagination(),
+            },
           },
         },
-      },
-    }
+      }
     ),
   })
 }

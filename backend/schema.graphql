@@ -20,6 +20,7 @@ type Mutation {
   signupUser(bio: String, data: UserCreateInput!): User!
   togglePublishPost(id: Int!): Post
   updateProfileForUser(bio: String, email: String!): User
+  votePost(id: Int!): Post
 }
 
 type PageInfo {
@@ -39,6 +40,7 @@ type Post {
   title: String!
   updatedAt: DateTime!
   viewCount: Int!
+  votes: Int!
 }
 
 input PostCreateInput {

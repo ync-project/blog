@@ -22,6 +22,7 @@ import {
       t.string('content')
       t.nonNull.boolean('published')
       t.nonNull.int('viewCount')
+      t.nonNull.int('votes')
       t.field('author', {
         type: User,
         resolve: (parent, _, context: Context) => {
