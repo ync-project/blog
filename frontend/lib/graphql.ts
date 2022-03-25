@@ -188,7 +188,7 @@ export const DELETE_POST = gql`
 
 // list all users
 export const ALL_USERS = gql`
-  query allUsers($skip: Int!, $take: Int!) {
+  query allUsers($skip: Int, $take: Int) {
     allUsers(skip: $skip, take: $take) {
       id
       email

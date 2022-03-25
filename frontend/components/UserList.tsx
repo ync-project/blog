@@ -1,30 +1,14 @@
 import { gql, useQuery, NetworkStatus } from '@apollo/client'
-import { AllUsersDocument, AllPostsQueryVariables } from '../interfaces/graphql_generated'
+import { AllUsersDocument, AllUsersQuery } from '../interfaces/graphql_generated'
 import ErrorMessage from './ErrorMessage'
+import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
 
-export const ALL_USERS_QUERY = gql`
-  query allUsers($skip: Int!, $take: Int!) {
-    allUsers(skip: $skip, take: $take) {
-      id
-      email
-      name
-    }
-    _allUsersMeta{
-      count
-    }
-  }
-`
-
-export const allUsersQueryVars = {
-  skip: 0,
-  take: 2,
-}
 
 export default function UserList() {
-  const { loading, error, data, fetchMore, networkStatus } = useQuery(
+  const { loading, error, data, fetchMore, networkStatus } = useQuery<AllUsersQuery>(
     AllUsersDocument,
     {
-      variables: allUsersQueryVars,
+      variables:  { take: DEFAULT_PAGE_TAKE },
       // Setting this value to true will make the component rerender when
       // the "networkStatus" changes, so we are able to know if it is fetching
       // more data
@@ -35,7 +19,7 @@ export default function UserList() {
   const loadingMoreUsers = networkStatus === NetworkStatus.fetchMore
 
   const loadMoreUsers = () => {
-    console.log('loadMoreUsers')
+    //console.log('loadMoreUsers')
     fetchMore({
       variables: {
         skip: allUsers.length,
@@ -46,8 +30,8 @@ export default function UserList() {
   if (error) return <ErrorMessage message="Error loading users." />
   if (loading && !loadingMoreUsers) return <div>Loading</div>
 
-  const { allUsers, _allUsersMeta } = data
-  const areMoreUsers = allUsers.length < _allUsersMeta.count //_allPostsMeta.count
+  const { allUsers, _allUsersMeta } = data!
+  const areMoreUsers = allUsers.length < _allUsersMeta?.count! //_allPostsMeta.count
 
   return (
     <section>
@@ -57,7 +41,7 @@ export default function UserList() {
           <li key={user.id}>
             <div>
               <span>{index + 1}. </span>
-              <a href={user.name}>{user.email}</a>
+              <a>{user.email}</a>
             </div>
           </li>
         ))}

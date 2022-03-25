@@ -311,8 +311,8 @@ export type DeletePostMutationVariables = Exact<{
 export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number } | null };
 
 export type AllUsersQueryVariables = Exact<{
-  skip: Scalars['Int'];
-  take: Scalars['Int'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -781,7 +781,7 @@ export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutati
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
 export const AllUsersDocument = gql`
-    query allUsers($skip: Int!, $take: Int!) {
+    query allUsers($skip: Int, $take: Int) {
   allUsers(skip: $skip, take: $take) {
     id
     email
@@ -810,7 +810,7 @@ export const AllUsersDocument = gql`
  *   },
  * });
  */
-export function useAllUsersQuery(baseOptions: Apollo.QueryHookOptions<AllUsersQuery, AllUsersQueryVariables>) {
+export function useAllUsersQuery(baseOptions?: Apollo.QueryHookOptions<AllUsersQuery, AllUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<AllUsersQuery, AllUsersQueryVariables>(AllUsersDocument, options);
       }
