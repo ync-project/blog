@@ -41,7 +41,7 @@ export default function PostList() {
           <li key={post.id}>
             <div>
               <span>{index + 1}. </span>
-              <Link href="/p/[id]" as={`/p/${post.id}`}>
+              <Link href="/post/[id]" as={`/post/${post.id}`}>
                 <a>{post.title}</a>
               </Link>
               <PostUpvoter id={post.id} votes={post.votes} />

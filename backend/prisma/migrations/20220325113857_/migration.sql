@@ -14,7 +14,8 @@ CREATE TABLE "Post" (
     "title" TEXT NOT NULL,
     "content" TEXT,
     "published" BOOLEAN NOT NULL DEFAULT false,
-    "viewCount" INTEGER NOT NULL DEFAULT 0,
+    "viewCount" INTEGER DEFAULT 0,
+    "votes" INTEGER DEFAULT 0,
     "authorId" INTEGER,
     CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );

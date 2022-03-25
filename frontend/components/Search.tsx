@@ -1,4 +1,6 @@
 import { gql, useMutation } from '@apollo/client'
+import { client } from '../lib/apolloClient'
+import { useAllPostsLazyQuery } from '../interfaces/graphql_generated'
 
 const CREATE_POST_MUTATION = gql`
   mutation createPost($title: String!, $content: String!, $authorEmail: String!) {
@@ -16,9 +18,12 @@ const CREATE_POST_MUTATION = gql`
 `
 
 export default function Search() {
-  const [createPost, { loading }] = useMutation(CREATE_POST_MUTATION)
+  const [ loadPosts , {loading, error, data }] = useAllPostsLazyQuery({client});
+  const findPost = (title: string) => {
+    loadPosts({ variables: { searchString: title }})
+  }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault()
     const form = event.target
     const formData = new window.FormData(form)
