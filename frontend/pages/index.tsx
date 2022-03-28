@@ -1,8 +1,8 @@
 import App from '../components/App'
 import Header from '../components/Header'
 import InfoBox from '../components/InfoBox'
-import Search from '../components/Search'
-import PostList from '../components/PostList'
+//import PostList from '../components/PostList'
+import QuickSearch from '../components/QuickSearch'
 
 import { initializeApollo, addApolloState } from '../lib/apolloClient'
 import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
@@ -12,8 +12,7 @@ const Home = () => (
     <App>
       <Header />
       <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
-      <Search />
-      <PostList />
+      <QuickSearch />
     </App>  
 ) 
 

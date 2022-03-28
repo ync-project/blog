@@ -163,10 +163,7 @@ export interface NexusGenFieldTypes {
     allPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
-    feed: NexusGenRootTypes['Post'][]; // [Post!]!
-    feeds: NexusGenRootTypes['Response'] | null; // Response
     postById: NexusGenRootTypes['Post'] | null; // Post
-    topFeeds: NexusGenRootTypes['TopInfo'] | null; // TopInfo
     user: NexusGenRootTypes['User'] | null; // User
   }
   Response: { // field return type
@@ -235,10 +232,7 @@ export interface NexusGenFieldTypeNames {
     allPosts: 'Post'
     allUsers: 'User'
     draftsByUser: 'Post'
-    feed: 'Post'
-    feeds: 'Response'
     postById: 'Post'
-    topFeeds: 'TopInfo'
     user: 'User'
   }
   Response: { // field return type name
@@ -295,7 +289,12 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    _allPostsMeta: { // args
+      searchString?: string | null; // String
+    }
     allPosts: { // args
+      orderBy?: NexusGenInputs['PostOrderByUpdatedAtInput'] | null; // PostOrderByUpdatedAtInput
+      searchString?: string | null; // String
       skip?: number | null; // Int
       take?: number | null; // Int
     }
@@ -306,24 +305,8 @@ export interface NexusGenArgTypes {
     draftsByUser: { // args
       userUniqueInput: NexusGenInputs['UserUniqueInput']; // UserUniqueInput!
     }
-    feed: { // args
-      orderBy?: NexusGenInputs['PostOrderByUpdatedAtInput'] | null; // PostOrderByUpdatedAtInput
-      searchString?: string | null; // String
-      skip?: number | null; // Int
-      take?: number | null; // Int
-    }
-    feeds: { // args
-      orderBy?: NexusGenInputs['PostOrderByUpdatedAtInput'] | null; // PostOrderByUpdatedAtInput
-      page: number; // Int!
-      searchString?: string | null; // String
-      take?: number | null; // Int
-    }
     postById: { // args
       id?: number | null; // Int
-    }
-    topFeeds: { // args
-      searchString?: string | null; // String
-      take?: number | null; // Int
     }
     user: { // args
       id?: number | null; // Int

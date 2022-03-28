@@ -11,7 +11,7 @@ const UPDATE_POST_MUTATION = gql`
   }
 `
 
-export default function PostUpvoter({ votes, id }: Post) {
+export default function PostUpvoter({ votes, id }: {id: number, votes: number}) {
   const [updatePost] = useMutation(UPDATE_POST_MUTATION)
 
   const upvotePost = () => {
@@ -25,7 +25,7 @@ export default function PostUpvoter({ votes, id }: Post) {
         votePost: {
           __typename: 'Post',
           id,
-          votes: votes,
+          votes: votes + 1,
         },
       },
     })

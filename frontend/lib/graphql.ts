@@ -35,9 +35,20 @@ export const ProfileFields = gql`
     }
 `  
 
-export const ALL_FEEDS = gql`
-query allPosts($take: Int, $skip: Int) {
-    allPosts(take: $take, skip: $skip) {
+// Search posts with paginated and ordered results
+export const ALL_POSTS = gql`
+query allPosts(
+    $searchString: String, 
+    $take: Int, 
+    $skip: Int
+    $orderBy: PostOrderByUpdatedAtInput
+) {
+    allPosts(
+        searchString: $searchString,
+        take: $take, 
+        skip: $skip,
+        orderBy: $orderBy
+    ){
       id
       title
       content
@@ -45,58 +56,11 @@ query allPosts($take: Int, $skip: Int) {
       votes
       createdAt
     }
-    _allPostsMeta {
+    _allPostsMeta(searchString: $searchString) {
       count
     }
   }
 `
-
-export const TOP_FEEDS = gql`
-    query topFeeds(
-        $searchString: String,
-        $take: Int)
-    {
-        topFeeds(searchString: $searchString, take: $take){
-            totalCount
-            pageCount
-            perPage
-            topPosts{
-                ...PostFields
-            }
-        }
-    }
-`    
-
-// Search posts with paginated and ordered results
-export const FEEDS = gql`
-    query feeds(
-        $searchString: String, 
-        $page: Int!, 
-        $take: Int, 
-        $orderBy: PostOrderByUpdatedAtInput) {
-      feeds(
-          searchString: $searchString, 
-          page: $page, 
-          take: $take,
-          orderBy: $orderBy
-      ){
-          pageInfo{
-            totalCount
-            pageCount
-            currentPage
-            hasNextPage
-          }
-          posts {
-            ...PostFields
-            author {
-              ...UserIdentities
-            }
-          } 
-      }
-    }  
-    ${PostFields}
-    ${UserIdentities}
-`  
 
 // Retrieve a single post
 export const POST_BY_ID = gql`

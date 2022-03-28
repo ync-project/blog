@@ -59,15 +59,12 @@ type Profile {
 }
 
 type Query {
-  _allPostsMeta: _QueryMeta
+  _allPostsMeta(searchString: String): _QueryMeta
   _allUsersMeta: _QueryMeta
-  allPosts(skip: Int, take: Int): [Post!]!
+  allPosts(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
   allUsers(skip: Int, take: Int): [User!]!
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
-  feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
-  feeds(orderBy: PostOrderByUpdatedAtInput, page: Int!, searchString: String, take: Int): Response
   postById(id: Int): Post
-  topFeeds(searchString: String, take: Int): TopInfo
   user(id: Int): User
 }
 

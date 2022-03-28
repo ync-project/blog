@@ -49,38 +49,6 @@ export const Query = objectType({
         },
       })
   
-      t.nonNull.list.nonNull.field('feed', {
-        type: Post,
-        args: {
-          searchString: stringArg(),
-          skip: intArg(),
-          take: intArg(),
-          orderBy: arg({
-            type: 'PostOrderByUpdatedAtInput',
-          }),
-        },
-        resolve: (_parent, args, context: Context) => {
-          const or = args.searchString
-            ? {
-                OR: [
-                  { title: { contains: args.searchString } },
-                  { content: { contains: args.searchString } },
-                ],
-              }
-            : {}
-  
-          return context.prisma.post.findMany({
-            where: {
-              published: true,
-              ...or,
-            },
-            take: args.take || undefined,
-            skip: args.skip || undefined,
-            orderBy: args.orderBy || undefined,
-          })
-        },
-      })
-  
       t.list.field('draftsByUser', {
         type: Post,
         args: {
@@ -148,31 +116,40 @@ export const Query = objectType({
         args:{
           skip: intArg(),
           take: intArg(),
+          searchString: stringArg(),
+          orderBy: arg({
+            type: 'PostOrderByUpdatedAtInput',
+          }),
         },
         resolve: (_parent, args, context: Context) => {
+          const or = args.searchString
+            ? {
+                OR: [
+                  { title: { contains: args.searchString } },
+                  { content: { contains: args.searchString } },
+                ],
+              }
+            : {}
+  
+          const where = {
+              published: true,
+              ...or,
+          }
           return context.prisma.post.findMany({
+            where,
             take: args.take || undefined,
             skip: args.skip || undefined,
+            orderBy: args.orderBy || undefined,
           })
         },
       })
 
       t.field("_allPostsMeta", {
         type: "_QueryMeta",
-        async resolve(_root, _args, context: Context) {
-          return {
-            count: await context.prisma.post.count(),
-          }
-        },
-      })
-
-      t.field('topFeeds', {
-        type: TopInfo,
-        args: {
+        args:{
           searchString: stringArg(),
-          take: intArg(),
         },
-        resolve: async (_parent, args, context: Context) => {
+        async resolve(_root, args, context: Context) {
           const or = args.searchString
             ? {
                 OR: [
@@ -186,85 +163,10 @@ export const Query = objectType({
               published: true,
               ...or,
           }
-
-          const defaultPerPage = 10
-          let perPage = args.take ?? defaultPerPage
-          perPage <= 0 ? defaultPerPage : perPage
-
-          const topPosts = await context.prisma.post.findMany({
-            where,
-            take: perPage,
-          })
-          const totalCount = await context.prisma.post.count({
-            where
-          })
-          const pageCount = Math.ceil(totalCount / perPage)
-
           return {
-              totalCount,
-              pageCount,
-              perPage,
-              topPosts
-          }
-        },
-      })
-
-      t.field('feeds', {
-        type: Response,
-        args: {
-          searchString: stringArg(),
-          page: nonNull(intArg()),
-          take: intArg(),
-          orderBy: arg({
-            type: 'PostOrderByUpdatedAtInput',
-          }),
-        },
-        resolve: async (_parent, args, context: Context) => {
-          const or = args.searchString
-            ? {
-                OR: [
-                  { title: { contains: args.searchString } },
-                  { content: { contains: args.searchString } },
-                ],
-              }
-            : {}
-  
-          const where = {
-              published: true,
-              ...or,
-          }
-
-          let page = args.page 
-          page = (page <= 0) ? 1 : page          
-          const defaultPerPage = 10
-          let perPage = args.take ?? defaultPerPage
-          perPage <= 0 ? defaultPerPage : perPage
-          const start = (page - 1) * perPage
-          console.log('page', page)
-          //console.log('start', start)
-
-          const results = await context.prisma.post.findMany({
-            where,
-            take: perPage,
-            skip: start,
-            orderBy: args.orderBy || undefined,
-          })
-
-          console.log('results', results.map(p => p.id))
-          const totalCount = await context.prisma.post.count({
-            where
-          })
-          const pageCount = Math.ceil(totalCount / perPage)
-
-          return {
-            pageInfo: {
-              totalCount,
-              pageCount,
-              currentPage: page,
-              perPage,
-              hasNextPage: pageCount > page
-            },
-            posts: results,
+            count: await context.prisma.post.count({
+              where
+            }),
           }
         },
       })
