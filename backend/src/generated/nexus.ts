@@ -81,8 +81,8 @@ export interface NexusGenObjects {
     published: boolean; // Boolean!
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    viewCount: number; // Int!
-    votes: number; // Int!
+    viewCount?: number | null; // Int
+    votes?: number | null; // Int
   }
   Profile: { // root type
     bio?: string | null; // String
@@ -149,8 +149,8 @@ export interface NexusGenFieldTypes {
     published: boolean; // Boolean!
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    viewCount: number; // Int!
-    votes: number; // Int!
+    viewCount: number | null; // Int
+    votes: number | null; // Int
   }
   Profile: { // field return type
     bio: string | null; // String

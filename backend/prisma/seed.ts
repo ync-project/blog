@@ -13,11 +13,13 @@ const userData: Prisma.UserCreateInput[] = [
           title: 'Join the Prisma Slack',
           content: 'https://slack.prisma.io',
           published: true,
+          votes: 0
         },
         {
           title: 'Join the Prisma Apple Messenger',
           content: 'https://slack.prisma.io',
           published: true,
+          votes: 0
         },
       ],
     },
@@ -33,18 +35,21 @@ const userData: Prisma.UserCreateInput[] = [
           content: 'https://www.twitter.com/prisma',
           published: true,
           viewCount: 42,
+          votes: 0
         },
         {
           title: 'Follow Prisma on Facebook',
           content: 'https://www.twitter.com/prisma',
           published: true,
           viewCount: 23,
+          votes: 0
         },
         {
           title: 'Follow Prisma on Instagram',
           content: 'https://www.twitter.com/prisma',
           published: true,
           viewCount: 11,
+          votes: 0
         },
       ],
     },
@@ -60,30 +65,35 @@ const userData: Prisma.UserCreateInput[] = [
           content: 'https://www.github.com/prisma/prisma/discussions',
           published: true,
           viewCount: 128,
+          votes: 0
         },
         {
           title: 'Prisma on Uphold',
           content: 'https://pris.ly/youtube',
           published: true,
           viewCount: 3,
+          votes: 0
         },
         {
           title: 'Prisma on New York Times',
           content: 'https://pris.ly/youtube',
           published: true,
           viewCount: 5,
+          votes: 0
         },
         {
           title: 'Prisma on Linkedin',
           content: 'https://pris.ly/youtube',
           published: true,
           viewCount: 2,
+          votes: 0
         },
         {
           title: 'Prisma on Line',
           content: 'https://pris.ly/youtube',
           published: true,
           viewCount: 3,
+          votes: 0
         },
         {
           title: 'Prisma on Messenger',
@@ -134,7 +144,7 @@ const userData: Prisma.UserCreateInput[] = [
   },
   {
     name: 'Alice9',
-    email: 'alice2@prisma.io',
+    email: 'alice9@prisma.io',
     password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
   },
 ]

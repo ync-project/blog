@@ -39,8 +39,8 @@ type Post {
   published: Boolean!
   title: String!
   updatedAt: DateTime!
-  viewCount: Int!
-  votes: Int!
+  viewCount: Int
+  votes: Int
 }
 
 input PostCreateInput {
