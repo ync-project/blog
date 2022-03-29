@@ -1,71 +1,60 @@
+import React, { useState } from "react";
+import { useQuery, NetworkStatus } from '@apollo/client'
 import ErrorMessage from './ErrorMessage'
 import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
-import { AllPostsQuery, useAllPostsLazyQuery } from '../interfaces/graphql_generated'
-import { client } from '../lib/apolloClient'
+import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated'
+import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
+import Search from './Search'
 
+export function PostList() {
+  const { loading, error, data, fetchMore, networkStatus } = useQuery<AllPostsQuery>(
+    AllPostsDocument,
+    {
+      variables: { take: DEFAULT_PAGE_TAKE },
+      // Setting this value to true will make the component rerender when
+      // the "networkStatus" changes, so we are able to know if it is fetching
+      // more data
+      notifyOnNetworkStatusChange: true,
+    }
+  )
 
-export default function WrappedPosts() {
-  const [ loadPosts, {loading, error, data}] = useAllPostsLazyQuery({client})
+  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore
 
-  const findPost = (title: string) => {
-    loadPosts({variables: {searchString: title}})
+  const loadMorePosts = () => {
+    fetchMore({
+      variables: {
+        skip: allPosts?.length || undefined,
+      },
+    })
   }
 
-  const renderResults = () => {
-    if (loading) {
-      return <span>Loading...</span>
-    }
+  if (error) return <ErrorMessage message="Error loading posts." />
+  if (loading && !loadingMorePosts) return <div>Loading</div>
 
-    if (error) {
-      return <span>Something went wrong: ${error}</span>
-    }
+  const { allPosts, _allPostsMeta } = data!
+  const areMorePosts = allPosts!.length < _allPostsMeta?.count!
 
-    return data && <Posts posts={data.allPosts} count={Number(data._allPostsMeta?.count)} />
-  }
-
-  const handleSubmit = (event: any) => {
-    event.preventDefault()
-    const form = event.target
-    const formData = new window.FormData(form)
-    const title = formData.get('title')
-    //form.reset()
-    //cb(title!.toString())
-    findPost(title!.toString())
-  }  
-
-  return (
-    <div>
-        <h1>Post List</h1>
-        <form onSubmit={handleSubmit}>
-          <input placeholder="title" name="title" type="text" required />
-          <button type="submit" disabled={false}>
-            Search
-          </button>
-        </form>
-
-        {renderResults()}
-    </div> 
-  );
-}
-
-function Posts({ posts, count }: { posts: AllPostsQuery["allPosts"], count: number}){
-  const areMorePosts = posts.length < count
   return (
     <section>
       <ul>
-        {posts.map((post, index) => (
+        {allPosts.map((post, index) => (
           <li key={post.id}>
             <div>
               <span>{index + 1}. </span>
               <Link href="/post/[id]" as={`/post/${post.id}`}>
                 <a>{post.title}</a>
               </Link>
-              <PostUpvoter id={post.id} votes={post.votes} />
+              <PostUpvoter id={post.id} votes={post.votes || 0} />
             </div>
           </li>
         ))}
       </ul>
+      {areMorePosts && (
+        <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
+          {loadingMorePosts ? 'Loading...' : 'Show More'}
+        </button>
+      )}
       <style jsx>{`
         section {
           padding-bottom: 20px;
@@ -104,9 +93,47 @@ function Posts({ posts, count }: { posts: AllPostsQuery["allPosts"], count: numb
           width: 0;
         }
       `}</style>
-
     </section>
   )
 }
+const Search = ({handeleSearch}: {handeleSearch: any}) => {
+  return (
+    <div className="justify-content-center d-flex position-relative">
+      <form onSubmit={handeleSearch}>
+        <input type="text" name="searchText" placeholder="title or content"/>
+        <input type="text" name="take" placeholder="number of page"/>
+        <button type="submit" disabled={false}>
+          Search
+        </button>
+        <style jsx>{`
+        form {
+          border-bottom: 1px solid #ececec;
+          padding-bottom: 20px;
+          margin-bottom: 20px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        input {
+          display: block;
+          margin-bottom: 10px;
+        }
+      `}</style>
+      </form>     
+    </div>        
+  )
+}
 
-  
+export default function App(){
+  const [take, setTake] = useState(DEFAULT_PAGE_TAKE)
+  const [searhc, setSearch] = useState(null)
+  const handeleSearch = (target: any) => {
+    setSearch(target.value)
+  }
+  return (
+    <>
+      <h1>Post List</h1>
+      <Search handeleSearch={handeleSearch} />
+    </>)
+
+} 

@@ -97,8 +97,8 @@ export type Post = {
   published: Scalars['Boolean'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
-  viewCount: Scalars['Int'];
-  votes: Scalars['Int'];
+  viewCount?: Maybe<Scalars['Int']>;
+  votes?: Maybe<Scalars['Int']>;
 };
 
 export type PostCreateInput = {
@@ -207,7 +207,7 @@ export type _QueryMeta = {
   count?: Maybe<Scalars['Int']>;
 };
 
-export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean };
+export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean };
 
 export type UserIdentitiesFragment = { __typename?: 'User', id: number, email: string };
 
@@ -223,21 +223,21 @@ export type AllPostsQueryVariables = Exact<{
 }>;
 
 
-export type AllPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, createdAt: any }>, _allPostsMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
+export type AllPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, createdAt: any }>, _allPostsMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
 
 export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type PostByIdQuery = { __typename?: 'Query', postById?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
+export type PostByIdQuery = { __typename?: 'Query', postById?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
 
 export type DraftsByUserQueryVariables = Exact<{
   email: Scalars['String'];
 }>;
 
 
-export type DraftsByUserQuery = { __typename?: 'Query', draftsByUser?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null };
+export type DraftsByUserQuery = { __typename?: 'Query', draftsByUser?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null };
 
 export type CreateDraftMutationVariables = Exact<{
   authorEmail: Scalars['String'];
@@ -246,7 +246,7 @@ export type CreateDraftMutationVariables = Exact<{
 }>;
 
 
-export type CreateDraftMutation = { __typename?: 'Mutation', createDraft?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount: number, votes: number, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
+export type CreateDraftMutation = { __typename?: 'Mutation', createDraft?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
 
 export type TogglePublishPostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -260,14 +260,14 @@ export type VotePostMutationVariables = Exact<{
 }>;
 
 
-export type VotePostMutation = { __typename?: 'Mutation', votePost?: { __typename?: 'Post', id: number, votes: number } | null };
+export type VotePostMutation = { __typename?: 'Mutation', votePost?: { __typename?: 'Post', id: number, votes?: number | null } | null };
 
 export type IncrementPostViewCountMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type IncrementPostViewCountMutation = { __typename?: 'Mutation', incrementPostViewCount?: { __typename?: 'Post', id: number, viewCount: number } | null };
+export type IncrementPostViewCountMutation = { __typename?: 'Mutation', incrementPostViewCount?: { __typename?: 'Post', id: number, viewCount?: number | null } | null };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];

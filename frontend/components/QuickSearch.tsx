@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, FormControl } from 'react-bootstrap';
-import QuickSearchSuggestions from './QuickSearchSuggestions';
+import SearchPosts from './SearchPosts';
 
 
 const QuickSearch = () => {
@@ -19,7 +19,7 @@ const QuickSearch = () => {
             <Form className="w-100">
                 <FormControl type="text" placeholder="Search entire shop" className="w-100" onChange={e => handleChange(e.target.value)}/>
             </Form>
-            <QuickSearchSuggestions isValid={isValid} searchQuery={searchQuery}/>
+            <SearchPosts isValid={isValid} searchQuery={searchQuery}/>
         </div>
     );
 };

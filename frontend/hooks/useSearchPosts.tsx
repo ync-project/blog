@@ -16,7 +16,7 @@ import { client } from '../lib/apolloClient'
  * }
  */
 export const useQuickSearchSuggestions = (props: any) => {
-    const { isValid, searchQuery } = props;
+    const { isValid, searchQuery, take, skip } = props;
     const [ isOpen, setIsOpen ] = useState(false);
     const [ hasSuggestions, setHasSuggestions ] = useState(false);
     const [fetchSuggestions, { loading, data }] = useAllPostsLazyQuery({client});
@@ -26,6 +26,8 @@ export const useQuickSearchSuggestions = (props: any) => {
             fetchSuggestions({
                 variables: {
                     searchString: searchQuery,
+                    take,
+                    skip,
                 }
             });
             setIsOpen(true);
@@ -35,7 +37,7 @@ export const useQuickSearchSuggestions = (props: any) => {
     }, [fetchSuggestions, isValid, searchQuery]);
 
     useEffect(() => {
-        data && data.allPosts && data.allPosts.length ?
+        data?.allPosts.length ?
             setHasSuggestions(true): setHasSuggestions(false);
     }, [data]);
 
@@ -43,7 +45,8 @@ export const useQuickSearchSuggestions = (props: any) => {
         hasSuggestions,
         isLoading: loading,
         isOpen,
-        items: data && data.allPosts ? data.allPosts : []
+        items: data?.allPosts ||  [],
+        count: data?._allPostsMeta?.count || 0
     }
 }
 
