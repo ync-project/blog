@@ -1,13 +1,44 @@
 import React, { useState } from "react";
 import { useQuery, NetworkStatus } from '@apollo/client'
 import ErrorMessage from './ErrorMessage'
-import PostUpvoter from './PostUpvoter'
-import Link from 'next/link'
 import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated'
 import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
 import Search from './Search'
+import SearchPosts from './SearchPosts'
+import Posts from './Posts'
 
-export function PostList() {
+
+export default function PostList(){
+  const [ isValid, setIsValid] = useState<boolean>(false);
+  const [take, setTake] = useState<number>(DEFAULT_PAGE_TAKE)
+  const [searchText, setSearchText] = useState<string>()
+
+  const handeleSearch = (event: any) => {
+    event.preventDefault()
+    const form = event.target
+    const formData = new window.FormData(form)
+    const searchText = formData.get('searchText')!.toString()
+    const take = Number(formData.get('take')!.toString()) || DEFAULT_PAGE_TAKE
+    //form.reset()
+
+    const isValid = !!searchText && searchText.length > 2;
+  
+    setTake(take)
+    setSearchText(searchText);
+    setIsValid(isValid);
+  }
+  return (
+    <>
+      <h1>Post List</h1>
+      <Search handeleSearch={handeleSearch}/>
+      {isValid && <SearchPosts isValid={isValid}  searchText={searchText} 
+        take={take} skip={0} />}
+    </>
+  )
+}
+
+export function PostList2(){
+  
   const { loading, error, data, fetchMore, networkStatus } = useQuery<AllPostsQuery>(
     AllPostsDocument,
     {
@@ -33,107 +64,6 @@ export function PostList() {
   if (loading && !loadingMorePosts) return <div>Loading</div>
 
   const { allPosts, _allPostsMeta } = data!
-  const areMorePosts = allPosts!.length < _allPostsMeta?.count!
 
-  return (
-    <section>
-      <ul>
-        {allPosts.map((post, index) => (
-          <li key={post.id}>
-            <div>
-              <span>{index + 1}. </span>
-              <Link href="/post/[id]" as={`/post/${post.id}`}>
-                <a>{post.title}</a>
-              </Link>
-              <PostUpvoter id={post.id} votes={post.votes || 0} />
-            </div>
-          </li>
-        ))}
-      </ul>
-      {areMorePosts && (
-        <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
-          {loadingMorePosts ? 'Loading...' : 'Show More'}
-        </button>
-      )}
-      <style jsx>{`
-        section {
-          padding-bottom: 20px;
-        }
-        li {
-          display: block;
-          margin-bottom: 10px;
-        }
-        div {
-          align-items: center;
-          display: flex;
-        }
-        a {
-          font-size: 14px;
-          margin-right: 10px;
-          text-decoration: none;
-          padding-bottom: 0;
-          border: 0;
-        }
-        span {
-          font-size: 14px;
-          margin-right: 5px;
-        }
-        ul {
-          margin: 0;
-          padding: 0;
-        }
-        button:before {
-          align-self: center;
-          border-style: solid;
-          border-width: 6px 4px 0 4px;
-          border-color: #ffffff transparent transparent transparent;
-          content: '';
-          height: 0;
-          margin-right: 5px;
-          width: 0;
-        }
-      `}</style>
-    </section>
-  )
-}
-const Search = ({handeleSearch}: {handeleSearch: any}) => {
-  return (
-    <div className="justify-content-center d-flex position-relative">
-      <form onSubmit={handeleSearch}>
-        <input type="text" name="searchText" placeholder="title or content"/>
-        <input type="text" name="take" placeholder="number of page"/>
-        <button type="submit" disabled={false}>
-          Search
-        </button>
-        <style jsx>{`
-        form {
-          border-bottom: 1px solid #ececec;
-          padding-bottom: 20px;
-          margin-bottom: 20px;
-        }
-        h1 {
-          font-size: 20px;
-        }
-        input {
-          display: block;
-          margin-bottom: 10px;
-        }
-      `}</style>
-      </form>     
-    </div>        
-  )
-}
-
-export default function App(){
-  const [take, setTake] = useState(DEFAULT_PAGE_TAKE)
-  const [searhc, setSearch] = useState(null)
-  const handeleSearch = (target: any) => {
-    setSearch(target.value)
-  }
-  return (
-    <>
-      <h1>Post List</h1>
-      <Search handeleSearch={handeleSearch} />
-    </>)
 
 } 

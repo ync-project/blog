@@ -3,29 +3,39 @@ import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import useSearchPosts from '../hooks/useSearchPosts';
+import Posts from './Posts'
+import Link from 'next/link'
+import PostUpvoter from './PostUpvoter'
 
-const QuickSearchSuggestions = (props: any) => {
-    const { isValid, searchQuery, take, skip } = props;
+const SearchPosts = ({ isValid, searchText, take, skip }: any) => {
     const {
         hasSuggestions,
         isLoading,
         isOpen,
         items,
         count
-    } = useSearchPosts({ isValid, searchQuery, take, skip });
+    } = useSearchPosts({ isValid, searchText, take, skip });
 
-    const suggestions = items.map((product: any) => {
-        //console.log(product.id, product.title)
-        return <ListGroup.Item key={product.id}>
-            {product.title}
-        </ListGroup.Item>
-    });
+    const suggestions = 
+        items.map((post, index) => (
+        <li key={post.id}>
+          <div>
+            <span>{index + 1}. </span>
+            <Link href="/post/[id]" as={`/post/${post.id}`}>
+              <a>{post.title}</a>
+            </Link>
+            <PostUpvoter id={post.id} votes={post.votes || 0} />
+          </div>
+        </li>
+      ))
 
-    const shouldDisplaySuggestions = suggestions ? <section>
-        <ListGroup>
-            {suggestions}
-        </ListGroup>
-    </section> : null;
+    const shouldDisplaySuggestions = suggestions ? <div>
+         <section>
+               <ul>
+                {suggestions}
+            </ul>
+         </section>   
+    </div> : null;
 
     if (isOpen && hasSuggestions) {
         return shouldDisplaySuggestions;
@@ -44,9 +54,4 @@ const QuickSearchSuggestions = (props: any) => {
     }
 };
 
-QuickSearchSuggestions.propTypes = {
-    isValid: PropTypes.bool.isRequired,
-    searchQuery: PropTypes.string.isRequired
-};
-
-export default QuickSearchSuggestions;
+export default SearchPosts;

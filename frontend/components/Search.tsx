@@ -1,40 +1,14 @@
-import React, { useState } from 'react';
-import { gql, useQuery } from '@apollo/client'
-import PostList from '../components/PostList'
-import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
-import { client, initializeApollo, addApolloState } from '../lib/apolloClient'
-import SearchPosts from './SearchPosts';
 
-
-
-export default function Search() {
-  //const [ loadPosts ] = useAllPostsLazyQuery({client});
-  const [ isValid, setIsValid] = useState(false);
-  const [ searchQuery, setSearchQuery ] = useState('');
-
-
-  const handleSubmit = (event: any) => {
-    event.preventDefault()
-    const form = event.target
-    const formData = new window.FormData(form)
-    const value = formData.get('title')!.toString()
-    //form.reset()
-
-    const valueEntered = !!value
-    const isValid = valueEntered && value.length > 2;
-  
-    setIsValid(isValid);
-    setSearchQuery(value);
-  }  
-
+export default function Search({searchText, take, handeleSearch}: any) {
   return (
-    <form onSubmit={handleSubmit}>
-      <input placeholder="title or content" name="title" type="text" required />
-      <button type="submit" disabled={false}>
-        Search
-      </button>
-      <SearchPosts isValid={isValid} searchQuery={searchQuery}/>
-      <style jsx>{`
+    <div className="justify-content-center d-flex position-relative">
+      <form onSubmit={handeleSearch}>
+        <input type="text" name="searchText" placeholder="title or content"/>
+        <input type="text" name="take" placeholder="number of page"/>
+        <button type="submit" disabled={false}>
+          Search
+        </button>
+        <style jsx>{`
         form {
           border-bottom: 1px solid #ececec;
           padding-bottom: 20px;
@@ -48,6 +22,7 @@ export default function Search() {
           margin-bottom: 10px;
         }
       `}</style>
-    </form>
+      </form>     
+    </div>        
   )
 }
