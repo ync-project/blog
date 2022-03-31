@@ -1,5 +1,11 @@
+import NextHead from 'next/head'
+
 export default function App({ children }) {
   return (
+    <>
+    <NextHead>
+      <link rel="icon" href="/static/favicon.ico" />
+    </NextHead>  
     <main>
       {children}
       <style jsx global>{`
@@ -43,5 +49,6 @@ export default function App({ children }) {
         }
       `}</style>
     </main>
+   </> 
   )
 }

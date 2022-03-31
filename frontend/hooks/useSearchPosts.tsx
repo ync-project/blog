@@ -16,30 +16,24 @@ import { client } from '../lib/apolloClient'
  * }
  */
 export const useSearchPosts = (props: any) => {
-    const { isValid, searchText, take, skip } = props;
-    const [ isOpen, setIsOpen ] = useState(false);
+    const { searchText, take, skip } = props;
     const [ hasSuggestions, setHasSuggestions ] = useState(false);
     const [fetchPosts, { loading, data }] = useAllPostsLazyQuery();
 
-    // console.log('isValid', isValid, 
-    // ', searchText', searchText, 
-    // ', take', take, 
-    // ', skip', skip)
+    console.log(
+    ', searchText', searchText, 
+    ', take', take, 
+    ', skip', skip)
 
     useEffect(() => {
-        if (isValid) {
-            fetchPosts({
-                variables: {
-                    searchString: searchText,
-                    take,
-                    skip,
-                }
-            });
-            setIsOpen(true);
-        } else {
-            setIsOpen(false);
-        }
-    }, [fetchPosts, isValid, searchText, take, skip]);
+        fetchPosts({
+            variables: {
+                searchString: searchText,
+                take,
+                skip,
+            }
+        });
+    }, [fetchPosts, searchText, take, skip]);
 
     useEffect(() => {
         data?.allPosts.length ?
@@ -49,7 +43,6 @@ export const useSearchPosts = (props: any) => {
     return {
         hasSuggestions,
         isLoading: loading,
-        isOpen,
         items: data?.allPosts || [],
         count: data?._allPostsMeta?.count || 0
     }

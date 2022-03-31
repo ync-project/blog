@@ -1,13 +1,14 @@
 
-export default function Search({searchText, take, handeleSearch}: any) {
+export default function Search({handeleSearch}: any) {
   return (
     <div className="justify-content-center d-flex position-relative">
       <form onSubmit={handeleSearch}>
-        <input type="text" name="searchText" placeholder="title or content"/>
+        <input type="text" name="searchString" placeholder="title or content"/>
         <input type="text" name="take" placeholder="number of page"/>
         <button type="submit" disabled={false}>
           Search
         </button>
+        <input type="reset"/>
         <style jsx>{`
         form {
           border-bottom: 1px solid #ececec;

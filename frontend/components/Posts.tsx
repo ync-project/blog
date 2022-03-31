@@ -1,17 +1,15 @@
-import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated'
 import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
+import { AllPostsQuery } from '../interfaces/graphql_generated'
 
-const Posts = ({posts, count, loadMorePosts, loadingMorePosts}: 
-    {posts: AllPostsQuery["allPosts"], count: number, loadMorePosts: any, loadingMorePosts: any}) => {
-    const areMorePosts = posts!.length < count!
+const Posts = ({posts, count}: {posts: AllPostsQuery["allPosts"], count: number}) => { 
     return ( posts &&
     <section>
       <ul>
-        {posts.map((post, index) => (
+        {posts.map((post) => (
           <li key={post.id}>
             <div>
-              <span>{index + 1}. </span>
+              <span>{post.id}. </span>
               <Link href="/post/[id]" as={`/post/${post.id}`}>
                 <a>{post.title}</a>
               </Link>
@@ -20,11 +18,6 @@ const Posts = ({posts, count, loadMorePosts, loadingMorePosts}:
           </li>
         ))}
       </ul>
-      {areMorePosts && (
-        <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
-          {loadingMorePosts ? 'Loading...' : 'Show More'}
-        </button>
-      )}
       <style jsx>{`
         section {
           padding-bottom: 20px;
