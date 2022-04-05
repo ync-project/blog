@@ -6,6 +6,10 @@ import Search from "./Search";
 import ClientOnly from '../components/ClientOnly'
 import Posts from "./Posts";
 
+/**
+ * this component implements both lazyQuery and fetchMore
+ * @returns 
+ */
 export default function PostList(){
   const [variables, setVariables] = useState<SearchVariables>({
     take: DEFAULT_PAGE_TAKE
@@ -18,30 +22,35 @@ export default function PostList(){
       searchString: formData.get('searchString')!.toString(),
       take: Number(formData.get('take')!.toString()) || DEFAULT_PAGE_TAKE          
     }
-    findPosts( newVariables )
+    setVariables(newVariables)
+    loadPosts({variables: newVariables })
   }
-  const { data: data1, loading, error, networkStatus, fetchMore } = useQuery<AllPostsQuery>(
+
+  // default fetched data
+  const { data: data1, loading, error, fetchMore, networkStatus } = useQuery<AllPostsQuery>(
+    
     AllPostsDocument, {
         variables,
         notifyOnNetworkStatusChange: true,
     });
 
-  const [loadPosts, { data: data2}] = useLazyQuery<AllPostsQuery>(
+  // search data
+  const [loadPosts, { data: data2, loading: loading2, error: error2, 
+              networkStatus: networkStatus2}] = useLazyQuery<AllPostsQuery>(
     AllPostsDocument, {
         variables,
         notifyOnNetworkStatusChange: true,
     });
   
-    const findPosts = (variables: SearchVariables) => {
-    loadPosts({variables})
-  }    
+  const loadingMorePosts = networkStatus === NetworkStatus.fetchMore
 
-  if (networkStatus === NetworkStatus.fetchMore) return <p>Refetching!</p>;
+  if (networkStatus === NetworkStatus.fetchMore
+      || networkStatus2 === NetworkStatus.fetchMore) return <p>Refetching!</p>;
 
-  if (loading) {
+  if (loading || loading2) {
     return <span>Loading...</span>;
   }
-  if (error) {
+  if (error || error2) {
     return <span>Something went wrong: ${error}</span>;
   }
 
@@ -50,15 +59,22 @@ export default function PostList(){
     return <span>No product!</span>;
   }
 
-  const {allPosts, _allPostsMeta} = data
+  const loadMorePosts = () => {
+    fetchMore({
+      variables: {
+        ...variables,
+        skip: data.allPosts.length || undefined,
+      },
+    })
+  }
   return ( 
     <>
       <ClientOnly>
         <h1>Post List</h1>
-        <Search handeleSearch={handleSearch} />
-        <Posts posts={allPosts} count={_allPostsMeta?.count!} />
+        <Search handeleSearch={handleSearch} variables={variables}/>
+        <Posts posts={data.allPosts} count={data._allPostsMeta?.count!}
+                loadMorePosts={loadMorePosts} loadingMorePosts={loadingMorePosts} />
       </ClientOnly>
     </>
   )
-
 }

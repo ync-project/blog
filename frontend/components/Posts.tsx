@@ -2,8 +2,8 @@ import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
 import { AllPostsQuery } from '../interfaces/graphql_generated'
 
-const Posts = ({posts, count}: 
-      {posts: AllPostsQuery["allPosts"], count: number}) => { 
+const Posts = ({posts, count, loadMorePosts, loadingMorePosts}: 
+  {posts: AllPostsQuery["allPosts"], count: number, loadMorePosts: any, loadingMorePosts: any}) => { 
     const areMore = Number(posts.length) < count
     return ( posts &&
     <section>
@@ -20,6 +20,12 @@ const Posts = ({posts, count}:
           </li>
         ))}
       </ul>
+      {areMore && (
+        <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
+          {loadingMorePosts ? 'Loading...' : 'Show More'}
+        </button>
+      )}
+
       <style jsx>{`
         section {
           padding-bottom: 20px;
