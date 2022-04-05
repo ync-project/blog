@@ -1,14 +1,21 @@
+import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
 
 export default function Search({handeleSearch}: any) {
+  const takes = [1,3,5,10,15,20,25,30,40,50,75,100]
   return (
     <div className="justify-content-center d-flex position-relative">
       <form onSubmit={handeleSearch}>
-        <input type="text" name="searchString" placeholder="title or content"/>
-        <input type="text" name="take" placeholder="number of page"/>
+        <input type="text" name="searchString" placeholder="title or content" />
+        <select name="take" defaultValue={DEFAULT_PAGE_TAKE}>
+          { [...takes].map(o => (
+            <option key={o} value={o}>
+              {o}
+            </option>
+          ))}
+        </select>
         <button type="submit" disabled={false}>
           Search
         </button>
-        <input type="reset"/>
         <style jsx>{`
         form {
           border-bottom: 1px solid #ececec;

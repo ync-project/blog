@@ -2,7 +2,9 @@ import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
 import { AllPostsQuery } from '../interfaces/graphql_generated'
 
-const Posts = ({posts, count}: {posts: AllPostsQuery["allPosts"], count: number}) => { 
+const Posts = ({posts, count}: 
+      {posts: AllPostsQuery["allPosts"], count: number}) => { 
+    const areMore = Number(posts.length) < count
     return ( posts &&
     <section>
       <ul>
@@ -56,7 +58,7 @@ const Posts = ({posts, count}: {posts: AllPostsQuery["allPosts"], count: number}
           width: 0;
         }
       `}</style>
-    </section>
+    </section>  
     )
   }
   

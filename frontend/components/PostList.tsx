@@ -1,55 +1,64 @@
 import React, { useState } from "react";
-import Search from './Search'
-import SearchPosts from './SearchPosts'
-import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
-import { useQuery, NetworkStatus } from '@apollo/client'
-import { AllPostsDocument } from '../interfaces/graphql_generated'
+import { DEFAULT_PAGE_TAKE, SearchVariables } from '../interfaces/app_types'  
+import { useQuery, useLazyQuery, NetworkStatus } from '@apollo/client'
+import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated'
+import Search from "./Search";
+import ClientOnly from '../components/ClientOnly'
+import Posts from "./Posts";
 
 export default function PostList(){
-  const [ isValid, setIsValid] = useState<boolean>(false);
-  const [searchString, setSearchString] = useState<string>()
-  const [take, setTake] = useState<number>(DEFAULT_PAGE_TAKE)
-  const [skip, setSkip] = useState<number>(0)
-
-  const handeleSearch = (event: any) => {
-    //console.log('handleSearch')
+  const [variables, setVariables] = useState<SearchVariables>({
+    take: DEFAULT_PAGE_TAKE
+  })
+  const handleSearch = (event: any) => {
     event.preventDefault()
-    const form = event.target
-    const formData = new window.FormData(form)
-    const searchString = formData.get('searchString')!.toString()
-    const take = Number(formData.get('take')!.toString()) || DEFAULT_PAGE_TAKE
+    const formData = new window.FormData(event.target)
     //form.reset()
+    const newVariables = {
+      searchString: formData.get('searchString')!.toString(),
+      take: Number(formData.get('take')!.toString()) || DEFAULT_PAGE_TAKE          
+    }
+    findPosts( newVariables )
+  }
+  const { data: data1, loading, error, networkStatus, fetchMore } = useQuery<AllPostsQuery>(
+    AllPostsDocument, {
+        variables,
+        notifyOnNetworkStatusChange: true,
+    });
 
-    refetch({
-        searchString,
-        take,
-    })
-    // setSearchString(searchString);
-    // setTake(take)
-    // setIsValid(!!searchString && searchString.length > 2);  
-    //console.log('isValid', isValid, 'searchString', searchString, 'take', take)
+  const [loadPosts, { data: data2}] = useLazyQuery<AllPostsQuery>(
+    AllPostsDocument, {
+        variables,
+        notifyOnNetworkStatusChange: true,
+    });
+  
+    const findPosts = (variables: SearchVariables) => {
+    loadPosts({variables})
+  }    
+
+  if (networkStatus === NetworkStatus.fetchMore) return <p>Refetching!</p>;
+
+  if (loading) {
+    return <span>Loading...</span>;
+  }
+  if (error) {
+    return <span>Something went wrong: ${error}</span>;
   }
 
-  //console.log('isValid', isValid)
-  const { loading, error, data, refetch, networkStatus } = useQuery(
-    AllPostsDocument, {
-      variables: { 
-        searchString,
-        take,
-        skip,
-       },
-       notifyOnNetworkStatusChange: true,
-      }
-  )
-  if (networkStatus === NetworkStatus.refetch) return <p>Refetching!</p>;
-  if (loading) return null
-  if (error) return `Error!: ${error}`
+  const data = data2 ? data2 : data1
+  if (!data) {
+    return <span>No product!</span>;
+  }
 
-  return (
+  const {allPosts, _allPostsMeta} = data
+  return ( 
     <>
-      <h1>Post List</h1>
-      <Search handeleSearch={handeleSearch} />
-      {data && <SearchPosts searchString={searchString!} take={take} skip={skip}/>}
+      <ClientOnly>
+        <h1>Post List</h1>
+        <Search handeleSearch={handleSearch} />
+        <Posts posts={allPosts} count={_allPostsMeta?.count!} />
+      </ClientOnly>
     </>
   )
+
 }

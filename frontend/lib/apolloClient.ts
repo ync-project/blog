@@ -3,10 +3,11 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import { concatPagination,  } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
+import { Reference } from '@apollo/client'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
-let apolloClient
+let apolloClient: any
 
 // normal apollo client (no features like loadMore)
 export const client = new ApolloClient({
@@ -22,16 +23,38 @@ function createApolloClient() {
       //credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
     }),
     cache: new InMemoryCache(
-      // {
-      //   typePolicies: {
-      //     Query: {
-      //       fields: {
-      //         allUsers: {keyFields: []} , //concatPagination(),
-      //         allPosts: {keyFields: []}   //concatPagination(),
-      //       },
-      //     },
-      //   },
-      // }
+      {
+        typePolicies: {
+          Query: {
+            fields: {
+              //allUsers: concatPagination(), // {keyFields: []} , //concatPagination(),
+              //allPosts: concatPagination()   // {keyFields: []}   //concatPagination(),
+              //allPosts: concatPagination()   // {keyFields: []}   //concatPagination(),
+              // allPosts: {
+              //   keyArgs: false,
+              //   merge(existing, incoming) {
+              //     console.log('existing', existing)
+              //     console.log('incoming', incoming)
+              //     let allPosts: Reference[] = [];
+              //     if (existing) {
+              //       allPosts = allPosts.concat(existing);
+              //     }
+              //     if (incoming) {
+              //       allPosts = allPosts.concat(incoming);
+              //     }
+              //     // return {
+              //     //   ...incoming,
+              //     //   allPosts,
+              //     // };
+              //     return {
+              //       ...incoming,
+              //       allPosts
+              //     };
+              //   }
+            },
+          },
+        },
+      }
     ),
   })
 }

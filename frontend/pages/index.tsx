@@ -2,12 +2,14 @@ import App from '../components/App'
 import Header from '../components/Header'
 import InfoBox from '../components/InfoBox'
 import PostList from '../components/PostList'
-
-import { initializeApollo, addApolloState } from '../lib/apolloClient'
+import { initializeApollo, addApolloState, client } from '../lib/apolloClient'
 import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
-import { AllPostsDocument } from '../interfaces/graphql_generated'
+import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated'
+import { GetStaticProps } from "next";
+import ErrorMessage from '../components/error-message'
+import { useQuery } from "@apollo/client"; 
 
-const Home = () => (
+const Home = ({posts}: {posts: AllPostsQuery["allPosts"]}) => (
     <App>
       <Header />
       <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
@@ -15,18 +17,20 @@ const Home = () => (
     </App>  
 ) 
 
-export async function getStaticProps<GetStaticProps>() {
-  const apolloClient = initializeApollo()
-
-  // await apolloClient.query({
+export const getStaticProps: GetStaticProps = async () => {
+  // const { data, error } = await client.query<AllPostsQuery>({
   //   query: AllPostsDocument,
-  //   variables: { take: DEFAULT_PAGE_TAKE },
+  //   variables: {take: DEFAULT_PAGE_TAKE}  //@todo: take to real number 
   // })
 
-  return addApolloState(apolloClient, {
-    props: {},
-    revalidate: 1,
-  })
+  // if (error) return <ErrorMessage message="Error loading posts." />
+  // if (!data) return <div>Loading</div>
+    
+  return {
+    props: { 
+      //posts: data
+    }
+  }
 }
 
 export default Home;

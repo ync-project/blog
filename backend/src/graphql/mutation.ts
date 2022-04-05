@@ -108,7 +108,8 @@ import {
           const currentPost = await context.prisma.post.findUnique({
             where: { id: args.id },
            })
-
+          
+           //console.log('args.id', args.id)
           const updatePost = await context.prisma.post.update({
             where: { id: args.id },
             data: { votes: Number(currentPost?.votes) + 1 },

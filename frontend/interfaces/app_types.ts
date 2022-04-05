@@ -9,3 +9,8 @@ export interface PostIdParams extends ParsedUrlQuery {
     id: string,
  }
 
+export type SearchVariables = {
+    searchString?: string ,
+    take?: number
+}
+  
