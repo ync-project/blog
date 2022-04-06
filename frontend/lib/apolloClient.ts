@@ -4,6 +4,7 @@ import { concatPagination,  } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
 import { Reference } from '@apollo/client'
+import { relayStylePagination } from '@apollo/client/utilities';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
@@ -30,6 +31,32 @@ function createApolloClient() {
               //allUsers: concatPagination(), // {keyFields: []} , //concatPagination(),
               //allPosts: concatPagination()   // {keyFields: []}   //concatPagination(),
               //allPosts: concatPagination()   // {keyFields: []}   //concatPagination(),
+              //allPosts: relayStylePagination(),
+              allPosts: {
+                merge(existing: any[], incoming: any[], { args, readField }) {
+                  const merged = existing ? existing.slice(0) : [];
+                  // Obtain a Set of all existing task IDs.
+                  const existingIdSet = new Set(
+                    merged.map(task => readField("id", task)));
+                  // Remove incoming tasks already present in the existing data.
+                  incoming = incoming.filter(
+                    task => !existingIdSet.has(readField("id", task)));
+                  // Find the index of the task just before the incoming page of tasks.
+                  const afterIndex = merged.findIndex(
+                    task => args.afterId === readField("id", task));
+                  if (afterIndex >= 0) {
+                    // If we found afterIndex, insert incoming after that index.
+                    merged.splice(afterIndex + 1, 0, ...incoming);
+                  } else {
+                    // Otherwise insert incoming at the end of the existing data.
+                    merged.push(...incoming);
+                  }
+                  return merged;
+                },
+                  // merge(existing = [], incoming: any[]) {
+                  //   return [...existing, ...incoming]
+                  // }
+              }
               // allPosts: {
               //   keyArgs: false,
               //   merge(existing, incoming) {

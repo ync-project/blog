@@ -137,7 +137,7 @@ export const Query = objectType({
           }
           console.log('searchString:', args.searchString, ', take', args.take, ', skip', args.skip)
           return context.prisma.post.findMany({
-            where,
+            where, 
             take: args.take || undefined,
             skip: args.skip || undefined,
             orderBy: args.orderBy || undefined,
