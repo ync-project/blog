@@ -6,33 +6,48 @@ import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated
 import Search from "./Search";
 import ClientOnly from '../components/ClientOnly'
 import Posts from "./Posts";
+import { client } from '../lib/apolloClient'
 
 /**
  * this component implements both lazyQuery and fetchMore
  * @returns 
  */
 export default function PostList(){
-  const [variables, setVariables] = useState<SearchVariables>({
-    take: DEFAULT_PAGE_TAKE,
-    skip: 0
-  })
+  const [searchString, setSearchString] = useState<string>('')
+  const [take, setTake] = useState<number>(DEFAULT_PAGE_TAKE)
+  const [skip, setSkip] = useState<number>(0)
+  const [valid, setVaild] = useState<boolean>(true)
+
+  const handleSearchstring = (value: any) => {
+    setSearchString(value)
+  }
+  const handleTake = (e: any) => {
+    //console.log('handleTake', e.target.value)
+    setTake(Number(e.target.value))
+  }
+  const handleSkip = (e: any) => {
+    setSkip(Number(e.target.value))
+  }
+
   const handleSearch = (event: any) => {
     event.preventDefault()
-    const formData = new window.FormData(event.target)
-    //form.reset()
-    const newVariables = {
-      searchString: formData.get('searchString')!.toString(),
-      take: Number(formData.get('take')!.toString()) || DEFAULT_PAGE_TAKE,
-      skip: Number(formData.get('skip')!.toString()) || 0,       
-    }
-    setVariables(newVariables)
-    //loadPosts({variables: newVariables })
+    // const formData = new window.FormData(event.target)
+    // //form.reset()
+    // const newVariables = {
+    //   searchString: formData.get('searchString')!.toString(),
+    //   take: Number(formData.get('take')!.toString()) || DEFAULT_PAGE_TAKE,
+    //   skip: Number(formData.get('skip')!.toString()) || 0,       
+    // }
+    //setVariables(newVariables)
+    //loadPosts({variables:{ searchString, take, skip}  })
   }
+
+  //
 
   // // default fetched data
   const { data: data1, loading, error, networkStatus, fetchMore } = useQuery<AllPostsQuery>(    
     AllPostsDocument, {
-        variables,
+        variables: {searchString, take, skip},
         notifyOnNetworkStatusChange: true,
         //fetchPolicy: "network-only",   // Used for first execution
         //nextFetchPolicy: "cache-first" // Used for subsequent executions
@@ -99,8 +114,11 @@ export default function PostList(){
         {console.log('rendering...')}
         <ClientOnly>
           <h1>Post List</h1>
-          <Search handeleSearch={handleSearch} variables={variables} skip={data?.allPosts?.length}/>
-          {data &&
+          <Search handeleSearch={handleSearch} 
+              searchString={searchString} handleSearchstring={handleSearchstring}
+              take={take} handleTake={handleTake}
+              skip={data?.allPosts?.length}/>
+          {valid && data &&
           <Posts posts={data.allPosts} count={data._allPostsMeta?.count!}
                   loadMorePosts={loadMorePosts} loadingMorePosts={loadingMorePosts} />}
         </ClientOnly>
