@@ -84,6 +84,11 @@ export interface NexusGenObjects {
     viewCount?: number | null; // Int
     votes?: number | null; // Int
   }
+  PostConnection: { // root type
+    cursor: string; // String!
+    hasMore: boolean; // Boolean!
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+  }
   Profile: { // root type
     bio?: string | null; // String
     id: number; // Int!
@@ -152,6 +157,11 @@ export interface NexusGenFieldTypes {
     viewCount: number | null; // Int
     votes: number | null; // Int
   }
+  PostConnection: { // field return type
+    cursor: string; // String!
+    hasMore: boolean; // Boolean!
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+  }
   Profile: { // field return type
     bio: string | null; // String
     id: number; // Int!
@@ -164,6 +174,7 @@ export interface NexusGenFieldTypes {
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     postById: NexusGenRootTypes['Post'] | null; // Post
+    posts: NexusGenRootTypes['PostConnection'][]; // [PostConnection!]!
     user: NexusGenRootTypes['User'] | null; // User
   }
   Response: { // field return type
@@ -221,6 +232,11 @@ export interface NexusGenFieldTypeNames {
     viewCount: 'Int'
     votes: 'Int'
   }
+  PostConnection: { // field return type name
+    cursor: 'String'
+    hasMore: 'Boolean'
+    posts: 'Post'
+  }
   Profile: { // field return type name
     bio: 'String'
     id: 'Int'
@@ -233,6 +249,7 @@ export interface NexusGenFieldTypeNames {
     allUsers: 'User'
     draftsByUser: 'Post'
     postById: 'Post'
+    posts: 'PostConnection'
     user: 'User'
   }
   Response: { // field return type name
@@ -307,6 +324,10 @@ export interface NexusGenArgTypes {
     }
     postById: { // args
       id?: number | null; // Int
+    }
+    posts: { // args
+      after?: number | null; // Int
+      take?: number | null; // Int
     }
     user: { // args
       id?: number | null; // Int

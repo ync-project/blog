@@ -7,7 +7,6 @@ import * as types from './graphql/types'
 import * as query from './graphql/query'
 import * as mutation from './graphql/mutation'
 
-
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 
 export const schema = makeSchema({

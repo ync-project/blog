@@ -12,6 +12,7 @@ import {
 import { Context } from '../context'
 import { User } from './types/user'
 import { Post } from './types/post'
+import { Prisma } from '@prisma/client'
 
 export const SortOrder = enumType({
     name: 'SortOrder',
@@ -71,6 +72,33 @@ export const Query = objectType({
                 published: false,
               },
             })
+        },
+      })
+
+      t.nonNull.list.nonNull.field('posts', {
+        type: PostConnection,
+        args:{
+          take: intArg(),
+          after: intArg(),
+        },
+        resolve: async (_parent, args, context: Context) => {
+          console.log('after', args.after)
+           const posts = await context.prisma.post.findMany({
+            cursor: { 
+              id: args.after || undefined
+            }, 
+            take: args.take || undefined,
+          })
+
+          const totalCount = await context.prisma.post.count() || 0
+          console.log('totalCount', totalCount)
+          console.log('posts.length', posts.length)
+
+          return {
+            cursor: posts[posts.length - 1].id || null,
+            hasMore: posts.length < totalCount,
+            posts: posts,
+          };
         },
       })
 
@@ -222,6 +250,16 @@ export const Query = objectType({
     name: '_QueryMeta',
     definition(t) {
       t.int('count')
+    }
+  })
+
+  export const PostConnection = objectType({
+    name: 'PostConnection',
+    definition(t) {
+      t.nonNull.string('cursor')
+      t.nonNull.boolean('hasMore')
+      t.nonNull.list.nonNull.field('posts', { 
+        type: Post})
     }
   })
   

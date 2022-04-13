@@ -43,6 +43,12 @@ type Post {
   votes: Int
 }
 
+type PostConnection {
+  cursor: String!
+  hasMore: Boolean!
+  posts: [Post!]!
+}
+
 input PostCreateInput {
   content: String
   title: String!
@@ -65,6 +71,7 @@ type Query {
   allUsers(skip: Int, take: Int): [User!]!
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   postById(id: Int): Post
+  posts(after: Int, take: Int): [PostConnection!]!
   user(id: Int): User
 }
 
