@@ -23,14 +23,6 @@ type Mutation {
   votePost(id: Int!): Post
 }
 
-type PageInfo {
-  currentPage: Int!
-  hasNextPage: Boolean!
-  pageCount: Int!
-  perPage: Int!
-  totalCount: Int!
-}
-
 type Post {
   author: User
   content: String
@@ -47,6 +39,7 @@ type PostConnection {
   cursor: String!
   hasMore: Boolean!
   posts: [Post!]!
+  totalCount: Int!
 }
 
 input PostCreateInput {
@@ -65,31 +58,16 @@ type Profile {
 }
 
 type Query {
-  _allPostsMeta(searchString: String): _QueryMeta
-  _allUsersMeta: _QueryMeta
-  allPosts(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
   allUsers(skip: Int, take: Int): [User!]!
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   postById(id: Int): Post
-  posts(after: Int, take: Int): [PostConnection!]!
+  posts(after: Int, take: Int): PostConnection
   user(id: Int): User
-}
-
-type Response {
-  pageInfo: PageInfo!
-  posts: [Post!]!
 }
 
 enum SortOrder {
   asc
   desc
-}
-
-type TopInfo {
-  pageCount: Int!
-  perPage: Int!
-  topPosts: [Post!]!
-  totalCount: Int!
 }
 
 type User {
@@ -110,8 +88,4 @@ input UserCreateInput {
 input UserUniqueInput {
   email: String
   id: Int
-}
-
-type _QueryMeta {
-  count: Int
 }

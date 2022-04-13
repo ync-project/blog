@@ -67,13 +67,6 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: {};
-  PageInfo: { // root type
-    currentPage: number; // Int!
-    hasNextPage: boolean; // Boolean!
-    pageCount: number; // Int!
-    perPage: number; // Int!
-    totalCount: number; // Int!
-  }
   Post: { // root type
     content?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -88,29 +81,17 @@ export interface NexusGenObjects {
     cursor: string; // String!
     hasMore: boolean; // Boolean!
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
+    totalCount: number; // Int!
   }
   Profile: { // root type
     bio?: string | null; // String
     id: number; // Int!
   }
   Query: {};
-  Response: { // root type
-    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
-    posts: NexusGenRootTypes['Post'][]; // [Post!]!
-  }
-  TopInfo: { // root type
-    pageCount: number; // Int!
-    perPage: number; // Int!
-    topPosts: NexusGenRootTypes['Post'][]; // [Post!]!
-    totalCount: number; // Int!
-  }
   User: { // root type
     email: string; // String!
     id: number; // Int!
     name?: string | null; // String
-  }
-  _QueryMeta: { // root type
-    count?: number | null; // Int
   }
 }
 
@@ -139,13 +120,6 @@ export interface NexusGenFieldTypes {
     updateProfileForUser: NexusGenRootTypes['User'] | null; // User
     votePost: NexusGenRootTypes['Post'] | null; // Post
   }
-  PageInfo: { // field return type
-    currentPage: number; // Int!
-    hasNextPage: boolean; // Boolean!
-    pageCount: number; // Int!
-    perPage: number; // Int!
-    totalCount: number; // Int!
-  }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
     content: string | null; // String
@@ -161,6 +135,7 @@ export interface NexusGenFieldTypes {
     cursor: string; // String!
     hasMore: boolean; // Boolean!
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
+    totalCount: number; // Int!
   }
   Profile: { // field return type
     bio: string | null; // String
@@ -168,24 +143,11 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    _allPostsMeta: NexusGenRootTypes['_QueryMeta'] | null; // _QueryMeta
-    _allUsersMeta: NexusGenRootTypes['_QueryMeta'] | null; // _QueryMeta
-    allPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     allUsers: NexusGenRootTypes['User'][]; // [User!]!
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     postById: NexusGenRootTypes['Post'] | null; // Post
-    posts: NexusGenRootTypes['PostConnection'][]; // [PostConnection!]!
+    posts: NexusGenRootTypes['PostConnection'] | null; // PostConnection
     user: NexusGenRootTypes['User'] | null; // User
-  }
-  Response: { // field return type
-    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
-    posts: NexusGenRootTypes['Post'][]; // [Post!]!
-  }
-  TopInfo: { // field return type
-    pageCount: number; // Int!
-    perPage: number; // Int!
-    topPosts: NexusGenRootTypes['Post'][]; // [Post!]!
-    totalCount: number; // Int!
   }
   User: { // field return type
     email: string; // String!
@@ -193,9 +155,6 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     profile: NexusGenRootTypes['Profile'] | null; // Profile
-  }
-  _QueryMeta: { // field return type
-    count: number | null; // Int
   }
 }
 
@@ -214,13 +173,6 @@ export interface NexusGenFieldTypeNames {
     updateProfileForUser: 'User'
     votePost: 'Post'
   }
-  PageInfo: { // field return type name
-    currentPage: 'Int'
-    hasNextPage: 'Boolean'
-    pageCount: 'Int'
-    perPage: 'Int'
-    totalCount: 'Int'
-  }
   Post: { // field return type name
     author: 'User'
     content: 'String'
@@ -236,6 +188,7 @@ export interface NexusGenFieldTypeNames {
     cursor: 'String'
     hasMore: 'Boolean'
     posts: 'Post'
+    totalCount: 'Int'
   }
   Profile: { // field return type name
     bio: 'String'
@@ -243,24 +196,11 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Query: { // field return type name
-    _allPostsMeta: '_QueryMeta'
-    _allUsersMeta: '_QueryMeta'
-    allPosts: 'Post'
     allUsers: 'User'
     draftsByUser: 'Post'
     postById: 'Post'
     posts: 'PostConnection'
     user: 'User'
-  }
-  Response: { // field return type name
-    pageInfo: 'PageInfo'
-    posts: 'Post'
-  }
-  TopInfo: { // field return type name
-    pageCount: 'Int'
-    perPage: 'Int'
-    topPosts: 'Post'
-    totalCount: 'Int'
   }
   User: { // field return type name
     email: 'String'
@@ -268,9 +208,6 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     posts: 'Post'
     profile: 'Profile'
-  }
-  _QueryMeta: { // field return type name
-    count: 'Int'
   }
 }
 
@@ -306,15 +243,6 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    _allPostsMeta: { // args
-      searchString?: string | null; // String
-    }
-    allPosts: { // args
-      orderBy?: NexusGenInputs['PostOrderByUpdatedAtInput'] | null; // PostOrderByUpdatedAtInput
-      searchString?: string | null; // String
-      skip?: number | null; // Int
-      take?: number | null; // Int
-    }
     allUsers: { // args
       skip?: number | null; // Int
       take?: number | null; // Int
