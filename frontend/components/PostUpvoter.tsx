@@ -1,5 +1,5 @@
 import { gql, useMutation } from '@apollo/client'
-import { Post } from '../interfaces/graphql_generated'
+import { Post } from '../types/graphql_generated'
 
 const UPDATE_POST_MUTATION = gql`
   mutation votePost($id: Int!) {

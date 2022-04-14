@@ -78,7 +78,7 @@ export interface NexusGenObjects {
     votes?: number | null; // Int
   }
   PostConnection: { // root type
-    cursor: string; // String!
+    cursor: number; // Int!
     hasMore: boolean; // Boolean!
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     totalCount: number; // Int!
@@ -132,7 +132,7 @@ export interface NexusGenFieldTypes {
     votes: number | null; // Int
   }
   PostConnection: { // field return type
-    cursor: string; // String!
+    cursor: number; // Int!
     hasMore: boolean; // Boolean!
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     totalCount: number; // Int!
@@ -143,10 +143,10 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    allUsers: NexusGenRootTypes['User'][]; // [User!]!
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     postById: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['PostConnection'] | null; // PostConnection
+    uers: NexusGenRootTypes['User'][]; // [User!]!
     user: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
@@ -185,7 +185,7 @@ export interface NexusGenFieldTypeNames {
     votes: 'Int'
   }
   PostConnection: { // field return type name
-    cursor: 'String'
+    cursor: 'Int'
     hasMore: 'Boolean'
     posts: 'Post'
     totalCount: 'Int'
@@ -196,10 +196,10 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Query: { // field return type name
-    allUsers: 'User'
     draftsByUser: 'Post'
     postById: 'Post'
     posts: 'PostConnection'
+    uers: 'User'
     user: 'User'
   }
   User: { // field return type name
@@ -243,10 +243,6 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    allUsers: { // args
-      skip?: number | null; // Int
-      take?: number | null; // Int
-    }
     draftsByUser: { // args
       userUniqueInput: NexusGenInputs['UserUniqueInput']; // UserUniqueInput!
     }
@@ -255,6 +251,13 @@ export interface NexusGenArgTypes {
     }
     posts: { // args
       after?: number | null; // Int
+      orderBy?: NexusGenInputs['PostOrderByUpdatedAtInput'] | null; // PostOrderByUpdatedAtInput
+      searchString?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+    uers: { // args
+      skip?: number | null; // Int
       take?: number | null; // Int
     }
     user: { // args

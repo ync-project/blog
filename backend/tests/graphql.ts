@@ -32,14 +32,14 @@ export const ProfileFields = `
 `  
 
 // Search posts with paginated and ordered results
-export const FEED_LIST = `
-    query feedList(
+export const POSTS = `
+    query posts(
         $searchString: String,
         $skip: Int,
         $take: Int,
         $orderBy: PostOrderByUpdatedAtInput
     ) {
-        feed(
+        posts(
             searchString: $searchString
             skip: $skip
             take: $take

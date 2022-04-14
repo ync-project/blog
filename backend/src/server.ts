@@ -6,5 +6,9 @@ export async function createAplloServer () {
   return new ApolloServer({ 
     schema, 
     context: createContext,
+    introspection: true,
+    apollo: {
+      key: process.env.APOLLO_KEY,
+    },
   })
 }

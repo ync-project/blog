@@ -79,15 +79,6 @@ export type MutationVotePostArgs = {
   id: Scalars['Int'];
 };
 
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  currentPage: Scalars['Int'];
-  hasNextPage: Scalars['Boolean'];
-  pageCount: Scalars['Int'];
-  perPage: Scalars['Int'];
-  totalCount: Scalars['Int'];
-};
-
 export type Post = {
   __typename?: 'Post';
   author?: Maybe<User>;
@@ -99,6 +90,14 @@ export type Post = {
   updatedAt: Scalars['DateTime'];
   viewCount?: Maybe<Scalars['Int']>;
   votes?: Maybe<Scalars['Int']>;
+};
+
+export type PostConnection = {
+  __typename?: 'PostConnection';
+  cursor: Scalars['Int'];
+  hasMore: Scalars['Boolean'];
+  posts: Array<Post>;
+  totalCount: Scalars['Int'];
 };
 
 export type PostCreateInput = {
@@ -119,32 +118,11 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
-  _allPostsMeta?: Maybe<_QueryMeta>;
-  _allUsersMeta?: Maybe<_QueryMeta>;
-  allPosts: Array<Post>;
-  allUsers: Array<User>;
   draftsByUser?: Maybe<Array<Maybe<Post>>>;
   postById?: Maybe<Post>;
+  posts?: Maybe<PostConnection>;
+  uers: Array<User>;
   user?: Maybe<User>;
-};
-
-
-export type Query_AllPostsMetaArgs = {
-  searchString?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryAllPostsArgs = {
-  orderBy?: InputMaybe<PostOrderByUpdatedAtInput>;
-  searchString?: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryAllUsersArgs = {
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -158,28 +136,29 @@ export type QueryPostByIdArgs = {
 };
 
 
-export type QueryUserArgs = {
-  id?: InputMaybe<Scalars['Int']>;
+export type QueryPostsArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<PostOrderByUpdatedAtInput>;
+  searchString?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
-export type Response = {
-  __typename?: 'Response';
-  pageInfo: PageInfo;
-  posts: Array<Post>;
+
+export type QueryUersArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUserArgs = {
+  id?: InputMaybe<Scalars['Int']>;
 };
 
 export enum SortOrder {
   Asc = 'asc',
   Desc = 'desc'
 }
-
-export type TopInfo = {
-  __typename?: 'TopInfo';
-  pageCount: Scalars['Int'];
-  perPage: Scalars['Int'];
-  topPosts: Array<Post>;
-  totalCount: Scalars['Int'];
-};
 
 export type User = {
   __typename?: 'User';
@@ -202,12 +181,7 @@ export type UserUniqueInput = {
   id?: InputMaybe<Scalars['Int']>;
 };
 
-export type _QueryMeta = {
-  __typename?: '_QueryMeta';
-  count?: Maybe<Scalars['Int']>;
-};
-
-export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean };
+export type PostFieldsFragment = { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any };
 
 export type UserIdentitiesFragment = { __typename?: 'User', id: number, email: string };
 
@@ -215,29 +189,30 @@ export type UserFieldsFragment = { __typename?: 'User', id: number, email: strin
 
 export type ProfileFieldsFragment = { __typename?: 'Profile', id: number, bio?: string | null };
 
-export type AllPostsQueryVariables = Exact<{
+export type PostsQueryVariables = Exact<{
   searchString?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<PostOrderByUpdatedAtInput>;
 }>;
 
 
-export type AllPostsQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, createdAt: any }>, _allPostsMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
+export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostConnection', cursor: number, hasMore: boolean, totalCount: number, posts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null }> } | null };
 
 export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type PostByIdQuery = { __typename?: 'Query', postById?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
+export type PostByIdQuery = { __typename?: 'Query', postById?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null } | null };
 
 export type DraftsByUserQueryVariables = Exact<{
   email: Scalars['String'];
 }>;
 
 
-export type DraftsByUserQuery = { __typename?: 'Query', draftsByUser?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null };
+export type DraftsByUserQuery = { __typename?: 'Query', draftsByUser?: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null } | null> | null };
 
 export type CreateDraftMutationVariables = Exact<{
   authorEmail: Scalars['String'];
@@ -246,7 +221,7 @@ export type CreateDraftMutationVariables = Exact<{
 }>;
 
 
-export type CreateDraftMutation = { __typename?: 'Mutation', createDraft?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, author?: { __typename?: 'User', id: number, email: string } | null } | null };
+export type CreateDraftMutation = { __typename?: 'Mutation', createDraft?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null } | null };
 
 export type TogglePublishPostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -276,13 +251,13 @@ export type DeletePostMutationVariables = Exact<{
 
 export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number } | null };
 
-export type AllUsersQueryVariables = Exact<{
-  skip?: InputMaybe<Scalars['Int']>;
+export type UsersQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type AllUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', id: number, email: string, name?: string | null }>, _allUsersMeta?: { __typename?: '_QueryMeta', count?: number | null } | null };
+export type UsersQuery = { __typename?: 'Query', uers: Array<{ __typename?: 'User', id: number, name?: string | null, email: string }> };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -334,6 +309,8 @@ export const PostFieldsFragmentDoc = gql`
   viewCount
   votes
   published
+  createdAt
+  updatedAt
 }
     `;
 export const UserIdentitiesFragmentDoc = gql`
@@ -359,57 +336,60 @@ export const ProfileFieldsFragmentDoc = gql`
   bio
 }
     `;
-export const AllPostsDocument = gql`
-    query allPosts($searchString: String, $take: Int, $skip: Int, $orderBy: PostOrderByUpdatedAtInput) {
-  allPosts(
-    searchString: $searchString
+export const PostsDocument = gql`
+    query posts($searchString: String, $take: Int, $skip: Int, $after: Int, $orderBy: PostOrderByUpdatedAtInput) {
+  posts(
     take: $take
     skip: $skip
+    after: $after
+    searchString: $searchString
     orderBy: $orderBy
   ) {
-    id
-    title
-    content
-    viewCount
-    votes
-    createdAt
-  }
-  _allPostsMeta(searchString: $searchString) {
-    count
+    cursor
+    hasMore
+    totalCount
+    posts {
+      ...PostFields
+      author {
+        ...UserIdentities
+      }
+    }
   }
 }
-    `;
+    ${PostFieldsFragmentDoc}
+${UserIdentitiesFragmentDoc}`;
 
 /**
- * __useAllPostsQuery__
+ * __usePostsQuery__
  *
- * To run a query within a React component, call `useAllPostsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAllPostsQuery({
+ * const { data, loading, error } = usePostsQuery({
  *   variables: {
  *      searchString: // value for 'searchString'
  *      take: // value for 'take'
  *      skip: // value for 'skip'
+ *      after: // value for 'after'
  *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
-export function useAllPostsQuery(baseOptions?: Apollo.QueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
+export function usePostsQuery(baseOptions?: Apollo.QueryHookOptions<PostsQuery, PostsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AllPostsQuery, AllPostsQueryVariables>(AllPostsDocument, options);
+        return Apollo.useQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
       }
-export function useAllPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllPostsQuery, AllPostsQueryVariables>) {
+export function usePostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostsQuery, PostsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AllPostsQuery, AllPostsQueryVariables>(AllPostsDocument, options);
+          return Apollo.useLazyQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
         }
-export type AllPostsQueryHookResult = ReturnType<typeof useAllPostsQuery>;
-export type AllPostsLazyQueryHookResult = ReturnType<typeof useAllPostsLazyQuery>;
-export type AllPostsQueryResult = Apollo.QueryResult<AllPostsQuery, AllPostsQueryVariables>;
+export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
+export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
+export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
 export const PostByIdDocument = gql`
     query postById($id: Int!) {
   postById(id: $id) {
@@ -662,47 +642,44 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
-export const AllUsersDocument = gql`
-    query allUsers($skip: Int, $take: Int) {
-  allUsers(skip: $skip, take: $take) {
+export const UsersDocument = gql`
+    query users($take: Int, $skip: Int) {
+  uers(skip: $skip, take: $take) {
     id
-    email
     name
-  }
-  _allUsersMeta {
-    count
+    email
   }
 }
     `;
 
 /**
- * __useAllUsersQuery__
+ * __useUsersQuery__
  *
- * To run a query within a React component, call `useAllUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAllUsersQuery({
+ * const { data, loading, error } = useUsersQuery({
  *   variables: {
- *      skip: // value for 'skip'
  *      take: // value for 'take'
+ *      skip: // value for 'skip'
  *   },
  * });
  */
-export function useAllUsersQuery(baseOptions?: Apollo.QueryHookOptions<AllUsersQuery, AllUsersQueryVariables>) {
+export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AllUsersQuery, AllUsersQueryVariables>(AllUsersDocument, options);
+        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
       }
-export function useAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllUsersQuery, AllUsersQueryVariables>) {
+export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AllUsersQuery, AllUsersQueryVariables>(AllUsersDocument, options);
+          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
         }
-export type AllUsersQueryHookResult = ReturnType<typeof useAllUsersQuery>;
-export type AllUsersLazyQueryHookResult = ReturnType<typeof useAllUsersLazyQuery>;
-export type AllUsersQueryResult = Apollo.QueryResult<AllUsersQuery, AllUsersQueryVariables>;
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
+export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
 export const UserDocument = gql`
     query user($id: Int!) {
   user(id: $id) {

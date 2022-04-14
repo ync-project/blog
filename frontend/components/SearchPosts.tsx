@@ -2,7 +2,7 @@ import React from 'react';
 
 import Posts from './Posts'
 import { useQuery, NetworkStatus } from '@apollo/client'
-import { AllPostsDocument } from '../interfaces/graphql_generated'
+import { AllPostsDocument } from '../types/graphql_generated'
     
 export default function SearchPosts({searchString, take, skip}: 
     {searchString: string, take: number, skip: number}) {

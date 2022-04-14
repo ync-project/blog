@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {useEffect} from 'react'
-import { DEFAULT_PAGE_TAKE, SearchVariables } from '../interfaces/app_types'  
+import { DEFAULT_PAGE_TAKE, SearchVariables } from '../types/app_types'  
 import { useQuery, useLazyQuery, NetworkStatus } from '@apollo/client'
-import { AllPostsDocument, AllPostsQuery } from '../interfaces/graphql_generated'
+import { PostsDocument, PostsQuery, Post } from '../types/graphql_generated'
 import Search from "./Search";
 import ClientOnly from '../components/ClientOnly'
 import Posts from "./Posts";
@@ -31,7 +31,9 @@ export default function PostList(){
 
   const handleSearch = (event: any) => {
     event.preventDefault()
-    // const formData = new window.FormData(event.target)
+    const formData = new window.FormData(event.target)
+    const searchString = formData.get('searchString')!.toString()
+    setSearchString(searchString)
     // //form.reset()
     // const newVariables = {
     //   searchString: formData.get('searchString')!.toString(),
@@ -45,22 +47,14 @@ export default function PostList(){
   //
 
   // // default fetched data
-  const { data: data1, loading, error, networkStatus, fetchMore } = useQuery<AllPostsQuery>(    
-    AllPostsDocument, {
+  const { data, loading, error, networkStatus, fetchMore } = useQuery<PostsQuery>(    
+    PostsDocument, {
         variables: {searchString, take, skip},
         notifyOnNetworkStatusChange: true,
         //fetchPolicy: "network-only",   // Used for first execution
         //nextFetchPolicy: "cache-first" // Used for subsequent executions
     });
 
-    // search data
-    // const [loadPosts, { data: data2, loading: loading2, error: error2, fetchMore,
-    //             networkStatus: networkStatus2}] = useLazyQuery<AllPostsQuery>(
-    //   AllPostsDocument, {
-    //       variables,
-    //       notifyOnNetworkStatusChange: true,
-    //   });
-    
     // useEffect(() => {
     //     loadPosts();
     // }, []);
@@ -68,42 +62,33 @@ export default function PostList(){
     const loadingMorePosts = networkStatus === NetworkStatus.fetchMore
 
     if ( networkStatus === NetworkStatus.fetchMore 
-        //|| networkStatus2 === NetworkStatus.fetchMore
         ) return <p>Refetching!</p>;
 
-    if ( loading 
-      // || loading2
-      ) {
+    if ( loading ) {
       return <span>Loading...</span>;
     }
-    if ( error
-        // || error2
-        ) {
+    if ( error ) {
       return <span>Something went wrong: ${error}</span>;
     }
 
-    const data = data1 //? data2 : null //data1
-    // if (!data) {
-    //   return <span>No product!</span>;
-    // }
+    if (!data) {
+      return <span>No product!</span>;
+    }
 
-    console.log('data1', data1)
-    //console.log('data2', data2)
+    const { posts, totalCount, cursor, hasMore} = data.posts!
 
-    const loadMorePosts = (skip : number) => {
-      //console.log('variables', variables)
-      console.log('skip', skip)
+    const loadMorePosts = () => {
+      console.log('cursor', cursor)
       fetchMore({
         variables: {
-          //...variables,
-          skip: skip || undefined,
-        },
+          skip: 1,
+          after: cursor
+        }
         // updateQuery: (previousResult, { fetchMoreResult }) => {
         //   if (!fetchMoreResult) return previousResult;
         //   return Object.assign({}, previousResult, {
-        //     allPosts: {
-        //       ...previousResult.allPosts,
-        //       votes: [...previousResult.allPosts.votes, ...fetchMoreResult.allPosts.votes]
+        //     posts: {
+        //       ...previousResult.posts?.posts,
         //     }
         //   });
         // }
@@ -111,15 +96,13 @@ export default function PostList(){
     }
     return ( 
       <>
-        {console.log('rendering...')}
         <ClientOnly>
           <h1>Post List</h1>
           <Search handeleSearch={handleSearch} 
               searchString={searchString} handleSearchstring={handleSearchstring}
-              take={take} handleTake={handleTake}
-              skip={data?.allPosts?.length}/>
+              take={take} handleTake={handleTake}/>
           {valid && data &&
-          <Posts posts={data.allPosts} count={data._allPostsMeta?.count!}
+          <Posts posts={posts as Post[]} count={totalCount} hasMore={hasMore} totalCount={totalCount}
                   loadMorePosts={loadMorePosts} loadingMorePosts={loadingMorePosts} />}
         </ClientOnly>
       </>

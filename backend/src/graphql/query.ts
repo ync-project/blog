@@ -79,23 +79,51 @@ export const Query = objectType({
         type: PostConnection,
         args:{
           take: intArg(),
+          skip: intArg(),
           after: intArg(),
+          searchString: stringArg(),
+          orderBy: arg({
+            type: 'PostOrderByUpdatedAtInput',
+          }),
         },
         resolve: async (_parent, args, context: Context) => {
-          // console.log('after', args.after)
-           const posts = await context.prisma.post.findMany({
-            cursor: { 
-              id: args.after || undefined
-            }, 
+          console.log('take', args.take)
+          console.log('skip', args.skip )
+          console.log('after', args.after)
+          console.log('searchString', args.searchString )
+          console.log('--------------')
+          const or: any = args.searchString
+            ? {
+                OR: [
+                  { title: { contains: args.searchString } },
+                  { content: { contains: args.searchString } },
+                ],
+              }
+            : {}
+  
+          const where = {
+              published: true,
+              ...or,
+          }
+
+          const posts = await context.prisma.post.findMany({
             take: args.take || undefined,
+            skip: args.skip || undefined,
+            cursor: args.after && { 
+              id: args.after 
+            } || undefined, 
+            where,
+            orderBy: args.orderBy || undefined,
           })
 
-          const totalCount = await context.prisma.post.count() || 0
+          const totalCount = await context.prisma.post.count({
+            where
+          }) || 0
           // console.log('totalCount', totalCount)
-          // console.log('posts.length', posts.length)
+          // console.log('posts.length', posts.length )
 
           return {
-            cursor: posts[posts.length - 1].id || null,
+            cursor: posts && posts.length > 0 && posts[posts.length - 1].id || 0,
             hasMore: posts.length < totalCount,
             totalCount, 
             posts
@@ -103,7 +131,7 @@ export const Query = objectType({
         },
       })
 
-      t.nonNull.list.nonNull.field('allUsers', {
+      t.nonNull.list.nonNull.field('uers', {
         type: User,
         args:{
           skip: intArg(),
@@ -136,7 +164,7 @@ export const Query = objectType({
   export const PostConnection = objectType({
     name: 'PostConnection',
     definition(t) {
-      t.nonNull.string('cursor')
+      t.nonNull.int('cursor')
       t.nonNull.boolean('hasMore')
       t.nonNull.int('totalCount')
       t.nonNull.list.nonNull.field('posts', { 

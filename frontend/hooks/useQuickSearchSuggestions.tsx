@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 //import { useLazyQuery } from '@apollo/client';
-import { AllPostsQuery, useAllPostsLazyQuery } from '../interfaces/graphql_generated'
+import { AllPostsQuery, useAllPostsLazyQuery } from '../types/graphql_generated'
 //import { GET_QUICK_SEARCH_SUGGESTIONS } from '../../queries/product.gql';
-import {AllPostsDocument} from '../interfaces/graphql_generated'
+import {AllPostsDocument} from '../types/graphql_generated'
 import { client } from '../lib/apolloClient'
 
 /**

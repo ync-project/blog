@@ -8,6 +8,8 @@ export const PostFields = gql`
         viewCount
         votes
         published
+        createdAt
+        updatedAt
     }
 `  
 export const UserIdentities = gql`
@@ -36,30 +38,29 @@ export const ProfileFields = gql`
 `  
 
 // Search posts with paginated and ordered results
-export const ALL_POSTS = gql`
-query allPosts(
-    $searchString: String, 
-    $take: Int, 
-    $skip: Int
-    $orderBy: PostOrderByUpdatedAtInput
-) {
-    allPosts(
-        searchString: $searchString,
-        take: $take, 
-        skip: $skip,
-        orderBy: $orderBy
-    ){
-      id
-      title
-      content
-      viewCount
-      votes
-      createdAt
+export const POSTS = gql`
+    query posts(
+        $searchString: String, 
+        $take: Int, 
+        $skip: Int
+        $after: Int, 
+        $orderBy: PostOrderByUpdatedAtInput
+    ) {
+        posts(  take: $take, skip: $skip, after: $after, 
+                searchString: $searchString, orderBy: $orderBy){
+            cursor
+            hasMore
+            totalCount
+            posts{
+                ...PostFields
+                author{
+                    ...UserIdentities
+                }
+            }    
+        }
     }
-    _allPostsMeta(searchString: $searchString) {
-      count
-    }
-  }
+    ${PostFields}
+    ${UserIdentities}
 `
 
 // Retrieve a single post
@@ -69,7 +70,7 @@ export const POST_BY_ID = gql`
             ...PostFields
             author{
                 ...UserIdentities
-            }
+         }
         }  
     }
     ${PostFields}
@@ -151,18 +152,14 @@ export const DELETE_POST = gql`
 `  
 
 // list all users
-export const ALL_USERS = gql`
-  query allUsers($skip: Int, $take: Int) {
-    allUsers(skip: $skip, take: $take) {
-      id
-      email
-      name
-    }
-    _allUsersMeta{
-      count
-    }
+export const USERS = gql`
+ query users($take: Int, $skip: Int){
+  uers(skip: $skip, take: $take){
+    id
+    name
+    email
   }
-    ${UserIdentities}
+}
 `  
 
 // display a user

@@ -1,5 +1,5 @@
 import PostItem from '../../components/post/PostItem'
-import { Post } from '../../interfaces/graphql_generated'
+import { Post } from '../../types/graphql_generated'
 import Link from 'next/link'
 
 const PostList = ( {posts, page=1, pageCount=10} : {

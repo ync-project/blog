@@ -36,7 +36,7 @@ type Post {
 }
 
 type PostConnection {
-  cursor: String!
+  cursor: Int!
   hasMore: Boolean!
   posts: [Post!]!
   totalCount: Int!
@@ -58,10 +58,10 @@ type Profile {
 }
 
 type Query {
-  allUsers(skip: Int, take: Int): [User!]!
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   postById(id: Int): Post
-  posts(after: Int, take: Int): PostConnection
+  posts(after: Int, orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): PostConnection
+  uers(skip: Int, take: Int): [User!]!
   user(id: Int): User
 }
 

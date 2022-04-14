@@ -5,13 +5,13 @@ export default function Search({handeleSearch,
     searchString, handleSearchstring, take, handleTake, skip}: any) {
   const takes = [1,3,5,10,15,20,25,30,40,50,75,100]
 
-  const handleString = useDebouncedCallback(handleSearchstring, 500)
+  //const handleString = useDebouncedCallback(handleSearchstring, 200)
 
   return (
     <div className="justify-content-center d-flex position-relative">
       <form onSubmit={handeleSearch}>
         <input type="text" name="searchString"
-          value={searchString} onChange={(e) => handleString(e.target.value)}
+          defaultValue={searchString}
           placeholder="title or content" />
         <input type="hidden" name="skip" defaultValue={skip} />
         <select name="take" 

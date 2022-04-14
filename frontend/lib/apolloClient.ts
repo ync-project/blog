@@ -5,6 +5,7 @@ import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
 import { Reference } from '@apollo/client'
 import { relayStylePagination } from '@apollo/client/utilities';
+import { cache } from './cache';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
@@ -23,66 +24,7 @@ function createApolloClient() {
       uri: 'http://localhost:4000', // Server URL (must be absolute)
       //credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
     }),
-    cache: new InMemoryCache(
-      {
-        typePolicies: {
-          Query: {
-            fields: {
-              //allUsers: concatPagination(), // {keyFields: []} , //concatPagination(),
-              //allPosts: concatPagination()   // {keyFields: []}   //concatPagination(),
-              //allPosts: concatPagination()   // {keyFields: []}   //concatPagination(),
-              //allPosts: relayStylePagination(),
-              allPosts: {
-                merge(existing: any[], incoming: any[], { args, readField }) {
-                  const merged = existing ? existing.slice(0) : [];
-                  // Obtain a Set of all existing task IDs.
-                  const existingIdSet = new Set(
-                    merged.map(task => readField("id", task)));
-                  // Remove incoming tasks already present in the existing data.
-                  incoming = incoming.filter(
-                    task => !existingIdSet.has(readField("id", task)));
-                  // Find the index of the task just before the incoming page of tasks.
-                  const afterIndex = merged.findIndex(
-                    task => args.afterId === readField("id", task));
-                  if (afterIndex >= 0) {
-                    // If we found afterIndex, insert incoming after that index.
-                    merged.splice(afterIndex + 1, 0, ...incoming);
-                  } else {
-                    // Otherwise insert incoming at the end of the existing data.
-                    merged.push(...incoming);
-                  }
-                  return merged;
-                },
-                  // merge(existing = [], incoming: any[]) {
-                  //   return [...existing, ...incoming]
-                  // }
-              }
-              // allPosts: {
-              //   keyArgs: false,
-              //   merge(existing, incoming) {
-              //     console.log('existing', existing)
-              //     console.log('incoming', incoming)
-              //     let allPosts: Reference[] = [];
-              //     if (existing) {
-              //       allPosts = allPosts.concat(existing);
-              //     }
-              //     if (incoming) {
-              //       allPosts = allPosts.concat(incoming);
-              //     }
-              //     // return {
-              //     //   ...incoming,
-              //     //   allPosts,
-              //     // };
-              //     return {
-              //       ...incoming,
-              //       allPosts
-              //     };
-              //   }
-            },
-          },
-        },
-      }
-    ),
+    cache,
   })
 }
 

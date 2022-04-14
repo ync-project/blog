@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Post } from '../../interfaces/graphql_generated'
+import { Post } from '../../types/graphql_generated'
 
 const PostItem = ({post} : {post: Post}) => {
   return (

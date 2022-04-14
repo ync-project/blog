@@ -1,28 +1,28 @@
 import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
-import { AllPostsQuery } from '../interfaces/graphql_generated'
+import { PostsQuery, Post } from '../types/graphql_generated'
 
-const Posts = ({posts, count, loadMorePosts, loadingMorePosts}: 
-  {posts: AllPostsQuery["allPosts"], count: number, loadMorePosts: any, loadingMorePosts: any}) => { 
-    const areMore = Number(posts.length) < count
+const Posts = ({posts, loadMorePosts, loadingMorePosts, hasMore, totalCount}: 
+  {posts: Post[], count: number, loadMorePosts: any, loadingMorePosts: any
+   , hasMore: boolean, totalCount: number}) => { 
     return ( posts &&
     <section>
       <ul>
-        {posts.map((post) => (
+        {posts.map((post) => ( post &&
           <li key={post.id}>
             <div>
               <span>{post.id}. </span>
               <Link href="/post/[id]" as={`/post/${post.id}`}>
-                <a>{post.title}</a>
+                <a>{post.id}. {post.title}</a>
               </Link>
               <PostUpvoter id={post.id} votes={post.votes || 0} />
             </div>
           </li>
         ))}
       </ul>
-      {areMore && (
-        <button onClick={() => loadMorePosts(posts.length)} disabled={loadingMorePosts}>
-          {loadingMorePosts ? 'Loading...' : 'Show More'} ({posts.length})
+      {hasMore && (
+        <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
+          {loadingMorePosts ? 'Loading...' : 'Show More'} (total: {totalCount})
         </button>
       )}
 
