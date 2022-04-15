@@ -3,10 +3,11 @@ import Link from 'next/link'
 import { PostsQuery, Post } from '../types/graphql_generated'
 
 const Posts = ({posts, loadMorePosts, loadingMorePosts, hasMore, totalCount}: 
-  {posts: Post[], count: number, loadMorePosts: any, loadingMorePosts: any
-   , hasMore: boolean, totalCount: number}) => { 
+  {posts: Post[], totalCount: number, loadMorePosts: any, loadingMorePosts: any
+   , hasMore: boolean}) => { 
     return ( posts &&
     <section>
+      founds : {totalCount} records
       <ul>
         {posts.map((post) => ( post &&
           <li key={post.id}>

@@ -14,7 +14,7 @@ let apolloClient: any
 // normal apollo client (no features like loadMore)
 export const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
-  cache: new InMemoryCache(),
+  cache //: new InMemoryCache(),
 });
 
 function createApolloClient() {

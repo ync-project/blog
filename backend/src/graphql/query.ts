@@ -116,7 +116,7 @@ export const Query = objectType({
             orderBy: args.orderBy || undefined,
           })
 
-          const totalCount = await context.prisma.post.count({
+          const allPosts = await context.prisma.post.findMany({
             where
           }) || 0
           // console.log('totalCount', totalCount)
@@ -124,8 +124,11 @@ export const Query = objectType({
 
           return {
             cursor: posts && posts.length > 0 && posts[posts.length - 1].id || 0,
-            hasMore: posts.length < totalCount,
-            totalCount, 
+            hasMore: 
+              posts.length ? 
+                posts[posts.length - 1].id !== allPosts[allPosts.length - 1].id
+                : false,
+            totalCount: allPosts.length, 
             posts
           };
         },
