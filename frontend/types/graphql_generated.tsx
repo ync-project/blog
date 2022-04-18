@@ -121,8 +121,8 @@ export type Query = {
   draftsByUser?: Maybe<Array<Maybe<Post>>>;
   postById?: Maybe<Post>;
   posts?: Maybe<PostConnection>;
-  uers: Array<User>;
   user?: Maybe<User>;
+  users?: Maybe<UserConnection>;
 };
 
 
@@ -145,14 +145,15 @@ export type QueryPostsArgs = {
 };
 
 
-export type QueryUersArgs = {
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
+export type QueryUserArgs = {
+  id?: InputMaybe<Scalars['Int']>;
 };
 
 
-export type QueryUserArgs = {
-  id?: InputMaybe<Scalars['Int']>;
+export type QueryUsersArgs = {
+  after?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export enum SortOrder {
@@ -167,6 +168,14 @@ export type User = {
   name?: Maybe<Scalars['String']>;
   posts: Array<Post>;
   profile?: Maybe<Profile>;
+};
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  cursor: Scalars['Int'];
+  hasMore: Scalars['Boolean'];
+  totalCount: Scalars['Int'];
+  users: Array<User>;
 };
 
 export type UserCreateInput = {
@@ -254,10 +263,11 @@ export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typ
 export type UsersQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', uers: Array<{ __typename?: 'User', id: number, name?: string | null, email: string }> };
+export type UsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', cursor: number, hasMore: boolean, totalCount: number, users: Array<{ __typename?: 'User', id: number, name?: string | null, email: string }> } | null };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -643,11 +653,16 @@ export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutati
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
 export const UsersDocument = gql`
-    query users($take: Int, $skip: Int) {
-  uers(skip: $skip, take: $take) {
-    id
-    name
-    email
+    query users($take: Int, $skip: Int, $after: Int) {
+  users(skip: $skip, take: $take, after: $after) {
+    cursor
+    hasMore
+    totalCount
+    users {
+      id
+      name
+      email
+    }
   }
 }
     `;
@@ -666,6 +681,7 @@ export const UsersDocument = gql`
  *   variables: {
  *      take: // value for 'take'
  *      skip: // value for 'skip'
+ *      after: // value for 'after'
  *   },
  * });
  */

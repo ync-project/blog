@@ -61,8 +61,8 @@ type Query {
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   postById(id: Int): Post
   posts(after: Int, orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): PostConnection
-  uers(skip: Int, take: Int): [User!]!
   user(id: Int): User
+  users(after: Int, skip: Int, take: Int): UserConnection
 }
 
 enum SortOrder {
@@ -76,6 +76,13 @@ type User {
   name: String
   posts: [Post!]!
   profile: Profile
+}
+
+type UserConnection {
+  cursor: Int!
+  hasMore: Boolean!
+  totalCount: Int!
+  users: [User!]!
 }
 
 input UserCreateInput {

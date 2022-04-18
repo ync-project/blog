@@ -4,8 +4,8 @@ import Header from '../components/Header'
 import Submit from '../components/Submit'
 import UserList from '../components/UserList'
 import { initializeApollo, addApolloState } from '../lib/apolloClient'
-import { AllUsersDocument } from '../interfaces/graphql_generated'
-import { DEFAULT_PAGE_TAKE } from '../interfaces/app_types'  
+import { UsersDocument } from '../types/graphql_generated'
+import { DEFAULT_PAGE_TAKE } from '../types/app_types'  
 
 const SSRPage = () => (
   <App>
@@ -20,7 +20,7 @@ export async function getServerSideProps() {
   const apolloClient = initializeApollo()
 
   await apolloClient.query({
-    query: AllUsersDocument,
+    query: UsersDocument,
     variables: { take: DEFAULT_PAGE_TAKE },
   })
 

@@ -93,6 +93,12 @@ export interface NexusGenObjects {
     id: number; // Int!
     name?: string | null; // String
   }
+  UserConnection: { // root type
+    cursor: number; // Int!
+    hasMore: boolean; // Boolean!
+    totalCount: number; // Int!
+    users: NexusGenRootTypes['User'][]; // [User!]!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -146,8 +152,8 @@ export interface NexusGenFieldTypes {
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     postById: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['PostConnection'] | null; // PostConnection
-    uers: NexusGenRootTypes['User'][]; // [User!]!
     user: NexusGenRootTypes['User'] | null; // User
+    users: NexusGenRootTypes['UserConnection'] | null; // UserConnection
   }
   User: { // field return type
     email: string; // String!
@@ -155,6 +161,12 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     profile: NexusGenRootTypes['Profile'] | null; // Profile
+  }
+  UserConnection: { // field return type
+    cursor: number; // Int!
+    hasMore: boolean; // Boolean!
+    totalCount: number; // Int!
+    users: NexusGenRootTypes['User'][]; // [User!]!
   }
 }
 
@@ -199,8 +211,8 @@ export interface NexusGenFieldTypeNames {
     draftsByUser: 'Post'
     postById: 'Post'
     posts: 'PostConnection'
-    uers: 'User'
     user: 'User'
+    users: 'UserConnection'
   }
   User: { // field return type name
     email: 'String'
@@ -208,6 +220,12 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     posts: 'Post'
     profile: 'Profile'
+  }
+  UserConnection: { // field return type name
+    cursor: 'Int'
+    hasMore: 'Boolean'
+    totalCount: 'Int'
+    users: 'User'
   }
 }
 
@@ -256,12 +274,13 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
     }
-    uers: { // args
-      skip?: number | null; // Int
-      take?: number | null; // Int
-    }
     user: { // args
       id?: number | null; // Int
+    }
+    users: { // args
+      after?: number | null; // Int
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
   }
 }

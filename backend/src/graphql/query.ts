@@ -13,6 +13,7 @@ import { Context } from '../context'
 import { User } from './types/user'
 import { Post } from './types/post'
 import { Prisma } from '@prisma/client'
+import { paginateResults } from '../utils'
 
 export const SortOrder = enumType({
     name: 'SortOrder',
@@ -87,11 +88,11 @@ export const Query = objectType({
           }),
         },
         resolve: async (_parent, args, context: Context) => {
-          console.log('take', args.take)
-          console.log('skip', args.skip )
-          console.log('after', args.after)
-          console.log('searchString', args.searchString )
-          console.log('--------------')
+          // console.log('take', args.take)
+          // console.log('skip', args.skip )
+          // console.log('after', args.after)
+          // console.log('searchString', args.searchString )
+          // console.log('--------------')
           const or: any = args.searchString
             ? {
                 OR: [
@@ -123,30 +124,37 @@ export const Query = objectType({
           // console.log('posts.length', posts.length )
 
           return {
-            cursor: posts && posts.length > 0 && posts[posts.length - 1].id || 0,
-            hasMore: 
-              posts.length ? 
-                posts[posts.length - 1].id !== allPosts[allPosts.length - 1].id
-                : false,
-            totalCount: allPosts.length, 
+            ...paginateResults(posts, allPosts, "id", 0 ),
             posts
-          };
+          }
         },
       })
 
-      t.nonNull.list.nonNull.field('uers', {
-        type: User,
+      t.field('users', {
+        type: UserConnection,
         args:{
           skip: intArg(),
           take: intArg(),
+          after: intArg(),
         },
         resolve: async (_parent, args, context: Context) => {
-           const results = await context.prisma.user.findMany({
-            take: args.take || undefined,
-            skip: args.skip || undefined,
-          })
-          console.log('results', results.map(p => p.id))
-          return results
+           const users = await context.prisma.user.findMany({
+              take: args.take || undefined,
+              skip: args.skip || undefined,
+              cursor: args.after && { 
+                id: args.after 
+              } || undefined, 
+             })
+            //console.log('users', users.map(p => p.id))
+            //console.log('users', users)
+            //return results
+          return {
+              ...paginateResults(users, users, "id", 0 ),
+            users
+          }
+
+          //console.log('results', results)
+          //return results
         },
       })
     
@@ -175,4 +183,14 @@ export const Query = objectType({
     }
   })
   
+  export const UserConnection = objectType({
+    name: 'UserConnection',
+    definition(t) {
+      t.nonNull.int('cursor')
+      t.nonNull.boolean('hasMore')
+      t.nonNull.int('totalCount')
+      t.nonNull.list.nonNull.field('users', { 
+       type: User})
+    }
+  })
   

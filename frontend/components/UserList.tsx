@@ -1,43 +1,57 @@
-import { gql, useQuery, NetworkStatus } from '@apollo/client'
-import { AllUsersDocument, AllUsersQuery } from '../types/graphql_generated'
+import {useEffect} from 'react'
+import { gql, useLazyQuery, NetworkStatus } from '@apollo/client'
+import { UsersDocument, UsersQuery, User } from '../types/graphql_generated'
 import ErrorMessage from './ErrorMessage'
 import { DEFAULT_PAGE_TAKE } from '../types/app_types'  
 
 
 export default function UserList() {
-  const { loading, error, data, fetchMore, networkStatus } = useQuery<AllUsersQuery>(
-    AllUsersDocument,
+  const [loadUsers, { loading, error, data, fetchMore, networkStatus }] = useLazyQuery<UsersQuery>(
+    UsersDocument,
     {
       variables:  { take: DEFAULT_PAGE_TAKE },
-      // Setting this value to true will make the component rerender when
-      // the "networkStatus" changes, so we are able to know if it is fetching
-      // more data
       notifyOnNetworkStatusChange: true,
     }
   )
 
+  useEffect(() => {
+    loadUsers()
+  }, [])
+
   const loadingMoreUsers = networkStatus === NetworkStatus.fetchMore
 
+  if (error) return <ErrorMessage message="Error loading users." />
+  if (loading && !loadingMoreUsers) return <div>Loading</div>
+  if (!data) return <div>No user</div>
+
+  const { cursor, hasMore, totalCount, users } = data.users!
+
   const loadMoreUsers = () => {
-    //console.log('loadMoreUsers')
     fetchMore({
       variables: {
-        skip: allUsers.length,
+        skip: 1,
+        after: cursor
       },
     })
   }
 
-  if (error) return <ErrorMessage message="Error loading users." />
-  if (loading && !loadingMoreUsers) return <div>Loading</div>
+  return (
+    <>
+      {users &&
+          <Users users={users as User[]} totalCount={totalCount} hasMore={hasMore} 
+                  loadMorePosts={loadMoreUsers} loadingMoreUsers={loadingMoreUsers} />}
+    </>
+  )
+} 
 
-  const { allUsers, _allUsersMeta } = data!
-  const areMoreUsers = allUsers.length < _allUsersMeta?.count! //_allPostsMeta.count
-
+const Users = ({users, loadMorePosts, loadingMoreUsers, hasMore, totalCount}: 
+  {users: User[], totalCount: number, loadMorePosts: any, loadingMoreUsers: any
+   , hasMore: boolean}) => {
   return (
     <section>
       <h1>User list</h1>
       <ul>
-        {allUsers.map((user, index) => (
+        {(users as User[]).map((user, index) => (
           <li key={user.id}>
             <div>
               <span>{index + 1}. </span>
@@ -46,8 +60,8 @@ export default function UserList() {
           </li>
         ))}
       </ul>
-      {areMoreUsers && (
-        <button onClick={() => loadMoreUsers()} disabled={loadingMoreUsers}>
+      {hasMore && (
+        <button onClick={() => loadingMoreUsers()} disabled={loadingMoreUsers}>
           {loadingMoreUsers ? 'Loading...' : 'Show More'}
         </button>
       )}
