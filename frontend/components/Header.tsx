@@ -9,6 +9,9 @@ export default function Header() {
       <Link href="/">
         <a className={pathname === '/' ? 'is-active' : ''}>Home</a>
       </Link>
+      <Link href="/postsscroll">
+        <a className={pathname === '/postsscroll' ? 'is-active' : ''}>Posts-Scroll</a>
+      </Link>
       <Link href="/user">
         <a className={pathname === '/user' ? 'is-active' : ''}>User</a>
       </Link>

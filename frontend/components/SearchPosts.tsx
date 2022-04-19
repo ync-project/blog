@@ -1,28 +1,35 @@
-import React from 'react';
 
-import Posts from './Posts'
-import { useQuery, NetworkStatus } from '@apollo/client'
-import { AllPostsDocument } from '../types/graphql_generated'
-    
-export default function SearchPosts({searchString, take, skip}: 
-    {searchString: string, take: number, skip: number}) {
-    //console.log('searchString', searchString, 'take', take)    
-    const { loading, error, data, networkStatus } = useQuery(
-      AllPostsDocument, {
-        variables: { 
-          searchString,
-          take,
-          skip,
-         },
-      }
-    )
-  
-    if (networkStatus === NetworkStatus.refetch) return <p>Refetching!</p>
-    if (loading) return null
-    if (error) return `Error!: ${error}`
-  
-    return (
-        data && <Posts posts={data.allPosts} count={data._allPostsMeta?.count!} />
-    )
-  }
-  
+export type SearchProps = { 
+  handleSearchstring: (e: any)=>void 
+  searchString: string
+}
+
+export default function Search( {handleSearchstring, searchString} : SearchProps) {
+
+  //const handleString = useDebouncedCallback(handleSearchstring, 200)
+
+  return (
+    <div className="justify-content-center d-flex position-relative">
+      <form>
+        <label>Search:</label>
+        <input type="text" name="searchString" 
+            value={searchString} onChange={handleSearchstring}
+          placeholder="title or content" />
+        <style jsx>{`
+        form {
+          border-bottom: 1px solid #ececec;
+          padding-bottom: 20px;
+          margin-bottom: 20px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        input {
+          display: block;
+          margin-bottom: 10px;
+        }
+      `}</style>
+      </form>     
+    </div>        
+  )
+}

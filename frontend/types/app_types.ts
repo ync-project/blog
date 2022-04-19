@@ -4,7 +4,7 @@ export type TODOPageErr = {
     message: string
 } 
 
-export const DEFAULT_PAGE_TAKE = 3
+export const DEFAULT_PAGE_TAKE = 5
 export interface PostIdParams extends ParsedUrlQuery {
     id: string,
  }
