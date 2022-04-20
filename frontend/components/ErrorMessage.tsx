@@ -1,4 +1,4 @@
-export default function ErrorMessage({ message }) {
+export default function ErrorMessage({ message }: any) {
   return (
     <aside>
       {message}

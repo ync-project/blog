@@ -14,7 +14,7 @@ const QuickSearchSuggestions = (props: any) => {
         items
     } = useQuickSearchSuggestions({ isValid, searchQuery });
 
-    const suggestions = items.map(product => {
+    const suggestions = items.map((product: any) => {
         console.log(product.id, product.title)
         return <ListGroup.Item key={product.id}>
             {product.title}

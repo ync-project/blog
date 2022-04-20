@@ -67,6 +67,11 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: {};
+  PageInfo: { // root type
+    endCursor?: number | null; // Int
+    hasMore?: boolean | null; // Boolean
+    totalCount: number; // Int!
+  }
   Post: { // root type
     content?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -82,6 +87,14 @@ export interface NexusGenObjects {
     hasMore: boolean; // Boolean!
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     totalCount: number; // Int!
+  }
+  PostEdge: { // root type
+    cursor?: number | null; // Int
+    node?: NexusGenRootTypes['Post'] | null; // Post
+  }
+  PostResponse: { // root type
+    edges?: Array<NexusGenRootTypes['PostEdge'] | null> | null; // [PostEdge]
+    pageInfo?: NexusGenRootTypes['PageInfo'] | null; // PageInfo
   }
   Profile: { // root type
     bio?: string | null; // String
@@ -126,12 +139,19 @@ export interface NexusGenFieldTypes {
     updateProfileForUser: NexusGenRootTypes['User'] | null; // User
     votePost: NexusGenRootTypes['Post'] | null; // Post
   }
+  PageInfo: { // field return type
+    endCursor: number | null; // Int
+    hasMore: boolean | null; // Boolean
+    totalCount: number; // Int!
+  }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
     content: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    databaseId: number | null; // Int
     id: number; // Int!
     published: boolean; // Boolean!
+    slug: string | null; // String
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     viewCount: number | null; // Int
@@ -143,6 +163,14 @@ export interface NexusGenFieldTypes {
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     totalCount: number; // Int!
   }
+  PostEdge: { // field return type
+    cursor: number | null; // Int
+    node: NexusGenRootTypes['Post'] | null; // Post
+  }
+  PostResponse: { // field return type
+    edges: Array<NexusGenRootTypes['PostEdge'] | null> | null; // [PostEdge]
+    pageInfo: NexusGenRootTypes['PageInfo'] | null; // PageInfo
+  }
   Profile: { // field return type
     bio: string | null; // String
     id: number; // Int!
@@ -151,7 +179,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     postById: NexusGenRootTypes['Post'] | null; // Post
-    posts: NexusGenRootTypes['PostConnection'] | null; // PostConnection
+    posts: NexusGenRootTypes['PostResponse'] | null; // PostResponse
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['UserConnection'] | null; // UserConnection
   }
@@ -185,12 +213,19 @@ export interface NexusGenFieldTypeNames {
     updateProfileForUser: 'User'
     votePost: 'Post'
   }
+  PageInfo: { // field return type name
+    endCursor: 'Int'
+    hasMore: 'Boolean'
+    totalCount: 'Int'
+  }
   Post: { // field return type name
     author: 'User'
     content: 'String'
     createdAt: 'DateTime'
+    databaseId: 'Int'
     id: 'Int'
     published: 'Boolean'
+    slug: 'String'
     title: 'String'
     updatedAt: 'DateTime'
     viewCount: 'Int'
@@ -202,6 +237,14 @@ export interface NexusGenFieldTypeNames {
     posts: 'Post'
     totalCount: 'Int'
   }
+  PostEdge: { // field return type name
+    cursor: 'Int'
+    node: 'Post'
+  }
+  PostResponse: { // field return type name
+    edges: 'PostEdge'
+    pageInfo: 'PageInfo'
+  }
   Profile: { // field return type name
     bio: 'String'
     id: 'Int'
@@ -210,7 +253,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     draftsByUser: 'Post'
     postById: 'Post'
-    posts: 'PostConnection'
+    posts: 'PostResponse'
     user: 'User'
     users: 'UserConnection'
   }

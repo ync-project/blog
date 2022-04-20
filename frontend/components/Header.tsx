@@ -26,6 +26,9 @@ export default function Header() {
       <Link href="/ssr">
         <a className={pathname === '/ssr' ? 'is-active' : ''}>SSR</a>
       </Link>
+      <Link href="/ssg">
+        <a className={pathname === '/ssg' ? 'is-active' : ''}>SSG</a>
+      </Link>
       <style jsx>{`
         header {
           margin-bottom: 25px;

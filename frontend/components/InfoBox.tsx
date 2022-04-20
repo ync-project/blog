@@ -1,4 +1,4 @@
-const InfoBox = ({ children }) => (
+const InfoBox = ({ children }: any) => (
   <div className="info">
     <style jsx>{`
       .info {

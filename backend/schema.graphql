@@ -23,12 +23,20 @@ type Mutation {
   votePost(id: Int!): Post
 }
 
+type PageInfo {
+  endCursor: Int
+  hasMore: Boolean
+  totalCount: Int!
+}
+
 type Post {
   author: User
   content: String
   createdAt: DateTime!
+  databaseId: Int
   id: Int!
   published: Boolean!
+  slug: String
   title: String!
   updatedAt: DateTime!
   viewCount: Int
@@ -47,8 +55,18 @@ input PostCreateInput {
   title: String!
 }
 
+type PostEdge {
+  cursor: Int
+  node: Post
+}
+
 input PostOrderByUpdatedAtInput {
   updatedAt: SortOrder!
+}
+
+type PostResponse {
+  edges: [PostEdge]
+  pageInfo: PageInfo
 }
 
 type Profile {
@@ -60,7 +78,7 @@ type Profile {
 type Query {
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   postById(id: Int): Post
-  posts(after: Int, orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): PostConnection
+  posts(after: Int, orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): PostResponse
   user(id: Int): User
   users(after: Int, skip: Int, take: Int): UserConnection
 }

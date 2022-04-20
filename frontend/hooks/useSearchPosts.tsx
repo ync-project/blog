@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 //import { useLazyQuery } from '@apollo/client';
-import { AllPostsQuery, useAllPostsLazyQuery } from '../types/graphql_generated'
+import { PostsQuery, usePostsLazyQuery } from '../types/graphql_generated'
 //import { GET_QUICK_SEARCH_SUGGESTIONS } from '../../queries/product.gql';
-import {AllPostsDocument} from '../types/graphql_generated'
+import {PostsDocument} from '../types/graphql_generated'
 import { client } from '../lib/apolloClient'
 
 /**
@@ -18,7 +18,7 @@ import { client } from '../lib/apolloClient'
 export const useSearchPosts = (props: any) => {
     const { searchText, take, skip } = props;
     const [ hasSuggestions, setHasSuggestions ] = useState(false);
-    const [fetchPosts, { loading, data }] = useAllPostsLazyQuery();
+    const [fetchPosts, { loading, data }] = usePostsLazyQuery();
 
     console.log(
     ', searchText', searchText, 
@@ -36,15 +36,15 @@ export const useSearchPosts = (props: any) => {
     }, [fetchPosts, searchText, take, skip]);
 
     useEffect(() => {
-        data?.allPosts.length ?
+        data?.posts!.posts.length ?
             setHasSuggestions(true): setHasSuggestions(false);
     }, [data]);
 
     return {
         hasSuggestions,
         isLoading: loading,
-        items: data?.allPosts || [],
-        count: data?._allPostsMeta?.count || 0
+        items: data?.posts!.posts || [],
+        count: data?.posts?.totalCount || 0
     }
 }
 

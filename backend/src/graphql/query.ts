@@ -77,7 +77,7 @@ export const Query = objectType({
       })
 
       t.field('posts', {
-        type: PostConnection,
+        type: 'PostResponse',
         args:{
           take: intArg(),
           skip: intArg(),
@@ -88,11 +88,10 @@ export const Query = objectType({
           }),
         },
         resolve: async (_parent, args, context: Context) => {
-          // console.log('take', args.take)
-          // console.log('skip', args.skip )
+          // console.log('posts take', args.take)
           // console.log('after', args.after)
           // console.log('searchString', args.searchString )
-          // console.log('--------------')
+          console.log('--------------')
           const or: any = args.searchString
             ? {
                 OR: [
@@ -107,25 +106,43 @@ export const Query = objectType({
               ...or,
           }
 
-          const posts = await context.prisma.post.findMany({
-            take: args.take || undefined,
-            skip: args.skip || undefined,
-            cursor: args.after && { 
-              id: args.after 
-            } || undefined, 
-            where,
-            orderBy: args.orderBy || undefined,
-          })
+          let queryResults = null
+          if (args.after){
+            queryResults = await context.prisma.post.findMany({
+              take: args.take || undefined,
+              skip: 1,
+              cursor: args.after && { 
+                id: args.after 
+              } || undefined, 
+              where,
+              orderBy: args.orderBy || undefined,
+            })
+          }else{
+            queryResults = await context.prisma.post.findMany({
+              take: args.take || undefined,
+              cursor: args.after && { 
+                id: args.after 
+              } || undefined, 
+              where,
+              orderBy: args.orderBy || undefined,
+            })  
+          }
 
-          const allPosts = await context.prisma.post.findMany({
+          const allResults = await context.prisma.post.findMany({
             where
           }) || 0
           // console.log('totalCount', totalCount)
           // console.log('posts.length', posts.length )
+          //console.log('~~~', {...paginateResults(posts, allPosts, "id", 0 )})
 
           return {
-            ...paginateResults(posts, allPosts, "id", 0 ),
-            posts
+            pageInfo: {
+              ...paginateResults(queryResults, allResults, "id", 0 ),
+            },
+            edges: queryResults.map(post => ({
+                cursor: post.id, 
+                node: post
+            }))
           }
         },
       })
@@ -148,12 +165,12 @@ export const Query = objectType({
             //console.log('users', users.map(p => p.id))
             //console.log('users', users)
             //return results
-          return {
+            console.log('users', users.map(u=>u.id))
+            return {
               ...paginateResults(users, users, "id", 0 ),
             users
           }
 
-          //console.log('results', results)
           //return results
         },
       })
@@ -193,4 +210,33 @@ export const Query = objectType({
        type: User})
     }
   })
+
+  export const PostEdge = objectType({
+    name: 'PostEdge',
+    definition(t) {
+      t.int('cursor')
+      t.field('node', {
+        type: Post,
+      })
+    },
+  })
+  
+  export const PageInfo = objectType({
+    name: 'PageInfo',
+    definition(t) {
+      t.int('endCursor')
+      t.boolean('hasMore')
+      t.nonNull.int('totalCount')
+    },
+  })
+  
+  export const PostResponse = objectType({
+    name: 'PostResponse',
+    definition(t) {
+      t.field('pageInfo', { type: PageInfo })
+      t.list.field('edges', {
+        type: PostEdge,
+      })
+    },
+  })    
   

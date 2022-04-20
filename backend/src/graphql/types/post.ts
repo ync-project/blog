@@ -11,6 +11,17 @@ import {
   } from 'nexus'
   import { Context } from '../../context'
   import { User } from './user'
+  import slugify from 'slugify'
+
+  // Slugify config options
+  const slugOptions = {
+    replacement: '-',
+    remove: undefined,
+    lower: true,
+    strict: false,
+    locale: 'en',
+    trim: true,
+  }
 
   export const Post = objectType({
     name: 'Post',
@@ -32,7 +43,20 @@ import {
             })
             .author()
         },
+      }),
+      t.nullable.field('slug', { 
+        type: 'String',
+        resolve: (parent, _, context: Context) => {
+          return slugify(parent.title, slugOptions)
+        }
+      }
+      ),
+      t.field('databaseId', {
+        type: 'Int',
+        resolve: (parent, _, context: Context) => {
+          return parent.id
+        }  
       })
-    },
+    }  
   })
   

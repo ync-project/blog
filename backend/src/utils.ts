@@ -1,5 +1,5 @@
 interface CursorResults<T, K extends keyof T>{
-  cursor?: T[K],
+  endCursor?: T[K],
   hasMore: boolean
   totalCount: number
 }
@@ -11,7 +11,7 @@ export function paginateResults<T, K extends keyof T>(
   defaultCursor: T[K],
 ): CursorResults<T, K>  {
   return {
-    cursor: ary && ary.length > 0 && get(ary[ary.length - 1], cursorName) || defaultCursor,
+    endCursor: ary && ary.length > 0 && get(ary[ary.length - 1], cursorName) || defaultCursor,
     hasMore: 
       ary.length ? 
       get(ary[ary.length - 1], cursorName) !== get(allAry[allAry.length - 1], cursorName)

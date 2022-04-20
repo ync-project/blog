@@ -14,10 +14,6 @@ export default function UserList() {
     }
   )
 
-  useEffect(() => {
-    loadUsers()
-  }, [])
-
   const loadingMoreUsers = networkStatus === NetworkStatus.fetchMore
 
   if (error) return <ErrorMessage message="Error loading users." />
