@@ -91,7 +91,7 @@ export const Query = objectType({
           // console.log('posts take', args.take)
           // console.log('after', args.after)
           // console.log('searchString', args.searchString )
-          console.log('--------------')
+          // console.log('--------------')
           const or: any = args.searchString
             ? {
                 OR: [
