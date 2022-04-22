@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {useEffect} from 'react'
-import { DEFAULT_PAGE_TAKE } from '../types/app_types'  
+import { DEFAULT_PAGE_TAKE, Response } from '../types/app_types'  
 import { useLazyQuery, NetworkStatus } from '@apollo/client'
 import { PostsDocument, PostsQuery, Post } from '../types/graphql_generated'
 import Search from "./Search";
@@ -47,7 +47,8 @@ export default function PostList(){
       return <span>No product!</span>;
     }
 
-    const { posts, totalCount, cursor, hasMore} = data.posts!
+    const { posts : { posts: Response<number, PostsQuery>} }= data.posts!
+    //const type PostResponse = Response<number, Post>
 
     const loadMorePosts = () => {
       fetchMore({

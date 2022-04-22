@@ -15,3 +15,17 @@ export type SearchVariables = {
     skip?: number
 }
   
+export type PageInfo<T extends string | number > = { 
+    totalCount: number, 
+    endCursor: T, 
+    hasMore: boolean,
+}
+
+export interface Response<T extends string | number, N>{
+    pageInfo: PageInfo<T>,
+    edges: {
+        cursor: T,
+        node: N
+    }[]
+}
+

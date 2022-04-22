@@ -214,8 +214,8 @@ export const Query = objectType({
   export const PostEdge = objectType({
     name: 'PostEdge',
     definition(t) {
-      t.int('cursor')
-      t.field('node', {
+      t.nonNull.int('cursor')
+      t.nonNull.field('node', {
         type: Post,
       })
     },
@@ -224,8 +224,8 @@ export const Query = objectType({
   export const PageInfo = objectType({
     name: 'PageInfo',
     definition(t) {
-      t.int('endCursor')
-      t.boolean('hasMore')
+      t.nonNull.int('endCursor')
+      t.nonNull.boolean('hasMore')
       t.nonNull.int('totalCount')
     },
   })
@@ -233,8 +233,8 @@ export const Query = objectType({
   export const PostResponse = objectType({
     name: 'PostResponse',
     definition(t) {
-      t.field('pageInfo', { type: PageInfo })
-      t.list.field('edges', {
+      t.nonNull.field('pageInfo', { type: PageInfo })
+      t.nonNull.list.nonNull.field('edges', {
         type: PostEdge,
       })
     },

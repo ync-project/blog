@@ -9,7 +9,7 @@ import '../styles/global.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const App: NextPage<AppProps> = ({ Component, pageProps }) => {
-  const apolloClient = useApollo(pageProps.initialApolloState);
+  const apolloClient = useApollo(pageProps);
 
   return (
     <ApolloProvider client={apolloClient}>

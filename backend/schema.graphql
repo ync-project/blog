@@ -24,8 +24,8 @@ type Mutation {
 }
 
 type PageInfo {
-  endCursor: Int
-  hasMore: Boolean
+  endCursor: Int!
+  hasMore: Boolean!
   totalCount: Int!
 }
 
@@ -56,8 +56,8 @@ input PostCreateInput {
 }
 
 type PostEdge {
-  cursor: Int
-  node: Post
+  cursor: Int!
+  node: Post!
 }
 
 input PostOrderByUpdatedAtInput {
@@ -65,8 +65,8 @@ input PostOrderByUpdatedAtInput {
 }
 
 type PostResponse {
-  edges: [PostEdge]
-  pageInfo: PageInfo
+  edges: [PostEdge!]!
+  pageInfo: PageInfo!
 }
 
 type Profile {

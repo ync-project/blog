@@ -48,15 +48,20 @@ export const POSTS = gql`
     ) {
         posts(  take: $take, skip: $skip, after: $after, 
                 searchString: $searchString, orderBy: $orderBy){
-            cursor
-            hasMore
-            totalCount
-            posts{
-                ...PostFields
-                author{
-                    ...UserIdentities
-                }
-            }    
+            pageInfo{        
+                endCursor
+                hasMore
+                totalCount
+            }
+            edges{
+                cursor
+                node{
+                    ...PostFields
+                    author{
+                        ...UserIdentities
+                    }
+                }    
+            }
         }
     }
     ${PostFields}

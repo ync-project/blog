@@ -68,8 +68,8 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   PageInfo: { // root type
-    endCursor?: number | null; // Int
-    hasMore?: boolean | null; // Boolean
+    endCursor: number; // Int!
+    hasMore: boolean; // Boolean!
     totalCount: number; // Int!
   }
   Post: { // root type
@@ -89,12 +89,12 @@ export interface NexusGenObjects {
     totalCount: number; // Int!
   }
   PostEdge: { // root type
-    cursor?: number | null; // Int
-    node?: NexusGenRootTypes['Post'] | null; // Post
+    cursor: number; // Int!
+    node: NexusGenRootTypes['Post']; // Post!
   }
   PostResponse: { // root type
-    edges?: Array<NexusGenRootTypes['PostEdge'] | null> | null; // [PostEdge]
-    pageInfo?: NexusGenRootTypes['PageInfo'] | null; // PageInfo
+    edges: NexusGenRootTypes['PostEdge'][]; // [PostEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
   Profile: { // root type
     bio?: string | null; // String
@@ -140,8 +140,8 @@ export interface NexusGenFieldTypes {
     votePost: NexusGenRootTypes['Post'] | null; // Post
   }
   PageInfo: { // field return type
-    endCursor: number | null; // Int
-    hasMore: boolean | null; // Boolean
+    endCursor: number; // Int!
+    hasMore: boolean; // Boolean!
     totalCount: number; // Int!
   }
   Post: { // field return type
@@ -164,12 +164,12 @@ export interface NexusGenFieldTypes {
     totalCount: number; // Int!
   }
   PostEdge: { // field return type
-    cursor: number | null; // Int
-    node: NexusGenRootTypes['Post'] | null; // Post
+    cursor: number; // Int!
+    node: NexusGenRootTypes['Post']; // Post!
   }
   PostResponse: { // field return type
-    edges: Array<NexusGenRootTypes['PostEdge'] | null> | null; // [PostEdge]
-    pageInfo: NexusGenRootTypes['PageInfo'] | null; // PageInfo
+    edges: NexusGenRootTypes['PostEdge'][]; // [PostEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
   Profile: { // field return type
     bio: string | null; // String

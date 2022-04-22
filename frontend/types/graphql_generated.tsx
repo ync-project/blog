@@ -79,13 +79,22 @@ export type MutationVotePostArgs = {
   id: Scalars['Int'];
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['Int']>;
+  hasMore?: Maybe<Scalars['Boolean']>;
+  totalCount: Scalars['Int'];
+};
+
 export type Post = {
   __typename?: 'Post';
   author?: Maybe<User>;
   content?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
+  databaseId?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
   published: Scalars['Boolean'];
+  slug?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   viewCount?: Maybe<Scalars['Int']>;
@@ -105,8 +114,20 @@ export type PostCreateInput = {
   title: Scalars['String'];
 };
 
+export type PostEdge = {
+  __typename?: 'PostEdge';
+  cursor?: Maybe<Scalars['Int']>;
+  node?: Maybe<Post>;
+};
+
 export type PostOrderByUpdatedAtInput = {
   updatedAt: SortOrder;
+};
+
+export type PostResponse = {
+  __typename?: 'PostResponse';
+  edges?: Maybe<Array<Maybe<PostEdge>>>;
+  pageInfo?: Maybe<PageInfo>;
 };
 
 export type Profile = {
@@ -120,7 +141,7 @@ export type Query = {
   __typename?: 'Query';
   draftsByUser?: Maybe<Array<Maybe<Post>>>;
   postById?: Maybe<Post>;
-  posts?: Maybe<PostConnection>;
+  posts?: Maybe<PostResponse>;
   user?: Maybe<User>;
   users?: Maybe<UserConnection>;
 };
@@ -207,7 +228,7 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostConnection', cursor: number, hasMore: boolean, totalCount: number, posts: Array<{ __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null }> } | null };
+export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostResponse', pageInfo?: { __typename?: 'PageInfo', endCursor?: number | null, hasMore?: boolean | null, totalCount: number } | null, edges?: Array<{ __typename?: 'PostEdge', cursor?: number | null, node?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null } | null } | null> | null } | null };
 
 export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -355,13 +376,18 @@ export const PostsDocument = gql`
     searchString: $searchString
     orderBy: $orderBy
   ) {
-    cursor
-    hasMore
-    totalCount
-    posts {
-      ...PostFields
-      author {
-        ...UserIdentities
+    pageInfo {
+      endCursor
+      hasMore
+      totalCount
+    }
+    edges {
+      cursor
+      node {
+        ...PostFields
+        author {
+          ...UserIdentities
+        }
       }
     }
   }
