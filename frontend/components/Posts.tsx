@@ -23,7 +23,7 @@ const Posts = ({posts, loadMorePosts, loadingMorePosts, hasMore, totalCount}:
       </ul>
       {hasMore && (
         <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
-          {loadingMorePosts ? 'Loading...' : 'Show More'} (total: {totalCount})
+          {loadingMorePosts ? 'Loading...' : 'Show More'} 
         </button>
       )}
 

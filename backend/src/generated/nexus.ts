@@ -29,12 +29,12 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  OrderByUpdatedAtInput: { // input type
+    updatedAt: NexusGenEnums['SortOrder']; // SortOrder!
+  }
   PostCreateInput: { // input type
     content?: string | null; // String
     title: string; // String!
-  }
-  PostOrderByUpdatedAtInput: { // input type
-    updatedAt: NexusGenEnums['SortOrder']; // SortOrder!
   }
   UserCreateInput: { // input type
     email: string; // String!
@@ -82,12 +82,6 @@ export interface NexusGenObjects {
     viewCount?: number | null; // Int
     votes?: number | null; // Int
   }
-  PostConnection: { // root type
-    cursor: number; // Int!
-    hasMore: boolean; // Boolean!
-    posts: NexusGenRootTypes['Post'][]; // [Post!]!
-    totalCount: number; // Int!
-  }
   PostEdge: { // root type
     cursor: number; // Int!
     node: NexusGenRootTypes['Post']; // Post!
@@ -106,11 +100,13 @@ export interface NexusGenObjects {
     id: number; // Int!
     name?: string | null; // String
   }
-  UserConnection: { // root type
+  UserEdge: { // root type
     cursor: number; // Int!
-    hasMore: boolean; // Boolean!
-    totalCount: number; // Int!
-    users: NexusGenRootTypes['User'][]; // [User!]!
+    node: NexusGenRootTypes['User']; // User!
+  }
+  UserResponse: { // root type
+    edges: NexusGenRootTypes['UserEdge'][]; // [UserEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
 }
 
@@ -157,12 +153,6 @@ export interface NexusGenFieldTypes {
     viewCount: number | null; // Int
     votes: number | null; // Int
   }
-  PostConnection: { // field return type
-    cursor: number; // Int!
-    hasMore: boolean; // Boolean!
-    posts: NexusGenRootTypes['Post'][]; // [Post!]!
-    totalCount: number; // Int!
-  }
   PostEdge: { // field return type
     cursor: number; // Int!
     node: NexusGenRootTypes['Post']; // Post!
@@ -181,7 +171,7 @@ export interface NexusGenFieldTypes {
     postById: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['PostResponse'] | null; // PostResponse
     user: NexusGenRootTypes['User'] | null; // User
-    users: NexusGenRootTypes['UserConnection'] | null; // UserConnection
+    users: NexusGenRootTypes['UserResponse'] | null; // UserResponse
   }
   User: { // field return type
     email: string; // String!
@@ -190,11 +180,13 @@ export interface NexusGenFieldTypes {
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     profile: NexusGenRootTypes['Profile'] | null; // Profile
   }
-  UserConnection: { // field return type
+  UserEdge: { // field return type
     cursor: number; // Int!
-    hasMore: boolean; // Boolean!
-    totalCount: number; // Int!
-    users: NexusGenRootTypes['User'][]; // [User!]!
+    node: NexusGenRootTypes['User']; // User!
+  }
+  UserResponse: { // field return type
+    edges: NexusGenRootTypes['UserEdge'][]; // [UserEdge!]!
+    pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
 }
 
@@ -231,12 +223,6 @@ export interface NexusGenFieldTypeNames {
     viewCount: 'Int'
     votes: 'Int'
   }
-  PostConnection: { // field return type name
-    cursor: 'Int'
-    hasMore: 'Boolean'
-    posts: 'Post'
-    totalCount: 'Int'
-  }
   PostEdge: { // field return type name
     cursor: 'Int'
     node: 'Post'
@@ -255,7 +241,7 @@ export interface NexusGenFieldTypeNames {
     postById: 'Post'
     posts: 'PostResponse'
     user: 'User'
-    users: 'UserConnection'
+    users: 'UserResponse'
   }
   User: { // field return type name
     email: 'String'
@@ -264,11 +250,13 @@ export interface NexusGenFieldTypeNames {
     posts: 'Post'
     profile: 'Profile'
   }
-  UserConnection: { // field return type name
+  UserEdge: { // field return type name
     cursor: 'Int'
-    hasMore: 'Boolean'
-    totalCount: 'Int'
-    users: 'User'
+    node: 'User'
+  }
+  UserResponse: { // field return type name
+    edges: 'UserEdge'
+    pageInfo: 'PageInfo'
   }
 }
 
@@ -312,7 +300,7 @@ export interface NexusGenArgTypes {
     }
     posts: { // args
       after?: number | null; // Int
-      orderBy?: NexusGenInputs['PostOrderByUpdatedAtInput'] | null; // PostOrderByUpdatedAtInput
+      orderBy?: NexusGenInputs['OrderByUpdatedAtInput'] | null; // OrderByUpdatedAtInput
       searchString?: string | null; // String
       skip?: number | null; // Int
       take?: number | null; // Int
@@ -322,6 +310,8 @@ export interface NexusGenArgTypes {
     }
     users: { // args
       after?: number | null; // Int
+      orderBy?: NexusGenInputs['OrderByUpdatedAtInput'] | null; // OrderByUpdatedAtInput
+      searchString?: string | null; // String
       skip?: number | null; // Int
       take?: number | null; // Int
     }

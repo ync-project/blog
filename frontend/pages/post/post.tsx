@@ -1,7 +1,7 @@
-import App from '../components/App'
-import Header from '../components/Header'
-import InfoBox from '../components/InfoBox'
-import PostList from '../components/PostList'
+import App from '../../components/App'
+import Header from '../../components/Header'
+import InfoBox from '../../components/InfoBox'
+import PostList from '../../components/PostList'
 
 const Home = () => (
     <App>

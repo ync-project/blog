@@ -79,10 +79,14 @@ export type MutationVotePostArgs = {
   id: Scalars['Int'];
 };
 
+export type OrderByUpdatedAtInput = {
+  updatedAt: SortOrder;
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['Int']>;
-  hasMore?: Maybe<Scalars['Boolean']>;
+  endCursor: Scalars['Int'];
+  hasMore: Scalars['Boolean'];
   totalCount: Scalars['Int'];
 };
 
@@ -101,14 +105,6 @@ export type Post = {
   votes?: Maybe<Scalars['Int']>;
 };
 
-export type PostConnection = {
-  __typename?: 'PostConnection';
-  cursor: Scalars['Int'];
-  hasMore: Scalars['Boolean'];
-  posts: Array<Post>;
-  totalCount: Scalars['Int'];
-};
-
 export type PostCreateInput = {
   content?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
@@ -116,18 +112,14 @@ export type PostCreateInput = {
 
 export type PostEdge = {
   __typename?: 'PostEdge';
-  cursor?: Maybe<Scalars['Int']>;
-  node?: Maybe<Post>;
-};
-
-export type PostOrderByUpdatedAtInput = {
-  updatedAt: SortOrder;
+  cursor: Scalars['Int'];
+  node: Post;
 };
 
 export type PostResponse = {
   __typename?: 'PostResponse';
-  edges?: Maybe<Array<Maybe<PostEdge>>>;
-  pageInfo?: Maybe<PageInfo>;
+  edges: Array<PostEdge>;
+  pageInfo: PageInfo;
 };
 
 export type Profile = {
@@ -143,7 +135,7 @@ export type Query = {
   postById?: Maybe<Post>;
   posts?: Maybe<PostResponse>;
   user?: Maybe<User>;
-  users?: Maybe<UserConnection>;
+  users?: Maybe<UserResponse>;
 };
 
 
@@ -159,7 +151,7 @@ export type QueryPostByIdArgs = {
 
 export type QueryPostsArgs = {
   after?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<PostOrderByUpdatedAtInput>;
+  orderBy?: InputMaybe<OrderByUpdatedAtInput>;
   searchString?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -173,6 +165,8 @@ export type QueryUserArgs = {
 
 export type QueryUsersArgs = {
   after?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<OrderByUpdatedAtInput>;
+  searchString?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
 };
@@ -191,19 +185,23 @@ export type User = {
   profile?: Maybe<Profile>;
 };
 
-export type UserConnection = {
-  __typename?: 'UserConnection';
-  cursor: Scalars['Int'];
-  hasMore: Scalars['Boolean'];
-  totalCount: Scalars['Int'];
-  users: Array<User>;
-};
-
 export type UserCreateInput = {
   email: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
   posts?: InputMaybe<Array<PostCreateInput>>;
+};
+
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  cursor: Scalars['Int'];
+  node: User;
+};
+
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  edges: Array<UserEdge>;
+  pageInfo: PageInfo;
 };
 
 export type UserUniqueInput = {
@@ -224,11 +222,11 @@ export type PostsQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<PostOrderByUpdatedAtInput>;
+  orderBy?: InputMaybe<OrderByUpdatedAtInput>;
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostResponse', pageInfo?: { __typename?: 'PageInfo', endCursor?: number | null, hasMore?: boolean | null, totalCount: number } | null, edges?: Array<{ __typename?: 'PostEdge', cursor?: number | null, node?: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null } | null } | null> | null } | null };
+export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostResponse', pageInfo: { __typename?: 'PageInfo', endCursor: number, hasMore: boolean, totalCount: number }, edges: Array<{ __typename?: 'PostEdge', cursor: number, node: { __typename?: 'Post', id: number, title: string, content?: string | null, viewCount?: number | null, votes?: number | null, published: boolean, createdAt: any, updatedAt: any, author?: { __typename?: 'User', id: number, email: string } | null } }> } | null };
 
 export type PostByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -282,13 +280,15 @@ export type DeletePostMutationVariables = Exact<{
 export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number } | null };
 
 export type UsersQueryVariables = Exact<{
+  searchString?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<OrderByUpdatedAtInput>;
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', cursor: number, hasMore: boolean, totalCount: number, users: Array<{ __typename?: 'User', id: number, name?: string | null, email: string }> } | null };
+export type UsersQuery = { __typename?: 'Query', users?: { __typename?: 'UserResponse', pageInfo: { __typename?: 'PageInfo', endCursor: number, hasMore: boolean, totalCount: number }, edges: Array<{ __typename?: 'UserEdge', cursor: number, node: { __typename?: 'User', id: number, email: string } }> } | null };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -368,7 +368,7 @@ export const ProfileFieldsFragmentDoc = gql`
 }
     `;
 export const PostsDocument = gql`
-    query posts($searchString: String, $take: Int, $skip: Int, $after: Int, $orderBy: PostOrderByUpdatedAtInput) {
+    query posts($searchString: String, $take: Int, $skip: Int, $after: Int, $orderBy: OrderByUpdatedAtInput) {
   posts(
     take: $take
     skip: $skip
@@ -679,19 +679,28 @@ export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutati
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
 export const UsersDocument = gql`
-    query users($take: Int, $skip: Int, $after: Int) {
-  users(skip: $skip, take: $take, after: $after) {
-    cursor
-    hasMore
-    totalCount
-    users {
-      id
-      name
-      email
+    query users($searchString: String, $take: Int, $skip: Int, $after: Int, $orderBy: OrderByUpdatedAtInput) {
+  users(
+    take: $take
+    skip: $skip
+    after: $after
+    searchString: $searchString
+    orderBy: $orderBy
+  ) {
+    pageInfo {
+      endCursor
+      hasMore
+      totalCount
+    }
+    edges {
+      cursor
+      node {
+        ...UserIdentities
+      }
     }
   }
 }
-    `;
+    ${UserIdentitiesFragmentDoc}`;
 
 /**
  * __useUsersQuery__
@@ -705,9 +714,11 @@ export const UsersDocument = gql`
  * @example
  * const { data, loading, error } = useUsersQuery({
  *   variables: {
+ *      searchString: // value for 'searchString'
  *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      after: // value for 'after'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */

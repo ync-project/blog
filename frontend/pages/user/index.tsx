@@ -11,7 +11,6 @@ import { DEFAULT_PAGE_TAKE } from '../../types/app_types'
 
 const UserIndexPage = (props: any) => (
     <App>
-      {console.log('props.users', props.users)}
       <Header />
       <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
       <UserList /> 

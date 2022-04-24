@@ -20,8 +20,8 @@ export const SortOrder = enumType({
     members: ['asc', 'desc'],
   })
   
-export const PostOrderByUpdatedAtInput = inputObjectType({
-    name: 'PostOrderByUpdatedAtInput',
+export const OrderByUpdatedAtInput = inputObjectType({
+    name: 'OrderByUpdatedAtInput',
     definition(t) {
       t.nonNull.field('updatedAt', { type: SortOrder })
     },
@@ -84,7 +84,7 @@ export const Query = objectType({
           after: intArg(),
           searchString: stringArg(),
           orderBy: arg({
-            type: 'PostOrderByUpdatedAtInput',
+            type: 'OrderByUpdatedAtInput',
           }),
         },
         resolve: async (_parent, args, context: Context) => {
@@ -148,30 +148,72 @@ export const Query = objectType({
       })
 
       t.field('users', {
-        type: UserConnection,
+        type: 'UserResponse',
         args:{
-          skip: intArg(),
           take: intArg(),
+          skip: intArg(),
           after: intArg(),
+          searchString: stringArg(),
+          orderBy: arg({
+            type: 'OrderByUpdatedAtInput',
+          }),
         },
         resolve: async (_parent, args, context: Context) => {
-           const users = await context.prisma.user.findMany({
+          // console.log('posts take', args.take)
+          // console.log('after', args.after)
+          // console.log('searchString', args.searchString )
+          // console.log('--------------')
+          const or: any = args.searchString
+            ? {
+                OR: [
+                  { title: { contains: args.searchString } },
+                  { content: { contains: args.searchString } },
+                ],
+              }
+            : {}
+  
+          const where = {
+              ...or,
+          }
+
+          let queryResults = null
+          if (args.after){
+            queryResults = await context.prisma.user.findMany({
               take: args.take || undefined,
-              skip: args.skip || undefined,
+              skip: 1,
               cursor: args.after && { 
                 id: args.after 
               } || undefined, 
-             })
-            //console.log('users', users.map(p => p.id))
-            //console.log('users', users)
-            //return results
-            console.log('users', users.map(u=>u.id))
-            return {
-              ...paginateResults(users, users, "id", 0 ),
-            users
+              where,
+              orderBy: args.orderBy || undefined,
+            })
+          }else{
+            queryResults = await context.prisma.user.findMany({
+              take: args.take || undefined,
+              cursor: args.after && { 
+                id: args.after 
+              } || undefined, 
+              where,
+              orderBy: args.orderBy || undefined,
+            })  
           }
 
-          //return results
+          const allResults = await context.prisma.user.findMany({
+            where
+          }) || 0
+          // console.log('totalCount', totalCount)
+          // console.log('posts.length', posts.length )
+          //console.log('~~~', {...paginateResults(posts, allPosts, "id", 0 )})
+
+          return {
+            pageInfo: {
+              ...paginateResults(queryResults, allResults, "id", 0 ),
+            },
+            edges: queryResults.map(user => ({
+                cursor: user.id, 
+                node: user
+            }))
+          }
         },
       })
     
@@ -189,38 +231,6 @@ export const Query = objectType({
     },
   })
 
-  export const PostConnection = objectType({
-    name: 'PostConnection',
-    definition(t) {
-      t.nonNull.int('cursor')
-      t.nonNull.boolean('hasMore')
-      t.nonNull.int('totalCount')
-      t.nonNull.list.nonNull.field('posts', { 
-       type: Post})
-    }
-  })
-  
-  export const UserConnection = objectType({
-    name: 'UserConnection',
-    definition(t) {
-      t.nonNull.int('cursor')
-      t.nonNull.boolean('hasMore')
-      t.nonNull.int('totalCount')
-      t.nonNull.list.nonNull.field('users', { 
-       type: User})
-    }
-  })
-
-  export const PostEdge = objectType({
-    name: 'PostEdge',
-    definition(t) {
-      t.nonNull.int('cursor')
-      t.nonNull.field('node', {
-        type: Post,
-      })
-    },
-  })
-  
   export const PageInfo = objectType({
     name: 'PageInfo',
     definition(t) {
@@ -240,3 +250,32 @@ export const Query = objectType({
     },
   })    
   
+  export const PostEdge = objectType({
+    name: 'PostEdge',
+    definition(t) {
+      t.nonNull.int('cursor')
+      t.nonNull.field('node', {
+        type: Post,
+      })
+    },
+  })
+  
+  export const UserResponse = objectType({
+    name: 'UserResponse',
+    definition(t) {
+      t.nonNull.field('pageInfo', { type: PageInfo })
+      t.nonNull.list.nonNull.field('edges', {
+        type: UserEdge,
+      })
+    },
+  })    
+  
+  export const UserEdge = objectType({
+    name: 'UserEdge',
+    definition(t) {
+      t.nonNull.int('cursor')
+      t.nonNull.field('node', {
+        type: User,
+      })
+    },
+  })

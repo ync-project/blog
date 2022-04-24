@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 //import { useLazyQuery } from '@apollo/client';
-import { PostsQuery, usePostsLazyQuery } from '../types/graphql_generated'
+import { PostsQuery, usePostsLazyQuery, Post, PostsDocument } from '../types/graphql_generated'
 //import { GET_QUICK_SEARCH_SUGGESTIONS } from '../../queries/product.gql';
-import {PostsDocument} from '../types/graphql_generated'
 import { client } from '../lib/apolloClient'
+import { Edge } from '../types/app_types'  
 
 /**
  * The useQuickSearchSuggestions hook provides data and business logic for the QuickSearchSuggestions component
@@ -35,7 +35,7 @@ export const useQuickSearchSuggestions = (props: any) => {
     }, [fetchSuggestions, isValid, searchQuery]);
 
     useEffect(() => {
-        data && data.posts?.totalCount! > 0 ?
+        data && data.posts?.pageInfo.totalCount! > 0 ?
             setHasSuggestions(true): setHasSuggestions(false);
     }, [data]);
 
@@ -43,7 +43,7 @@ export const useQuickSearchSuggestions = (props: any) => {
         hasSuggestions,
         isLoading: loading,
         isOpen,
-        items: data && data?.posts!.posts ? data.posts.posts : []
+        items: data?.posts?.edges?.map((edge) => (edge as Edge<number, Post>).node) || []
     }
 }
 

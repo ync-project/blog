@@ -20,12 +20,13 @@ export type PageInfo<T extends string | number > = {
     endCursor: T, 
     hasMore: boolean,
 }
-
-export interface Response<T extends string | number, N>{
+export type Response<T extends string | number, N> = {
     pageInfo: PageInfo<T>,
-    edges: {
-        cursor: T,
-        node: N
-    }[]
+    edges: Edge<T, N>[]
 }
 
+export interface Edge<T, N> {
+    cursor: T,
+    node: N
+  };
+  

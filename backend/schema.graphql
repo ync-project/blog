@@ -23,6 +23,10 @@ type Mutation {
   votePost(id: Int!): Post
 }
 
+input OrderByUpdatedAtInput {
+  updatedAt: SortOrder!
+}
+
 type PageInfo {
   endCursor: Int!
   hasMore: Boolean!
@@ -43,13 +47,6 @@ type Post {
   votes: Int
 }
 
-type PostConnection {
-  cursor: Int!
-  hasMore: Boolean!
-  posts: [Post!]!
-  totalCount: Int!
-}
-
 input PostCreateInput {
   content: String
   title: String!
@@ -58,10 +55,6 @@ input PostCreateInput {
 type PostEdge {
   cursor: Int!
   node: Post!
-}
-
-input PostOrderByUpdatedAtInput {
-  updatedAt: SortOrder!
 }
 
 type PostResponse {
@@ -78,9 +71,9 @@ type Profile {
 type Query {
   draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
   postById(id: Int): Post
-  posts(after: Int, orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): PostResponse
+  posts(after: Int, orderBy: OrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): PostResponse
   user(id: Int): User
-  users(after: Int, skip: Int, take: Int): UserConnection
+  users(after: Int, orderBy: OrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): UserResponse
 }
 
 enum SortOrder {
@@ -96,18 +89,21 @@ type User {
   profile: Profile
 }
 
-type UserConnection {
-  cursor: Int!
-  hasMore: Boolean!
-  totalCount: Int!
-  users: [User!]!
-}
-
 input UserCreateInput {
   email: String!
   name: String
   password: String!
   posts: [PostCreateInput!]
+}
+
+type UserEdge {
+  cursor: Int!
+  node: User!
+}
+
+type UserResponse {
+  edges: [UserEdge!]!
+  pageInfo: PageInfo!
 }
 
 input UserUniqueInput {

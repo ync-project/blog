@@ -44,7 +44,7 @@ export const POSTS = gql`
         $take: Int, 
         $skip: Int
         $after: Int, 
-        $orderBy: PostOrderByUpdatedAtInput
+        $orderBy: OrderByUpdatedAtInput
     ) {
         posts(  take: $take, skip: $skip, after: $after, 
                 searchString: $searchString, orderBy: $orderBy){
@@ -158,18 +158,28 @@ export const DELETE_POST = gql`
 
 // list all users
 export const USERS = gql`
- query users($take: Int, $skip: Int, $after: Int){
-  users(skip: $skip, take: $take, after: $after){
-    cursor
-    hasMore
-    totalCount
-    users {
-      id
-      name
-      email
+    query users(
+        $searchString: String, 
+        $take: Int, 
+        $skip: Int
+        $after: Int, 
+        $orderBy: OrderByUpdatedAtInput
+    ) {
+    users(  take: $take, skip: $skip, after: $after, 
+            searchString: $searchString, orderBy: $orderBy){
+        pageInfo{        
+            endCursor
+            hasMore
+            totalCount
+        }
+        edges{
+            cursor
+            node{
+                ...UserIdentities
+            }    
+        }
+        }
     }
-  }
-}
 `  
 
 // display a user

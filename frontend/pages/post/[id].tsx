@@ -1,7 +1,7 @@
 
 import { GetStaticProps } from "next";
 import { client } from "../../lib/apolloClient";
-import { TODOPageErr } from '../../types/app_types'
+import { TODOPageErr, Edge } from '../../types/app_types'
 import { Post, PostsDocument, PostsQuery,
     PostByIdDocument, PostByIdQuery} from '../../types/graphql_generated'
 import Header from '../../components/Header'
@@ -27,8 +27,8 @@ const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
     const { data } = await client.query<PostsQuery>({
         query: PostsDocument
     });
-    const paths = data?.posts?.posts.map((post) => ({
-        params: { id: post!.id.toString() },
+    const paths = data?.posts?.edges.map((edge) => ({
+        params: { id: edge.cursor.toString() },
     }))
     //console.log('paths', paths)
     return { paths: paths, fallback: false }
