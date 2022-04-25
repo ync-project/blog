@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react"
 
 
 const Protected = () => {
-  const { status } = useSession({
+  const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
       // The user is not authenticated, handle it here.
@@ -19,7 +19,7 @@ const Protected = () => {
   if (status === "loading") {
     return <>Loading or not authenticated...</>
   }
-  return <>User is logged in</>
+  return <>Hi {session?.user?.name} User is logged in</>
 }
   
  const ProtectedPage = () => {  

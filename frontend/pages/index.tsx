@@ -6,7 +6,7 @@ import { PostsDocument, PostsQuery } from '../types/graphql_generated'
 import { GetStaticProps } from "next";
 import ErrorMessage from '../components/error-message'
 import { useQuery } from "@apollo/client"; 
-import Layout from "../components/layout"
+import Layout from "../components/Layout"
 
 type Props = {
   posts: PostsQuery["posts"]
