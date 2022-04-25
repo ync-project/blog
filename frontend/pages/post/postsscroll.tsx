@@ -1,14 +1,12 @@
-import App from '../../components/App'
-import Header from '../../components/Header'
+import Layout from '../../components/Layout'
 import InfoBox from '../../components/InfoBox'
 import PostListScroll from '../../components/PostListScroll'
 
 const Home = () => (
-    <App>
-      <Header />
+    <Layout>
       <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
       <PostListScroll />
-    </App>  
+    </Layout>  
 ) 
 
 export default Home;

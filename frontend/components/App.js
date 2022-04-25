@@ -6,6 +6,7 @@ export default function App({ children }) {
     <NextHead>
       <link rel="icon" href="/static/favicon.ico" />
     </NextHead>  
+    <Header />
     <main>
       {children}
       <style jsx global>{`

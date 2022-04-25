@@ -1,8 +1,8 @@
-import App from '../components/App'
+import Layout from '../components/Layout'
 import Header from '../components/Header'
 
 const AboutPage = () => (
-  <App>
+  <Layout>
     <Header />
     <article>
       <h1>The Idea Behind This Example</h1>
@@ -39,7 +39,7 @@ const AboutPage = () => (
         its GraphQL backend.
       </p>
     </article>
-  </App>
+  </Layout>
 )
 
 export default AboutPage

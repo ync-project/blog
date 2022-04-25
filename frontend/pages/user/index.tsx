@@ -1,5 +1,4 @@
-import App from '../../components/App'
-import Header from '../../components/Header'
+import Layout from '../../components/Layout'
 import InfoBox from '../../components/InfoBox'
 import UserList from '../../components/UserList'
 import { UsersDocument, UsersQuery } from '../../types/graphql_generated'
@@ -10,11 +9,10 @@ import { DEFAULT_PAGE_TAKE } from '../../types/app_types'
 
 
 const UserIndexPage = (props: any) => (
-    <App>
-      <Header />
+    <Layout>
       <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
       <UserList /> 
-    </App>  
+    </Layout>  
 ) 
 
 export async function getServerSideProps() {

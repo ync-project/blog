@@ -1,6 +1,5 @@
-import App from '../components/App'
+import Layout from '../components/Layout'
 import InfoBox from '../components/InfoBox'
-import Header from '../components/Header'
 import Submit from '../components/Submit'
 import UserList from '../components/UserList'
 import { initializeApollo, addApolloState } from '../lib/apolloClient'
@@ -9,12 +8,11 @@ import { DEFAULT_PAGE_TAKE } from '../types/app_types'
 import { GetStaticPropsContext } from 'next'
 
 const SSGPage = () => (
-  <App>
-    <Header />
+  <Layout>
     <InfoBox>ℹ️ This page shows how to use SSR with Apollo.</InfoBox>
     <Submit />
     <UserList />
-  </App>
+  </Layout>
 )
 
 export async function getStaticProps(context: GetStaticPropsContext) {

@@ -1,12 +1,10 @@
-import App from '../components/App'
+import Layout from '../components/Layout'
 import InfoBox from '../components/InfoBox'
-import Header from '../components/Header'
 import Submit from '../components/Submit'
 import UserList from '../components/UserList'
 
 const ClientOnlyPage = (props) => (
-  <App>
-    <Header />
+  <Layout>
     <InfoBox>
       ℹ️ This page shows how to use Apollo only in the client. If you{' '}
       <a href="/client-only">reload</a> this page, you will see a loader since
@@ -15,7 +13,7 @@ const ClientOnlyPage = (props) => (
     </InfoBox>
     <Submit />
     <UserList />
-  </App>
+  </Layout>
 )
 
 export default ClientOnlyPage
