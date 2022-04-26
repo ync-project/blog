@@ -1,8 +1,7 @@
-import Layout from '../../components/Layout'
-import InfoBox from '../../components/InfoBox'
-import UserList from '../../components/UserList'
-import { UsersDocument, UsersQuery } from '../../types/graphql_generated'
-import ErrorMessage from '../../components/ErrorMessage'
+import Layout from '../../components/sys/Layout'
+import InfoBox from '../../components/etc/InfoBox'
+import UserList from '../../components/user/UserList'
+import { UsersDocument } from '../../types/graphql_generated'
 
 import { initializeApollo, addApolloState } from '../../lib/apolloClient'
 import { DEFAULT_PAGE_TAKE } from '../../types/app_types'  
@@ -18,17 +17,13 @@ const UserIndexPage = (props: any) => (
 export async function getServerSideProps() {
   const apolloClient = initializeApollo()
 
-  const {data, loading, error} = await apolloClient.query({
+  await apolloClient.query({
     query: UsersDocument,
     variables: { take: DEFAULT_PAGE_TAKE },
   })
 
-  if (error) return <ErrorMessage message="Error loading users." />
-  if (loading) return <div>Loading</div>
-  if (!data) return <div>No user</div>
-
   return addApolloState(apolloClient, {
-    props: {users: data.users,}
+    props: {}
   })
 }
 

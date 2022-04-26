@@ -9,7 +9,7 @@ export default function Header() {
   const loading = status === "loading"
 
   return (
-    <header>
+    <>
       <div className={styles.signedInStatus}>
         <p
           className={`nojs-show ${
@@ -64,14 +64,14 @@ export default function Header() {
         <Link href="/">
           <a className={pathname === '/' ? 'is-active' : ''}>Home</a>
         </Link>
-        <Link href="/post/postsscroll">
-          <a className={pathname === '/postsscroll' ? 'is-active' : ''}>Posts-Scroll</a>
-        </Link>
-        <Link href="/user">
-          <a className={pathname === '/user' ? 'is-active' : ''}>User</a>
+        <Link href="/posts">
+          <a className={pathname === '/posts' ? 'is-active' : ''}>Posts-Scroll</a>
         </Link>
         <Link href="/about">
           <a className={pathname === '/about' ? 'is-active' : ''}>About</a>
+        </Link>
+        <Link href="/users">
+          <a className={pathname === '/users' ? 'is-active' : ''}>User</a>
         </Link>
         <Link href="/client-only">
           <a className={pathname === '/client-only' ? 'is-active' : ''}>
@@ -104,6 +104,6 @@ export default function Header() {
           }
         `}</style>
       </nav>
-    </header>
+    </>  
   )
 }

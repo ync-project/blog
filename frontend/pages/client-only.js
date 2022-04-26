@@ -1,7 +1,7 @@
-import Layout from '../components/Layout'
-import InfoBox from '../components/InfoBox'
-import Submit from '../components/Submit'
-import UserList from '../components/UserList'
+import Layout from '../components/sys/Layout'
+import InfoBox from '../components/etc/InfoBox'
+import Submit from '../components/etc/Submit'
+import UserList from '../components/user/UserList'
 
 const ClientOnlyPage = (props) => (
   <Layout>

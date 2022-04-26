@@ -1,9 +1,7 @@
-import Layout from '../components/Layout'
-import Header from '../components/Header'
+import Layout from '../components/sys/Layout'
 
 const AboutPage = () => (
   <Layout>
-    <Header />
     <article>
       <h1>The Idea Behind This Example</h1>
       <p>

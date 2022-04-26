@@ -1,10 +1,13 @@
 import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
-import { PostsQuery, Post } from '../types/graphql_generated'
+import { PostsQuery, PageInfo, PostEdge, Post } from '../../types/graphql_generated'
 
-const Posts = ({posts, loadMorePosts, loadingMorePosts, hasMore, totalCount}: 
-  {posts: Post[], totalCount: number, loadMorePosts: any, loadingMorePosts: any
-   , hasMore: boolean}) => { 
+interface Props { 
+  posts: Post[]
+  totalCount: number;
+}
+
+const Posts = ({posts, totalCount}: Props) => { 
     return ( posts &&
     <section>
       founds : {totalCount} records
@@ -14,18 +17,13 @@ const Posts = ({posts, loadMorePosts, loadingMorePosts, hasMore, totalCount}:
             <div>
               <span>{post.id}. </span>
               <Link href="/post/[id]" as={`/post/${post.id}`}>
-                <a>{post.id}. {post.title}</a>
+                <a>{post.title}</a>
               </Link>
               <PostUpvoter id={post.id} votes={post.votes || 0} />
             </div>
           </li>
         ))}
       </ul>
-      {hasMore && (
-        <button onClick={() => loadMorePosts()} disabled={loadingMorePosts}>
-          {loadingMorePosts ? 'Loading...' : 'Show More'} 
-        </button>
-      )}
 
       <style jsx>{`
         section {
@@ -53,16 +51,6 @@ const Posts = ({posts, loadMorePosts, loadingMorePosts, hasMore, totalCount}:
         ul {
           margin: 0;
           padding: 0;
-        }
-        button:before {
-          align-self: center;
-          border-style: solid;
-          border-width: 6px 4px 0 4px;
-          border-color: #ffffff transparent transparent transparent;
-          content: '';
-          height: 0;
-          margin-right: 5px;
-          width: 0;
         }
       `}</style>
     </section>  

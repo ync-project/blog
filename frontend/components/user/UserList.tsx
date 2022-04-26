@@ -1,7 +1,7 @@
 import { gql, useQuery, NetworkStatus } from '@apollo/client'
-import { UsersDocument, UsersQuery, User } from '../types/graphql_generated'
-import ErrorMessage from './ErrorMessage'
-import { DEFAULT_PAGE_TAKE, Edge } from '../types/app_types'  
+import { UsersDocument, UsersQuery, User } from '../../types/graphql_generated'
+import ErrorMessage from '../etc/ErrorMessage'
+import { DEFAULT_PAGE_TAKE, Edge } from '../../types/app_types'  
 
 
 export default function UserList() {

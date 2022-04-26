@@ -4,9 +4,9 @@ import { client } from "../../lib/apolloClient";
 import { TODOPageErr, Edge } from '../../types/app_types'
 import { Post, PostsDocument, PostsQuery,
     PostByIdDocument, PostByIdQuery} from '../../types/graphql_generated'
-import Header from '../../components/Header'
-import InfoBox from '../../components/InfoBox'
-import App from '../../components/App'
+import Header from '../../components/sys/Header'
+import InfoBox from '../../components/etc/InfoBox'
+import Layout from '../../components/sys/Layout'
 import PostItem from '../../components/post/PostItem'
 
 const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
@@ -15,11 +15,10 @@ const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
   }
 
   return post && (
-    <App>
-      <Header />
+    <Layout>
       <InfoBox>Post detail</InfoBox>
       <PostItem post={post as Post}/>
-    </App>  
+    </Layout>  
   );
 }
 
