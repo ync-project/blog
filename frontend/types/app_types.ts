@@ -44,6 +44,7 @@ export type Suggestion<T> = {
     hasSuggestions: boolean,
     isLoading: boolean,
     hasMore: boolean,
+    totalCount: number,
     items: T[]
     loadingMore: boolean
     loadMore: ()=>void

@@ -57,6 +57,7 @@ export const usePostsSuggestions = (searchString : string) => {
         hasSuggestions,
         isLoading: loading,
         hasMore: data?.posts!.pageInfo!.hasMore!!,
+        totalCount: data?.posts!.pageInfo!.totalCount! | 0,
         items: posts,
         loadingMore,
         loadMore

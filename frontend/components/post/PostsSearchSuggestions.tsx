@@ -12,6 +12,7 @@ const QuickSearchSuggestions = ({searchQuery, mode}: SearchProps) => {
         hasSuggestions,
         isLoading,
         hasMore,
+        totalCount,
         items,
         loadingMore,
         loadMore
@@ -41,7 +42,7 @@ const QuickSearchSuggestions = ({searchQuery, mode}: SearchProps) => {
             onScroll={e => handleScroll(e, loadMore, hasMore)}
           >
             <ListGroup>
-                <ListItem posts={items} totalCount={6} />
+                <ListItem posts={items} totalCount={totalCount} />
             </ListGroup>
             <style jsx>{`
             .chapter-list {
@@ -59,7 +60,7 @@ const QuickSearchSuggestions = ({searchQuery, mode}: SearchProps) => {
     const shouldDisplaySuggestionsMore = suggestions ? 
     <div className={classes.suggestions}>
         <ListGroup>
-            <ListItem posts={items} totalCount={6} />
+            <ListItem posts={items} totalCount={totalCount} />
         </ListGroup>
         {hasMore && (
             <button onClick={() => loadMore()} disabled={loadingMore}>

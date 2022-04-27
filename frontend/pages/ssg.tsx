@@ -29,7 +29,7 @@ const Protected = () => {
 
 const SSGPage = () => (
   <Layout>
-    <InfoBox>ℹ️ This page shows how to use SSR with Apollo.</InfoBox>
+    <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
     <Protected />
   </Layout>
 )
