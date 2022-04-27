@@ -70,27 +70,32 @@ export default function Header() {
         <Link href="/about">
           <a className={pathname === '/about' ? 'is-active' : ''}>About</a>
         </Link>
-        <Link href="/users">
-          <a className={pathname === '/users' ? 'is-active' : ''}>User</a>
-        </Link>
-        <Link href="/client-only">
-          <a className={pathname === '/client-only' ? 'is-active' : ''}>
-            Client-Only
-          </a>
-        </Link>
-        <Link href="/ssr">
-          <a className={pathname === '/ssr' ? 'is-active' : ''}>SSR</a>
-        </Link>
-        <Link href="/ssg">
-          <a className={pathname === '/ssg' ? 'is-active' : ''}>SSG</a>
-        </Link>
-        <Link href="/protected">
-          <a className={pathname === '/protected' ? 'is-active' : ''}>Protected</a>
-        </Link>
-        {session && (
-          <div>Access Token: {session.accessToken}</div>
-        )}
-        <style jsx>{`
+
+        { status === 'authenticated' && (
+          <>
+            <Link href="/users">
+              <a className={pathname === '/users' ? 'is-active' : ''}>User</a>
+            </Link>
+            <Link href="/client-only">
+              <a className={pathname === '/client-only' ? 'is-active' : ''}>
+                Client-Only
+              </a>
+            </Link>
+            <Link href="/ssr">
+              <a className={pathname === '/ssr' ? 'is-active' : ''}>SSR</a>
+            </Link>
+            <Link href="/ssg">
+              <a className={pathname === '/ssg' ? 'is-active' : ''}>SSG</a>
+            </Link>
+            <Link href="/protected">
+              <a className={pathname === '/protected' ? 'is-active' : ''}>Protected</a>
+            </Link>
+            <Link href="/api-example">
+              <a className={pathname === '/api-example' ? 'is-active' : ''}>API</a>
+            </Link>
+          </>
+          )}
+          <style jsx>{`
           header {
             margin-bottom: 25px;
           }

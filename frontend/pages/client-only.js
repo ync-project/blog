@@ -1,7 +1,27 @@
 import Layout from '../components/sys/Layout'
 import InfoBox from '../components/etc/InfoBox'
-import Submit from '../components/etc/Submit'
+import Submit from '../components/form/Submit'
 import UserList from '../components/user/UserList'
+import { useSession } from "next-auth/react"
+import AccessDenied from '../components/sys/access-denied'
+
+const Protected = () => {
+  const { data: session, status } = useSession()
+
+  if (status === "loading") {
+    return <>Loading or not authenticated...</>
+  }
+  if (status === "unauthenticated") {
+    return <AccessDenied/>
+  }
+
+  return (
+    <>
+      <Submit />
+      <UserList /> 
+    </>
+  )  
+}
 
 const ClientOnlyPage = (props) => (
   <Layout>
@@ -11,8 +31,7 @@ const ClientOnlyPage = (props) => (
       Apollo didn't fetch any data on the server. This is useful when the page
       doesn't have SEO requirements or blocking data fetching requirements.
     </InfoBox>
-    <Submit />
-    <UserList />
+    <Protected />
   </Layout>
 )
 

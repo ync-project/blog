@@ -30,3 +30,21 @@ export interface Edge<T, N> {
     node: N
   };
   
+
+export interface SearchProps {
+    searchQuery: string
+    mode: 'scroll' | 'more'
+};
+
+export interface SearchMode {
+    mode: 'scroll' | 'more'
+};
+
+export type Suggestion<T> = {
+    hasSuggestions: boolean,
+    isLoading: boolean,
+    hasMore: boolean,
+    items: T[]
+    loadingMore: boolean
+    loadMore: ()=>void
+}

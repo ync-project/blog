@@ -1,8 +1,10 @@
 import Layout from '../components/sys/Layout'
+import InfoBox from '../components/etc/InfoBox'
 
 const AboutPage = () => (
   <Layout>
     <article>
+      <InfoBox>about </InfoBox>
       <h1>The Idea Behind This Example</h1>
       <p>
         <a href="https://www.apollographql.com/client/">Apollo</a> is a GraphQL

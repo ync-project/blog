@@ -1,24 +1,19 @@
 import Layout from '../components/sys/Layout'
 import InfoBox from '../components/etc/InfoBox'
-import Submit from '../components/etc/Submit'
-import UserList from '../components/user/UserList'
-import { initializeApollo, addApolloState } from '../lib/apolloClient'
-import { UsersDocument } from '../types/graphql_generated'
-import { DEFAULT_PAGE_TAKE } from '../types/app_types'  
-import { GetStaticPropsContext } from 'next'
 import { useSession } from "next-auth/react"
+import AccessDenied from '../components/sys/access-denied'
 
 
 const Protected = () => {
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      // The user is not authenticated, handle it here.
-    },
-  })
+  const { data: session, status } = useSession()
+
   if (status === "loading") {
     return <>Loading or not authenticated...</>
   }
+  if (status === "unauthenticated") {
+    return <AccessDenied/>
+  }
+
   return <>Hi {session?.user?.name} User is logged in</>
 }
   
