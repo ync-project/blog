@@ -31,3 +31,4 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     revalidate: 10,
   });
 }  
+

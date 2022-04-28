@@ -70,9 +70,15 @@ export default function Header() {
         <Link href="/about">
           <a className={pathname === '/about' ? 'is-active' : ''}>About</a>
         </Link>
+        <Link href="/api-example">
+              <a className={pathname === '/api-example' ? 'is-active' : ''}>API</a>
+            </Link>
 
         { status === 'authenticated' && (
           <>
+            <Link href="/admin">
+              <a className={pathname === '/admin' ? 'is-active' : ''}>Admin</a>
+            </Link>
             <Link href="/users">
               <a className={pathname === '/users' ? 'is-active' : ''}>User</a>
             </Link>
@@ -89,9 +95,6 @@ export default function Header() {
             </Link>
             <Link href="/protected">
               <a className={pathname === '/protected' ? 'is-active' : ''}>Protected</a>
-            </Link>
-            <Link href="/api-example">
-              <a className={pathname === '/api-example' ? 'is-active' : ''}>API</a>
             </Link>
           </>
           )}

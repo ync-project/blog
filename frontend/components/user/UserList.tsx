@@ -2,9 +2,10 @@ import { gql, useQuery, NetworkStatus } from '@apollo/client'
 import { UsersDocument, UsersQuery, User } from '../../types/graphql_generated'
 import ErrorMessage from '../etc/ErrorMessage'
 import { DEFAULT_PAGE_TAKE, Edge } from '../../types/app_types'  
+import { useSession } from "next-auth/react"
 
-
-export default function UserList() {
+export function UserList() {
+  const { data: session, status } = useSession()
   const { loading, error, data, fetchMore, networkStatus } = useQuery<UsersQuery>(
     UsersDocument,
     {
@@ -37,6 +38,7 @@ export default function UserList() {
   return (
     <section>
       <h1>User list</h1>
+      <p>Hi {session?.user?.name} User is logged in</p>
       <ul>
         {users.map((user, index) => (
           <li key={user.id}>
@@ -93,3 +95,5 @@ export default function UserList() {
     </section>
   )
 }
+
+export default UserList

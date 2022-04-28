@@ -1,23 +1,9 @@
 import Layout from '../components/sys/Layout'
 import InfoBox from '../components/etc/InfoBox'
 import { useSession } from "next-auth/react"
-import AccessDenied from '../components/sys/access-denied'
 
-
-const Protected = () => {
+const ProtectedPage = () => {  
   const { data: session, status } = useSession()
-
-  if (status === "loading") {
-    return <>Loading or not authenticated...</>
-  }
-  if (status === "unauthenticated") {
-    return <AccessDenied/>
-  }
-
-  return <>Hi {session?.user?.name} User is logged in</>
-}
-  
- const ProtectedPage = () => {  
   return (
     <Layout>
       <InfoBox>
@@ -25,10 +11,12 @@ const Protected = () => {
         to check if someone is signed in.
         Runs only on client side
       </InfoBox>
-      <Protected />
+      <p>Hi {session?.user?.name} User is logged in</p>
     </Layout>
   )
 
 }
+
+ProtectedPage.auth = true
 
 export default ProtectedPage

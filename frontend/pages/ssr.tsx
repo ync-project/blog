@@ -1,19 +1,30 @@
-import { GetStaticPropsContext } from 'next'
 import Layout from '../components/sys/Layout'
 import InfoBox from '../components/etc/InfoBox'
 import { initializeApollo, addApolloState } from '../lib/apolloClient'
 import { UsersDocument } from '../types/graphql_generated'
 import { DEFAULT_PAGE_TAKE } from '../types/app_types'  
+import { useSession, getSession } from "next-auth/react"
 import UserList from '../components/user/UserList'
+import { GetServerSideProps } from 'next'
+import AccessDenied from '../components/sys/access-denied'
 
-const SSGPage = () => (
-  <Layout>
-    <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
-    <UserList />
-  </Layout>
-)
+export default function Page() {
+  const { data: session, status } = useSession()
 
-export async function getStaticProps(context: GetStaticPropsContext) {
+  if (typeof window === "undefined") return null
+
+  if (session) {
+    return (
+      <Layout>
+        <InfoBox>ℹ️ This page shows how to use SSR with Apollo.</InfoBox>
+        <UserList />
+      </Layout>
+    )
+  }
+  return <Layout><AccessDenied /></Layout>
+}
+
+export const getServerSideProps: GetServerSideProps = async(context) => {
   const apolloClient = initializeApollo()
 
   // we’re not even using the return value that apolloClient.query() provides. 
@@ -25,10 +36,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   })
 
   return addApolloState(apolloClient, {
-    props: {},
+    props: {
+      session: await getSession(context),
+    },
   })
 }
-
-SSGPage.auth = true
-
-export default SSGPage
