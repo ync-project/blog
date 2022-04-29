@@ -106,6 +106,11 @@ export default NextAuth({
     // newUser: null // If set, new users will be directed here on first sign in
   },
 
+  theme: {
+    colorScheme: "light",
+  },
+
+
   // Callbacks are asynchronous functions you can use to control what happens
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
@@ -114,6 +119,12 @@ export default NextAuth({
     // async redirect({ url, baseUrl }) { return baseUrl },
     // async session({ session, token, user }) { return session },
     // async jwt({ token, user, account, profile, isNewUser }) { return token }
+    async jwt({ token, account }) {
+      console.log('~~account', account)
+      token.userRole = "admin"
+      return token
+    },
+
   },
 
   // Events are useful for logging
