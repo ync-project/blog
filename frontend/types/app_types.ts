@@ -33,7 +33,7 @@ export interface Edge<T, N> {
 
 export interface SearchProps {
     searchQuery: string
-    mode: 'scroll' | 'more'
+    //mode: 'scroll' | 'more'
 };
 
 export interface SearchMode {

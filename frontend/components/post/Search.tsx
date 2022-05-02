@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { Form, FormControl } from 'react-bootstrap';
-import PostSearchSuggestions from '../post/PostsSearchSuggestions';
-import {SearchMode} from '../../types/app_types'
 
-const QuickSearch = ({mode} : SearchMode) => {
+const QuickSearch = ({children}: any) => {
     const [ searchQuery, setSearchQuery ] = useState('');
     const handleChange = (value: any) => {
         const valueEntered = !!value;
-
         setSearchQuery(value);
     }
 
@@ -20,7 +17,7 @@ const QuickSearch = ({mode} : SearchMode) => {
             </Form>
         </div>
             <section>
-                <PostSearchSuggestions searchQuery={searchQuery} mode={mode} />
+                {children}
             </section>
             <style jsx>{`
             section {
@@ -43,5 +40,5 @@ const QuickSearch = ({mode} : SearchMode) => {
     );
 };
 
-export default QuickSearch;
 
+export default QuickSearch;

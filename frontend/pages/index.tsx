@@ -4,13 +4,13 @@ import { DEFAULT_PAGE_TAKE } from '../types/app_types'
 import { PostsDocument } from '../types/graphql_generated'
 import InfoBox from '../components/etc/InfoBox'
 import Layout from "../components/sys/Layout"
-import QuickSearch from '../components/form/QuickSearch'
+import PostsSearch from '../components/post/PostsSearch'
 
 export default function Home(){
   return (
     <Layout>
         <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
-        <QuickSearch mode='more'/>
+        <PostsSearch />
     </Layout>
   )    
 }
