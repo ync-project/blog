@@ -10,7 +10,6 @@ import {
     enumType,
   } from 'nexus'
   import { Context } from '../../context'
-  import { Profile } from './profile'
   import { Post } from './post'
 
   export const User = objectType({
@@ -28,15 +27,15 @@ import {
             })
             .posts()
         },
-      }),
-      t.field('profile', {
-        type: Profile,
-        resolve: (parent, _, context) => {
-          return context.prisma.user.findUnique({
-            where: { id: parent.id }
-          }).profile()
-        }
       })
+      // t.field('profile', {
+      //   type: Profile,
+      //   resolve: (parent, _, context) => {
+      //     return context.prisma.user.findUnique({
+      //       where: { id: parent.id }
+      //     }).profile()
+      //   }
+      // })
     },
   })
   

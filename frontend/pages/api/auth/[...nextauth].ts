@@ -25,31 +25,31 @@ export default NextAuth({
     //     keyId: process.env.APPLE_KEY_ID,
     //   },
     // }),
-    Auth0Provider({
-      clientId: process.env.AUTH0_ID,
-      clientSecret: process.env.AUTH0_SECRET,
-      // @ts-ignore
-      domain: process.env.AUTH0_DOMAIN,
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_ID,
-      clientSecret: process.env.FACEBOOK_SECRET,
-    }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-      // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
-      // @ts-ignore
-      scope: "read:user",
-    }),
+    // Auth0Provider({
+    //   clientId: process.env.AUTH0_ID,
+    //   clientSecret: process.env.AUTH0_SECRET,
+    //   // @ts-ignore
+    //   domain: process.env.AUTH0_DOMAIN,
+    // }),
+    // FacebookProvider({
+    //   clientId: process.env.FACEBOOK_ID,
+    //   clientSecret: process.env.FACEBOOK_SECRET,
+    // }),
+    // GithubProvider({
+    //   clientId: process.env.GITHUB_ID,
+    //   clientSecret: process.env.GITHUB_SECRET,
+    //   // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
+    //   // @ts-ignore
+    //   scope: "read:user",
+    // }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
-    TwitterProvider({
-      clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET,
-    }),
+    // TwitterProvider({
+    //   clientId: process.env.TWITTER_ID,
+    //   clientSecret: process.env.TWITTER_SECRET,
+    // }),
   ],
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
   // https://next-auth.js.org/configuration/databases

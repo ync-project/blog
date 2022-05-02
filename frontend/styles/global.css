@@ -1,35 +1,40 @@
-body {
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    padding: 0 1rem 1rem 1rem;
-    margin: 0 auto;
-    background: #fff;
-    color: #333;
+  * {
+    font-family: Menlo, Monaco, 'Lucida Console', 'Liberation Mono',
+      'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New',
+      monospace, serif;
   }
-  
-  li,
-  p {
-    line-height: 1.5rem;
+  body {
+    margin: 0;
+    padding: 25px 50px;
   }
-  
   a {
-    font-weight: 500;
+    color: #22bad9;
   }
-  
-  hr {
-    border: 1px solid #ddd;
+  p {
+    font-size: 14px;
+    line-height: 24px;
   }
-  
-  iframe {
-    background: #ccc;
-    border: 1px solid #ccc;
-    height: 10rem;
-    width: 100%;
-    border-radius: 0.5rem;
-    filter: invert(1);
+  article {
+    margin: 0 auto;
+    max-width: 650px;
   }
-  
-.navbar-nav .nav-item:first-child .nav-link {
-    padding-left: 0;
-}
+  button {
+    align-items: center;
+    background-color: #22bad9;
+    border: 0;
+    color: white;
+    display: flex;
+    padding: 5px 7px;
+    transition: background-color 0.3s;
+  }
+  button:active {
+    background-color: #1b9db7;
+  }
+  button:disabled {
+    background-color: #b5bebf;
+  }
+  button:focus {
+    outline: none;
+  }
+
+

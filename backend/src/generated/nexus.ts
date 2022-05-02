@@ -33,7 +33,9 @@ export interface NexusGenInputs {
     updatedAt: NexusGenEnums['SortOrder']; // SortOrder!
   }
   PostCreateInput: { // input type
-    content?: string | null; // String
+    authorEmail: string; // String!
+    authorName: string; // String!
+    content: string; // String!
     title: string; // String!
   }
   UserCreateInput: { // input type
@@ -90,10 +92,6 @@ export interface NexusGenObjects {
     edges: NexusGenRootTypes['PostEdge'][]; // [PostEdge!]!
     pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
-  Profile: { // root type
-    bio?: string | null; // String
-    id: number; // Int!
-  }
   Query: {};
   User: { // root type
     email: string; // String!
@@ -126,13 +124,10 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: { // field return type
-    addProfileForUser: NexusGenRootTypes['Profile'] | null; // Profile
     createDraft: NexusGenRootTypes['Post'] | null; // Post
     deletePost: NexusGenRootTypes['Post'] | null; // Post
     incrementPostViewCount: NexusGenRootTypes['Post'] | null; // Post
-    signupUser: NexusGenRootTypes['User']; // User!
     togglePublishPost: NexusGenRootTypes['Post'] | null; // Post
-    updateProfileForUser: NexusGenRootTypes['User'] | null; // User
     votePost: NexusGenRootTypes['Post'] | null; // Post
   }
   PageInfo: { // field return type
@@ -161,11 +156,6 @@ export interface NexusGenFieldTypes {
     edges: NexusGenRootTypes['PostEdge'][]; // [PostEdge!]!
     pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
   }
-  Profile: { // field return type
-    bio: string | null; // String
-    id: number; // Int!
-    user: NexusGenRootTypes['User'] | null; // User
-  }
   Query: { // field return type
     draftsByUser: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     postById: NexusGenRootTypes['Post'] | null; // Post
@@ -178,7 +168,6 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string | null; // String
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
-    profile: NexusGenRootTypes['Profile'] | null; // Profile
   }
   UserEdge: { // field return type
     cursor: number; // Int!
@@ -196,13 +185,10 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
-    addProfileForUser: 'Profile'
     createDraft: 'Post'
     deletePost: 'Post'
     incrementPostViewCount: 'Post'
-    signupUser: 'User'
     togglePublishPost: 'Post'
-    updateProfileForUser: 'User'
     votePost: 'Post'
   }
   PageInfo: { // field return type name
@@ -231,11 +217,6 @@ export interface NexusGenFieldTypeNames {
     edges: 'PostEdge'
     pageInfo: 'PageInfo'
   }
-  Profile: { // field return type name
-    bio: 'String'
-    id: 'Int'
-    user: 'User'
-  }
   Query: { // field return type name
     draftsByUser: 'Post'
     postById: 'Post'
@@ -248,7 +229,6 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     name: 'String'
     posts: 'Post'
-    profile: 'Profile'
   }
   UserEdge: { // field return type name
     cursor: 'Int'
@@ -262,12 +242,7 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    addProfileForUser: { // args
-      bio?: string | null; // String
-      userUniqueInput: NexusGenInputs['UserUniqueInput']; // UserUniqueInput!
-    }
     createDraft: { // args
-      authorEmail: string; // String!
       data: NexusGenInputs['PostCreateInput']; // PostCreateInput!
     }
     deletePost: { // args
@@ -276,16 +251,8 @@ export interface NexusGenArgTypes {
     incrementPostViewCount: { // args
       id: number; // Int!
     }
-    signupUser: { // args
-      bio?: string | null; // String
-      data: NexusGenInputs['UserCreateInput']; // UserCreateInput!
-    }
     togglePublishPost: { // args
       id: number; // Int!
-    }
-    updateProfileForUser: { // args
-      bio?: string | null; // String
-      email: string; // String!
     }
     votePost: { // args
       id: number; // Int!

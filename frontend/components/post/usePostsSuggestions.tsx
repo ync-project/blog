@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 //import { useLazyQuery } from '@apollo/client';
-import { usePostsLazyQuery, Post } from '../../types/graphql_generated'
+import { usePostsLazyQuery, Post, SortOrder } from '../../types/graphql_generated'
 //import { GET_QUICK_SEARCH_SUGGESTIONS } from '../../queries/product.gql';
 import { DEFAULT_PAGE_TAKE, Suggestion } from '../../types/app_types'  
 import { NetworkStatus } from "@apollo/client"; 
@@ -33,6 +33,7 @@ export const usePostsSuggestions = (searchString : string) => {
             variables: {
                 searchString,
                 take: DEFAULT_PAGE_TAKE,
+                orderBy: {updatedAt: SortOrder.Desc}
             },            
         });
     }, [fetchSuggestions, searchString]);

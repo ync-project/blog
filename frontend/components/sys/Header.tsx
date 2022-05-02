@@ -4,9 +4,11 @@ import { signIn, signOut, useSession } from "next-auth/react"
 import styles from "./Header.module.css"
 
 export default function Header() {
-  const { pathname } = useRouter()
+  const router = useRouter()
   const { data: session, status } = useSession()
   const loading = status === "loading"
+  const isActive: (pathname: string) => boolean = (pathname) =>
+    router.pathname === pathname;
 
   return (
     <>
@@ -56,45 +58,55 @@ export default function Header() {
               >
                 Sign out
               </a>
+              <span className={styles.signedInText}>
+              </span>
             </>
           )}
         </p>
       </div>
       <nav>
         <Link href="/">
-          <a className={pathname === '/' ? 'is-active' : ''}>Home</a>
+          <a data-active={isActive('/')}>Home</a>
         </Link>
         <Link href="/posts">
-          <a className={pathname === '/posts' ? 'is-active' : ''}>Posts-Scroll</a>
+          <a data-active={isActive('/posts')}>Posts-Scroll</a>
         </Link>
         <Link href="/about">
-          <a className={pathname === '/about' ? 'is-active' : ''}>About</a>
+          <a data-active={isActive('/about')}>About</a>
         </Link>
         <Link href="/api-example">
-              <a className={pathname === '/api-example' ? 'is-active' : ''}>API</a>
+              <a data-active={isActive('/api-example')}>API</a>
             </Link>
 
         { status === 'authenticated' && (
           <>
+            <Link href="/posts/drafts">
+              <a data-active={isActive('/posts/drafts')}>My drafts</a>
+            </Link>
             <Link href="/admin">
-              <a className={pathname === '/admin' ? 'is-active' : ''}>Admin</a>
+              <a data-active={isActive('/admin')}>Admin</a>
             </Link>
             <Link href="/users">
-              <a className={pathname === '/users' ? 'is-active' : ''}>User</a>
+              <a data-active={isActive('/users')}>User</a>
             </Link>
             <Link href="/client-only">
-              <a className={pathname === '/client-only' ? 'is-active' : ''}>
+              <a data-active={isActive('/client-only')}>
                 Client-Only
               </a>
             </Link>
             <Link href="/ssr">
-              <a className={pathname === '/ssr' ? 'is-active' : ''}>SSR</a>
+              <a data-active={isActive('/ssr')}>SSR</a>
             </Link>
             <Link href="/ssg">
-              <a className={pathname === '/ssg' ? 'is-active' : ''}>SSG</a>
+              <a data-active={isActive('/ssg')}>SSG</a>
             </Link>
             <Link href="/protected">
-              <a className={pathname === '/protected' ? 'is-active' : ''}>Protected</a>
+              <a data-active={isActive('/protected')}>Protected</a>
+            </Link>
+            <Link href="/posts/create">
+              <button>
+                <a>New post</a>
+              </button>
             </Link>
           </>
           )}
@@ -107,8 +119,12 @@ export default function Header() {
             margin-right: 15px;
             text-decoration: none;
           }
-          .is-active {
-            text-decoration: underline;
+          button {
+            float: right;
+          }
+          button a {
+            text-color: yellow;
+            color: yellow;
           }
         `}</style>
       </nav>

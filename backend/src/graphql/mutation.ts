@@ -7,9 +7,7 @@ import {
     arg,
   } from 'nexus'
   import { Context } from '../context'
-  import { User } from './types/user'
   import { Post } from './types/post'
-  import { Profile } from './types/profile'
   import { PostCreateInput } from './query'
   
   export const UserUniqueInput = inputObjectType({
@@ -42,15 +40,26 @@ import {
               type: 'PostCreateInput',
             }),
           ),
-          authorEmail: nonNull(stringArg()),
+          // authorEmail: nonNull(stringArg()),
+          // authorName: nonNull(stringArg()),
         },
         resolve: (_, args, context: Context) => {
           return context.prisma.post.create({
             data: {
               title: args.data.title,
               content: args.data.content,
+              published: true,
               author: {
-                connect: { email: args.authorEmail },
+                connect: { email: args.data.authorEmail },
+                connectOrCreate: {
+                  create: {
+                    name: args.data.authorName,
+                    email: args.data.authorEmail,
+                  },
+                  where:{
+                    email: args.data.authorEmail,
+                  }
+                }
               },
             },
           })
@@ -130,83 +139,6 @@ import {
           })
         },
       })
-      t.nonNull.field('signupUser', {
-        type: User,
-        args: {
-          data: nonNull(
-            arg({
-              type: UserCreateInput,
-            }),
-          ),
-          bio: (stringArg())
-        },
-        resolve: (_, args, context: Context) => {
-          const postData = args.data.posts?.map((post: any) => {
-            return { title: post.title, content: post.content || undefined }
-          })
-          return context.prisma.user.create({
-            data: {
-              name: args.data.name,
-              email: args.data.email,
-              password: args.data.password,
-              posts: {
-                create: postData,
-              },
-              profile: {
-                create: {
-                   bio: args.bio
-                }
-              },
-            },
-          })
-        },
-      })
-  
-      t.field('addProfileForUser', {
-        type: Profile,
-        args: {
-          userUniqueInput: nonNull(
-            arg({
-              type: 'UserUniqueInput',
-            }),
-          ),
-          bio: stringArg()
-        }, 
-        resolve: async (_, args, context) => {
-          return context.prisma.profile.create({
-            data: {
-              bio: args.bio,
-              user: {
-                connect: {
-                  id: args.userUniqueInput.id || undefined,
-                  email: args.userUniqueInput.email || undefined,
-                }
-              }
-            }
-          })
-        }
-      })
-
-      t.field('updateProfileForUser', {
-        type: User,
-        args: {
-          email: nonNull(stringArg()),
-          bio: stringArg()
-        }, 
-        resolve: async (_, args, context) => {
-          return context.prisma.user.update({
-            where: { email: args.email},
-            data: {
-              profile: {
-                update: {
-                  bio: args.bio
-                }
-              }
-            }
-          })
-        }
-      })
-
-    },
+    }   
   })
   

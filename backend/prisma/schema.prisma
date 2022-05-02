@@ -7,16 +7,6 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  password String
-  posts Post[]
-  profile Profile?
-  token String?
-}
-
 model Post {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -26,15 +16,18 @@ model Post {
   published Boolean  @default(false)
   viewCount Int?      @default(0)
   votes     Int?      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
   slug      String?
   databaseId Int? 
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
 }
 
-model Profile {
-  id     Int     @default(autoincrement()) @id
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  email     String  @unique  
+  posts     Post[]
 }

@@ -31,7 +31,9 @@ export const PostCreateInput = inputObjectType({
   name: 'PostCreateInput',
   definition(t) {
     t.nonNull.string('title')
-    t.string('content')
+    t.nonNull.string('content')
+    t.nonNull.string('authorEmail')
+    t.nonNull.string('authorName')
   },
 })
   

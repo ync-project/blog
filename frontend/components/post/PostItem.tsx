@@ -7,7 +7,7 @@ const PostItem = ({post} : {post: Post}) => {
         <a>
           <h2>{post.id}. {post.title}</h2>
           {post.author &&
-              <small>by {post.author.name}</small>}
+              <small>by {post.author.email}</small>}
           <p>{post.content}</p>
           <style jsx>{`
             a {
