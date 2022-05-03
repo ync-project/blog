@@ -8,11 +8,24 @@
     padding: 25px 50px;
   }
   a {
+    font-weight: 500;
     color: #22bad9;
   }
   p {
     font-size: 14px;
-    line-height: 24px;
+    line-height: 1.5rem;
+  }
+  hr {
+    border: 1px solid #ddd;
+  }
+  
+  iframe {
+    background: #ccc;
+    border: 1px solid #ccc;
+    height: 10rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    filter: invert(1);
   }
   article {
     margin: 0 auto;

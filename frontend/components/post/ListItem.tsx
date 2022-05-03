@@ -1,6 +1,7 @@
 import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
-import { PostsQuery, PageInfo, PostEdge, Post } from '../../types/graphql_generated'
+import { Post } from '../../types/graphql_generated'
+import { Section } from '../../styles/styles'
 
 interface Props { 
   posts: Post[]
@@ -9,7 +10,7 @@ interface Props {
 
 const Posts = ({posts, totalCount}: Props) => { 
     return ( posts &&
-    <section>
+    <Section>
       founds : {totalCount} records
       <ul>
         {posts.map((post, index) => ( post &&
@@ -24,36 +25,7 @@ const Posts = ({posts, totalCount}: Props) => {
           </li>
         ))}
       </ul>
-
-      <style jsx>{`
-        section {
-          padding-bottom: 20px;
-        }
-        li {
-          display: block;
-          margin-bottom: 10px;
-        }
-        div {
-          align-items: center;
-          display: flex;
-        }
-        a {
-          font-size: 14px;
-          margin-right: 10px;
-          text-decoration: none;
-          padding-bottom: 0;
-          border: 0;
-        }
-        span {
-          font-size: 14px;
-          margin-right: 5px;
-        }
-        ul {
-          margin: 0;
-          padding: 0;
-        }
-      `}</style>
-    </section>  
+    </Section>  
     )
   }
   

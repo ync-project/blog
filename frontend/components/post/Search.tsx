@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, FormControl } from 'react-bootstrap';
-import { SearchMode, SearchProps, Suggestion } from '../../types/app_types'  
+import {Section} from '../../styles/styles'
 
 const Search = ({children}: any) => {
     const [ searchQuery, setSearchQuery ] = useState('');
@@ -19,25 +19,9 @@ const Search = ({children}: any) => {
                   className="w-100" onChange={e => handleChange(e.target.value)}/>
             </Form>
         </div>
-            <section>
+            <Section>
                 {ClonedChildren}
-            </section>
-            <style jsx>{`
-            section {
-                padding-top: 20px;
-                padding-bottom: 20px;
-            }
-            button:before {
-              align-self: center;
-              border-style: solid;
-              border-width: 6px 4px 0 4px;
-              border-color: #ffffff transparent transparent transparent;
-              content: '';
-              height: 0;
-              margin-right: 5px;
-              width: 0;
-            }
-          `}</style>
+            </Section>
 
         </>
     );

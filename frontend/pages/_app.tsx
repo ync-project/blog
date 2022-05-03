@@ -4,11 +4,9 @@ import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../lib/apolloClient'
 import { SessionProvider } from "next-auth/react"
 import { useSession } from "next-auth/react"
-import AccessDenied from '../components/sys/access-denied'
 
 import 'normalize.css/normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import "../styles/styles.css"
 import '../styles/global.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 

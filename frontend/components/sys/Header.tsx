@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from "next-auth/react"
-import styles from "./Header.module.css"
+import {Header} from '../../styles/styles'
 
-export default function Header() {
+export default function HeaderPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const loading = status === "loading"
@@ -11,21 +11,21 @@ export default function Header() {
     router.pathname === pathname;
 
   return (
-    <>
-      <div className={styles.signedInStatus}>
+    <Header>
+      <div className="signedInStatus">
         <p
           className={`nojs-show ${
-            !session && loading ? styles.loading : styles.loaded
+            !session && loading ? 'loading' : 'loaded'
           }`}
         >
           {!session && (
             <>
-              <span className={styles.notSignedInText}>
+              <span className="notSignedInText">
                 You are not signed in
               </span>
               <a
                 href={`/api/auth/signin`}
-                className={styles.buttonPrimary}
+                className="buttonPrimary"
                 onClick={(e) => {
                   e.preventDefault()
                   signIn()
@@ -40,17 +40,17 @@ export default function Header() {
               {session.user.image && (
                 <span
                   style={{ backgroundImage: `url('${session.user.image}')` }}
-                  className={styles.avatar}
+                  className="avatar"
                 />
               )}
-              <span className={styles.signedInText}>
+              <span className="signedInText">
                 <small>Signed in as</small>
                 <br />
                 <strong>{session.user.email ?? session.user.name}</strong>
               </span>
               <a
                 href={`/api/auth/signout`}
-                className={styles.button}
+                className="button"
                 onClick={(e) => {
                   e.preventDefault()
                   signOut()
@@ -58,7 +58,7 @@ export default function Header() {
               >
                 Sign out
               </a>
-              <span className={styles.signedInText}>
+              <span className="signedInText">
               </span>
             </>
           )}
@@ -110,24 +110,7 @@ export default function Header() {
             </Link>
           </>
           )}
-          <style jsx>{`
-          header {
-            margin-bottom: 25px;
-          }
-          a {
-            font-size: 14px;
-            margin-right: 15px;
-            text-decoration: none;
-          }
-          button {
-            float: right;
-          }
-          button a {
-            text-color: yellow;
-            color: yellow;
-          }
-        `}</style>
       </nav>
-    </>  
+    </Header>  
   )
 }
