@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Form, FormControl } from 'react-bootstrap';
+import { SearchMode, SearchProps, Suggestion } from '../../types/app_types'  
 
-const QuickSearch = ({children}: any) => {
+const Search = ({children}: any) => {
     const [ searchQuery, setSearchQuery ] = useState('');
     const handleChange = (value: any) => {
         const valueEntered = !!value;
         setSearchQuery(value);
     }
+
+    const ClonedChildren = React.cloneElement(children, {searchQuery});
 
     return (
         <>
@@ -17,7 +20,7 @@ const QuickSearch = ({children}: any) => {
             </Form>
         </div>
             <section>
-                {children}
+                {ClonedChildren}
             </section>
             <style jsx>{`
             section {
@@ -41,4 +44,4 @@ const QuickSearch = ({children}: any) => {
 };
 
 
-export default QuickSearch;
+export default Search;

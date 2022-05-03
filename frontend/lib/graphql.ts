@@ -80,11 +80,11 @@ export const POST_BY_ID = gql`
 
 // Retrieve the drafts of a user
 export const DRAFTS_BY_USER = gql`
-    query draftsByUser($email: String!) {
+    query draftsByUser($email: String!, $orderBy: OrderByUpdatedAtInput) {
         draftsByUser(
             userUniqueInput: {
                 email: $email
-            }
+            }, orderBy: $orderBy
         ) {
             ...PostFields
             author {

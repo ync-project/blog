@@ -113,6 +113,7 @@ export type Query = {
 
 
 export type QueryDraftsByUserArgs = {
+  orderBy?: InputMaybe<OrderByUpdatedAtInput>;
   userUniqueInput: UserUniqueInput;
 };
 
@@ -207,6 +208,7 @@ export type PostByIdQuery = { __typename?: 'Query', postById?: { __typename?: 'P
 
 export type DraftsByUserQueryVariables = Exact<{
   email: Scalars['String'];
+  orderBy?: InputMaybe<OrderByUpdatedAtInput>;
 }>;
 
 
@@ -392,8 +394,8 @@ export type PostByIdQueryHookResult = ReturnType<typeof usePostByIdQuery>;
 export type PostByIdLazyQueryHookResult = ReturnType<typeof usePostByIdLazyQuery>;
 export type PostByIdQueryResult = Apollo.QueryResult<PostByIdQuery, PostByIdQueryVariables>;
 export const DraftsByUserDocument = gql`
-    query draftsByUser($email: String!) {
-  draftsByUser(userUniqueInput: {email: $email}) {
+    query draftsByUser($email: String!, $orderBy: OrderByUpdatedAtInput) {
+  draftsByUser(userUniqueInput: {email: $email}, orderBy: $orderBy) {
     ...PostFields
     author {
       ...UserIdentities
@@ -416,6 +418,7 @@ ${UserIdentitiesFragmentDoc}`;
  * const { data, loading, error } = useDraftsByUserQuery({
  *   variables: {
  *      email: // value for 'email'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */

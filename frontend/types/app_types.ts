@@ -49,3 +49,9 @@ export type Suggestion<T> = {
     loadingMore: boolean
     loadMore: ()=>void
 }
+
+export type Result<T> = {
+    hasSuggestions: boolean,
+    isLoading: boolean,
+    items: T[]
+}

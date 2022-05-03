@@ -61,6 +61,9 @@ export const Query = objectType({
               type: 'UserUniqueInput',
             }),
           ),
+          orderBy: arg({
+            type: 'OrderByUpdatedAtInput',
+          }),
         },
         resolve: (_parent, args, context: Context) => {
           return context.prisma.user
@@ -74,6 +77,7 @@ export const Query = objectType({
               where: {
                 published: false,
               },
+              orderBy: args.orderBy || undefined,
             })
         },
       })
@@ -98,7 +102,7 @@ export const Query = objectType({
             ? {
                 OR: [
                   { title: { contains: args.searchString } },
-                  { content: { contains: args.searchString } },
+                  //{ content: { contains: args.searchString } },
                 ],
               }
             : {}

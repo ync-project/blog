@@ -29,7 +29,7 @@ const PostPage = ({post}: {post: PostByIdQuery["postById"]}) => {
     const paths = data?.posts?.edges.map((edge) => ({
         params: { id: edge.cursor.toString() },
     }))
-    //console.log('paths', paths)
+    console.log('paths', paths)
     return { paths: paths, fallback: false }
 }
 
@@ -45,6 +45,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
             props: {
                 post: data?.postById
             },
+            revalidate: 1
         }
     } catch (err: unknown ) {
         const errors = err as TODOPageErr

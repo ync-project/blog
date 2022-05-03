@@ -260,6 +260,7 @@ export interface NexusGenArgTypes {
   }
   Query: {
     draftsByUser: { // args
+      orderBy?: NexusGenInputs['OrderByUpdatedAtInput'] | null; // OrderByUpdatedAtInput
       userUniqueInput: NexusGenInputs['UserUniqueInput']; // UserUniqueInput!
     }
     postById: { // args

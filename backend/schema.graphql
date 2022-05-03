@@ -62,7 +62,7 @@ type PostResponse {
 }
 
 type Query {
-  draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
+  draftsByUser(orderBy: OrderByUpdatedAtInput, userUniqueInput: UserUniqueInput!): [Post]
   postById(id: Int): Post
   posts(after: Int, orderBy: OrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): PostResponse
   user(id: Int): User

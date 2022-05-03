@@ -65,7 +65,7 @@ export default function Submit() {
             },
           },
         })
-        Router.replace('/')
+        Router.replace('/drafts')
       },
     })
   }

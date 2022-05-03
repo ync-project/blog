@@ -80,8 +80,8 @@ export default function Header() {
 
         { status === 'authenticated' && (
           <>
-            <Link href="/posts/drafts">
-              <a data-active={isActive('/posts/drafts')}>My drafts</a>
+            <Link href="/drafts">
+              <a data-active={isActive('/drafts')}>My drafts</a>
             </Link>
             <Link href="/admin">
               <a data-active={isActive('/admin')}>Admin</a>
@@ -103,7 +103,7 @@ export default function Header() {
             <Link href="/protected">
               <a data-active={isActive('/protected')}>Protected</a>
             </Link>
-            <Link href="/posts/create">
+            <Link href="/drafts/create">
               <button>
                 <a>New post</a>
               </button>

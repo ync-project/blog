@@ -16,10 +16,9 @@ const Posts = ({posts, totalCount}: Props) => {
           <li key={post.id}>
             <div>
               <span>{index+1}. </span>
-              <Link href="/posts/[id]" as={`/posts/${post.id}`}>
+              <Link href="/drafts/[id]" as={`/drafts/${post.id}`}>
                 <a>{post.title}</a>
               </Link>
-              <PostUpvoter id={post.id} votes={post.votes || 0} />
             </div>
           </li>
         ))}

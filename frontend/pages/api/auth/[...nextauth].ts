@@ -120,7 +120,7 @@ export default NextAuth({
     // async session({ session, token, user }) { return session },
     // async jwt({ token, user, account, profile, isNewUser }) { return token }
     async jwt({ token, account }) {
-      console.log('~~account', account)
+      //console.log('~~account', account)
       token.userRole = "admin"
       return token
     },

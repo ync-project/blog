@@ -48,7 +48,7 @@ import {
             data: {
               title: args.data.title,
               content: args.data.content,
-              published: true,
+              published: false,
               author: {
                 connect: { email: args.data.authorEmail },
                 connectOrCreate: {
