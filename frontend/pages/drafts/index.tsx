@@ -1,8 +1,6 @@
 import { GetServerSideProps } from "next";
-import { initializeApollo, addApolloState } from '../../lib/apolloClient'
 import Layout from '../../components/sys/Layout'
 import InfoBox from '../../components/etc/InfoBox'
-import { DraftsByUserDocument } from '../../types/graphql_generated'
 import DraftsSearch from '../../components/post/DraftsSearch'
 import { useSession, getSession } from "next-auth/react"
 import type { Session } from "next-auth"
