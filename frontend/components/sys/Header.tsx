@@ -1,133 +1,112 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from "next-auth/react"
-import styles from "./Header.module.css"
+import {Header, NotSignedInText, SignedInStatus, Avatar,
+  Abutton, PrimaryButton, NavItems } from '../../styles/styles'
 
-export default function Header() {
+export default function HeaderPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const loading = status === "loading"
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
+  const isActive: (pathname: string) => string = (pathname) =>
+    router.pathname === pathname ? 'is-active' : '';
+
 
   return (
-    <>
-      <div className={styles.signedInStatus}>
-        <p
-          className={`nojs-show ${
-            !session && loading ? styles.loading : styles.loaded
-          }`}
-        >
-          {!session && (
-            <>
-              <span className={styles.notSignedInText}>
+    <Header>
+      <SignedInStatus>
+        {!session && (
+          <>
+              <NotSignedInText>
                 You are not signed in
-              </span>
-              <a
+              </NotSignedInText>
+              <PrimaryButton
                 href={`/api/auth/signin`}
-                className={styles.buttonPrimary}
                 onClick={(e) => {
                   e.preventDefault()
                   signIn()
                 }}
               >
                 Sign in
-              </a>
+              </PrimaryButton>
             </>
-          )}
-          {session?.user && (
-            <>
-              {session.user.image && (
-                <span
+        )}
+        {session?.user && (
+          <>
+            {session.user.image && (
+                <Avatar
                   style={{ backgroundImage: `url('${session.user.image}')` }}
-                  className={styles.avatar}
                 />
-              )}
-              <span className={styles.signedInText}>
+            )}
+            <span>
                 <small>Signed in as</small>
                 <br />
                 <strong>{session.user.email ?? session.user.name}</strong>
-              </span>
-              <a
+            </span>
+            <Abutton
                 href={`/api/auth/signout`}
-                className={styles.button}
-                onClick={(e) => {
+                onClick={(e:any) => {
                   e.preventDefault()
-                  signOut()
+                  signOut({
+                    callbackUrl: `/`
+                  })
                 }}
               >
                 Sign out
-              </a>
-              <span className={styles.signedInText}>
-              </span>
-            </>
-          )}
-        </p>
-      </div>
-      <nav>
+            </Abutton>
+          </>    
+        )}  
+      </SignedInStatus>
+      <NavItems>
         <Link href="/">
-          <a data-active={isActive('/')}>Home</a>
+          <a className={isActive('/')}>Home</a>
         </Link>
         <Link href="/posts">
-          <a data-active={isActive('/posts')}>Posts-Scroll</a>
+          <a className={isActive('/posts')}>Posts-Scroll</a>
         </Link>
         <Link href="/about">
-          <a data-active={isActive('/about')}>About</a>
+          <a className={isActive('/about')}>About</a>
         </Link>
         <Link href="/api-example">
-              <a data-active={isActive('/api-example')}>API</a>
-            </Link>
+          <a className={isActive('/api-example')}>API</a>
+        </Link>
 
         { status === 'authenticated' && (
           <>
             <Link href="/drafts">
-              <a data-active={isActive('/drafts')}>My drafts</a>
+              <a className={isActive('/drafts')}>My drafts</a>
             </Link>
             <Link href="/admin">
-              <a data-active={isActive('/admin')}>Admin</a>
+              <a className={isActive('/admin')}>Admin</a>
             </Link>
             <Link href="/users">
-              <a data-active={isActive('/users')}>User</a>
+              <a className={isActive('/users')}>User</a>
             </Link>
             <Link href="/client-only">
-              <a data-active={isActive('/client-only')}>
+              <a className={isActive('/client-only')}>
                 Client-Only
               </a>
             </Link>
             <Link href="/ssr">
-              <a data-active={isActive('/ssr')}>SSR</a>
+              <a className={isActive('/ssr')}>SSR</a>
+            </Link>
+            <Link href="/ssr">
+              <a className={isActive('/ssr')}>SSR</a>
             </Link>
             <Link href="/ssg">
-              <a data-active={isActive('/ssg')}>SSG</a>
+              <a className={isActive('/ssg')}>SSG</a>
             </Link>
             <Link href="/protected">
-              <a data-active={isActive('/protected')}>Protected</a>
+              <a className={isActive('/protected')}>Protected</a>
             </Link>
             <Link href="/drafts/create">
-              <button>
-                <a>New post</a>
-              </button>
+                <button>
+                    <a>New post</a>
+                </button>
             </Link>
-          </>
-          )}
-          <style jsx>{`
-          header {
-            margin-bottom: 25px;
-          }
-          a {
-            font-size: 14px;
-            margin-right: 15px;
-            text-decoration: none;
-          }
-          button {
-            float: right;
-          }
-          button a {
-            text-color: yellow;
-            color: yellow;
-          }
-        `}</style>
-      </nav>
-    </>  
+          </>  
+        )}
+      </NavItems>
+    </Header>
   )
 }

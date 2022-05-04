@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import { Form, FormControl } from 'react-bootstrap';
-import { SearchMode, SearchProps, Suggestion } from '../../types/app_types'  
-import { ListGroup } from 'react-bootstrap';
+import { SearchProps, Suggestion } from '../../types/app_types'  
 import usePostsSuggestions from './usePostsSuggestions';
-import classes from './PostsSearch.module.css'
 import ListItem from './ListItem'
 import { Post } from '../../types/graphql_generated'
 import Search from './Search'
+import {Suggestions, ChapterList} from '../../styles/styles'
 
 const PostSearch = () => {
   return (
@@ -28,9 +25,9 @@ const PostSearchSuggestionsScroll = ({searchQuery}: SearchProps) => {
     }: Suggestion<Post> = usePostsSuggestions(searchQuery);
 
     const suggestions = items.map((product: any) => {
-        return <ListGroup.Item key={product.id}>
+        return <li key={product.id}>
             {product.title}
-        </ListGroup.Item>
+        </li>
     });
 
     const handleScroll = ({ currentTarget }: any, onLoadMore: ()=> void, hasMore: boolean) => {
@@ -45,39 +42,26 @@ const PostSearchSuggestionsScroll = ({searchQuery}: SearchProps) => {
       };
 
     const shouldDisplaySuggestions = suggestions ? 
-        <div className={classes.suggestions}>
-          <div
-            className="list-group chapter-list"
-            onScroll={e => handleScroll(e, loadMore, hasMore)}
+        <Suggestions>
+          <ChapterList
+            onScroll={(e:any) => handleScroll(e, loadMore, hasMore)}
           >
-            <ListGroup>
+            <div>
                 <ListItem posts={items} totalCount={totalCount} />
-            </ListGroup>
-            <style jsx>{`
-            .chapter-list {
-              margin-top: 15px;
-              max-height: 200px;
-              overflow: scroll;
-            }
-            section {
-              padding-bottom: 20px;
-            }
-          `}</style>
-          </div>  
-        </div> : null;
+            </div>
+          </ChapterList>  
+        </Suggestions> : null;
 
     if (hasSuggestions) {
         return shouldDisplaySuggestions;
     } else if (isLoading) {
-        return <div className={classes.suggestions}>
-            <ListGroup.Item>Loading...</ListGroup.Item>
-        </div>;
+        return <Suggestions>
+            <p>Loading...</p>
+        </Suggestions>;
     } else if (!hasSuggestions) {
-        return <div className={classes.suggestions}>
-            <ListGroup>
-                <ListGroup.Item>No products found</ListGroup.Item>
-            </ListGroup>
-        </div>
+        return <Suggestions>
+                <p>No products found</p>
+        </Suggestions>
     } else {
         return null;
     }

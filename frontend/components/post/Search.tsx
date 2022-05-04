@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Form, FormControl } from 'react-bootstrap';
-import { SearchMode, SearchProps, Suggestion } from '../../types/app_types'  
+import {Section} from '../../styles/styles'
 
 const Search = ({children}: any) => {
     const [ searchQuery, setSearchQuery ] = useState('');
@@ -13,32 +12,16 @@ const Search = ({children}: any) => {
 
     return (
         <>
-        <div className="justify-content-center d-flex position-relative">
-            <Form className="w-100">
-                <FormControl type="text" placeholder="Search entire shop" 
-                  className="w-100" onChange={e => handleChange(e.target.value)}/>
-            </Form>
+        <div className="flex flex-col mb-4">
+        <label className="mb-2 uppercase font-bold text-lg text-grey-darkest" htmlFor="searchText">Search</label>         
+        <input type="text" placeholder="Search entire site" id="searchText"
+            onChange={e => handleChange(e.target.value)}
+            className="border py-2 px-5 text-grey-darkest" 
+            />
         </div>
-            <section>
+            <div>
                 {ClonedChildren}
-            </section>
-            <style jsx>{`
-            section {
-                padding-top: 20px;
-                padding-bottom: 20px;
-            }
-            button:before {
-              align-self: center;
-              border-style: solid;
-              border-width: 6px 4px 0 4px;
-              border-color: #ffffff transparent transparent transparent;
-              content: '';
-              height: 0;
-              margin-right: 5px;
-              width: 0;
-            }
-          `}</style>
-
+            </div>
         </>
     );
 };

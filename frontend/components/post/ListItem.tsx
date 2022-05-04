@@ -1,6 +1,6 @@
 import PostUpvoter from './PostUpvoter'
 import Link from 'next/link'
-import { PostsQuery, PageInfo, PostEdge, Post } from '../../types/graphql_generated'
+import { Post } from '../../types/graphql_generated'
 
 interface Props { 
   posts: Post[]
