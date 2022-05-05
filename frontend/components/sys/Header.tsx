@@ -33,21 +33,24 @@ export default function HeaderPage() {
         )}
         {session?.user && (
           <>
-            <div className="flex w-xl">
-            <img className="block mx-auto h-12 rounded-full sm:mx-0 sm:shrink-0" 
-                  src={session.user.image} alt="Woman's Face"/>
-                {session.user.email ?? session.user.name}
-                <p className="text-slate-500 font-sm">
-                  Product Engineer
-                </p>
-              <button className="
-                      px-3 py-3 text-sm text-purple-600 font-semibold rounded-full 
-                      border border-purple-200 
-                      hover:text-white hover:bg-purple-600 hover:border-transparent 
-                      focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
-              >Message</button>
-            </div>  
-              <Abutton
+
+            <div className="flex w-xl divide-x-2 divide-none">
+            <img className="h-10 w-10 rounded-full" src={session.user.image}  referrerpolicy="no-referrer" alt="" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900">{session.user.name}</p>
+                    <p className="text-sm text-gray-500">{session.user.email}</p>
+                  </div>
+                <button className="
+                        px-3 py-3 text-sm text-purple-600 font-semibold rounded-full 
+                        border border-purple-200 
+                        hover:text-white hover:bg-purple-600 hover:border-transparent 
+                        focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
+                >Message</button>
+            <button className="
+                        px-3 py-3 text-sm text-purple-600 font-semibold rounded-full 
+                        border border-purple-200 
+                        hover:text-white hover:bg-purple-600 hover:border-transparent 
+                        focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
                 href={`/api/auth/signout`}
                 onClick={(e:any) => {
                   e.preventDefault()
@@ -57,7 +60,8 @@ export default function HeaderPage() {
                 }}
               >
                 Sign out
-            </Abutton>
+            </button>
+            </div>  
 
           </>    
         )}  
