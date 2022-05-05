@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { Post } from '../../types/graphql_generated'
-import { Section } from '../../styles/styles'
 
 interface Props { 
   posts: Post[]
@@ -9,7 +8,7 @@ interface Props {
 
 const Posts = ({posts, totalCount}: Props) => { 
     return ( posts &&
-    <Section>
+    <>
       founds : {totalCount} records
       <ul>
         {posts.map((post, index) => ( post &&
@@ -24,7 +23,7 @@ const Posts = ({posts, totalCount}: Props) => {
         ))}
       </ul>
 
-    </Section>  
+    </>  
     )
   }
   

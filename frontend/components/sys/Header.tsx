@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from "next-auth/react"
-import {Header, NotSignedInText, SignedInStatus, Avatar,
-  Abutton, PrimaryButton, NavItems } from '../../styles/styles'
 
 export default function HeaderPage() {
   const router = useRouter()
@@ -13,14 +11,14 @@ export default function HeaderPage() {
 
 
   return (
-    <Header>
-      <SignedInStatus>
+    <>
+      <div>
         {!session && (
           <>
-              <NotSignedInText>
+              <div>
                 You are not signed in
-              </NotSignedInText>
-              <PrimaryButton
+              </div>
+              <a
                 href={`/api/auth/signin`}
                 onClick={(e) => {
                   e.preventDefault()
@@ -28,14 +26,14 @@ export default function HeaderPage() {
                 }}
               >
                 Sign in
-              </PrimaryButton>
+              </a>
             </>
         )}
         {session?.user && (
           <>
 
             <div className="flex w-xl divide-x-2 divide-none">
-            <img className="h-10 w-10 rounded-full" src={session.user.image}  referrerpolicy="no-referrer" alt="" />
+            <img className="h-10 w-10 rounded-full" src={session.user.image}  referrerPolicy="no-referrer" alt="" />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">{session.user.name}</p>
                     <p className="text-sm text-gray-500">{session.user.email}</p>
@@ -46,7 +44,7 @@ export default function HeaderPage() {
                         hover:text-white hover:bg-purple-600 hover:border-transparent 
                         focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
                 >Message</button>
-            <button className="
+            <a className="
                         px-3 py-3 text-sm text-purple-600 font-semibold rounded-full 
                         border border-purple-200 
                         hover:text-white hover:bg-purple-600 hover:border-transparent 
@@ -60,13 +58,13 @@ export default function HeaderPage() {
                 }}
               >
                 Sign out
-            </button>
+            </a>
             </div>  
 
           </>    
         )}  
-      </SignedInStatus>
-      <NavItems>
+      </div>
+      <div>
         <Link href="/">
           <a className={isActive('/')}>Home</a>
         </Link>
@@ -115,7 +113,7 @@ export default function HeaderPage() {
             </Link>
           </>  
         )}
-      </NavItems>
-    </Header>
+      </div>
+    </>
   )
 }

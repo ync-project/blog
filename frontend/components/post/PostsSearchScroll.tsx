@@ -3,7 +3,6 @@ import usePostsSuggestions from './usePostsSuggestions';
 import ListItem from './ListItem'
 import { Post } from '../../types/graphql_generated'
 import Search from './Search'
-import {Suggestions, ChapterList} from '../../styles/styles'
 
 const PostSearch = () => {
   return (
@@ -42,26 +41,26 @@ const PostSearchSuggestionsScroll = ({searchQuery}: SearchProps) => {
       };
 
     const shouldDisplaySuggestions = suggestions ? 
-        <Suggestions>
-          <ChapterList
+        <div>
+          <div
             onScroll={(e:any) => handleScroll(e, loadMore, hasMore)}
           >
             <div>
                 <ListItem posts={items} totalCount={totalCount} />
             </div>
-          </ChapterList>  
-        </Suggestions> : null;
+          </div>  
+        </div> : null;
 
     if (hasSuggestions) {
         return shouldDisplaySuggestions;
     } else if (isLoading) {
-        return <Suggestions>
+        return <div>
             <p>Loading...</p>
-        </Suggestions>;
+        </div>;
     } else if (!hasSuggestions) {
-        return <Suggestions>
+        return <div>
                 <p>No products found</p>
-        </Suggestions>
+        </div>
     } else {
         return null;
     }

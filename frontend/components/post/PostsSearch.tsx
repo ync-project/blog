@@ -3,7 +3,6 @@ import usePostsSuggestions from './usePostsSuggestions';
 import ListItem from './ListItem'
 import { Post } from '../../types/graphql_generated'
 import Search from './Search'
-import {Button, Suggestions} from '../../styles/styles'
 
 const PostSearch = () => {
     return (
@@ -31,25 +30,25 @@ const PostSearchSuggestions = ({searchQuery}: SearchProps) => {
     });
 
     const shouldDisplaySuggestions = suggestions ? 
-    <Suggestions>
+    <div>
             <ListItem posts={items} totalCount={totalCount} />
         {hasMore && (
-            <Button onClick={() => loadMore()} disabled={loadingMore}>
+            <button onClick={() => loadMore()} disabled={loadingMore}>
               {loadingMore ? 'Loading...' : 'Show More'} 
-            </Button>
+            </button>
           )}
-    </Suggestions> : null;
+    </div> : null;
 
     if (hasSuggestions) {
         return shouldDisplaySuggestions ;
     } else if (isLoading) {
-        return <Suggestions>
+        return <div>
             <p>Loading...</p>
-        </Suggestions>;
+        </div>;
     } else if (!hasSuggestions) {
-        return <Suggestions>
+        return <div>
                 <p>No products found</p>
-        </Suggestions>
+        </div>
     } else {
         return null;
     }

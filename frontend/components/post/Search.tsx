@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import {Section} from '../../styles/styles'
 
 const Search = ({children}: any) => {
     const [ searchQuery, setSearchQuery ] = useState('');

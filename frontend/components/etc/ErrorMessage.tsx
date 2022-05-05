@@ -1,9 +1,8 @@
-import {Aside} from '../../styles/styles'
 
 export default function ErrorMessage({ message }: any) {
   return (
-    <Aside>
+    <div>
       {message}
-    </Aside>
+    </div>
   )
 }

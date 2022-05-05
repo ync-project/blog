@@ -3,7 +3,6 @@ import { Result } from '../../types/app_types'
 import useDraftsSuggestions from './useDraftsSuggestions';
 import Listdraft from './Listdraft'
 import { Post } from '../../types/graphql_generated'
-import {Suggestions} from '../../styles/styles'
 
 const DraftsSearch = ({email}: {email: string}) => {
     console.log('email', email)
@@ -20,22 +19,22 @@ const DraftsSearch = ({email}: {email: string}) => {
     });
 
     const shouldDisplaySuggestions = suggestions ? 
-    <Suggestions>
+    <div>
         <div>
             <Listdraft posts={items} totalCount={items.length} />
         </div>
-    </Suggestions> : null;
+    </div> : null;
 
     if (hasSuggestions) {
         return shouldDisplaySuggestions ;
     } else if (isLoading) {
-        return <Suggestions>
+        return <div>
             <p>Loading...</p>
-        </Suggestions>;
+        </div>;
     } else if (!hasSuggestions) {
-        return <Suggestions>
+        return <div>
             <p>No products found</p>
-        </Suggestions>
+        </div>
     } else {
         return null;
     }

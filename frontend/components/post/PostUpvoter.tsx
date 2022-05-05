@@ -1,5 +1,4 @@
 import { gql, useMutation } from '@apollo/client'
-import {VoteButton} from '../../styles/styles'
 
 const UPDATE_POST_MUTATION = gql`
   mutation votePost($id: Int!) {
@@ -32,8 +31,8 @@ export default function PostUpvoter({ votes, id }: {id: number, votes: number}) 
   }
 
   return (
-    <VoteButton onClick={() => upvotePost()}>
+    <button onClick={() => upvotePost()}>
       {votes}
-    </VoteButton>
+    </button>
   )
 }

@@ -6,7 +6,8 @@ import { SessionProvider } from "next-auth/react"
 import { useSession } from "next-auth/react"
 import AccessDenied from '../components/sys/access-denied'
 
-import '../styles/global.css'
+import { ChakraProvider } from '@chakra-ui/react'
+import theme from '../theme'
 
 type AppAuthProps = AppProps & {
   Component: NextComponentType<NextPageContext, any, {}> & {auth: boolean};
@@ -21,13 +22,15 @@ const App: NextPage<AppAuthProps> = ({
   return (
     <ApolloProvider client={apolloClient}>
       <SessionProvider session={session} refetchInterval={0}>
-        {Component.auth ? (
-          <Auth>
+        <ChakraProvider theme={theme}>
+          {Component.auth ? (
+            <Auth>
+              <Component {...pageProps} />
+            </Auth>
+          ) : (
             <Component {...pageProps} />
-          </Auth>
-        ) : (
-          <Component {...pageProps} />
-        )}
+          )}
+        </ChakraProvider>
       </SessionProvider>
     </ApolloProvider>
   );

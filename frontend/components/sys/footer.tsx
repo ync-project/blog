@@ -1,10 +1,9 @@
 import Link from "next/link"
 import packageJSON from "../../package.json"
-import {Footer} from '../../styles/styles'
 
 export default function FooterPage() {
   return (
-    <Footer>
+    <>
       <hr />
       <ul className="navItems">
         <li className="navItem">
@@ -25,7 +24,7 @@ export default function FooterPage() {
           <em>next-auth@{packageJSON.dependencies["next-auth"]}</em>
         </li>
       </ul>
-    </Footer>
+    </>
 
   )
 }
