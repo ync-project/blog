@@ -5,8 +5,8 @@ import {H3, H5} from '../../chakra'
 export default function App(){
     return (
       <>
-        <H3>Container</H3>
-        <H5>contains VStacks</H5>
+        <H3>{"<"}Container{">"}</H3>
+        <H5>insides VStacks</H5>
         <VStack>
             <Container maxW='md' bg='blue.600' color='white'>
                 "md" Container
