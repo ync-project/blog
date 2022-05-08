@@ -1,10 +1,12 @@
 import { Box, VStack, Container, Text, HStack, Spacer, Flex, Grid,
         Heading, Button, ButtonGroup } from "@chakra-ui/react"
-
+import {H3, H5} from '../../chakra'
 
 export default function App(){
     return (
       <>
+        <H3>Container</H3>
+        <H5>contains VStacks</H5>
         <VStack>
             <Container maxW='md' bg='blue.600' color='white'>
                 "md" Container
@@ -17,6 +19,7 @@ export default function App(){
             </Container>
         </VStack>
 
+        <H5>contains Box</H5>
         <Container maxW='2xl' bg='blue.600' centerContent>
             <Box padding='4' bg='blue.400' color='black' maxW='md'>
             There are many benefits to a joint design and development system. Not only
@@ -26,6 +29,7 @@ export default function App(){
             </Box>
         </Container>
 
+        <H3>Flex</H3>
         <Box>
             <Text>Flex and Spacer: Full width, equal Spacing</Text>
             <Flex>
