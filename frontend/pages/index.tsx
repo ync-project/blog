@@ -5,12 +5,14 @@ import { PostsDocument } from '../types/graphql_generated'
 import InfoBox from '../components/etc/InfoBox'
 import Layout from "../components/sys/Layout"
 import PostsSearch from '../components/post/PostsSearch'
+import { Main } from '../components/sys/Main'
+import { Box, VStack, Container, Text, HStack, Spacer, Flex, Grid, Stack,
+  Heading, Button, ButtonGroup, Code } from "@chakra-ui/react"
 
 export default function Home(){
   return (
-    <Layout >
-        <InfoBox>ℹ️ This page shows how to use SSG with Apollo.</InfoBox>
-        <PostsSearch />
+    <Layout>
+        <Text>test3</Text>
     </Layout>
   )    
 }

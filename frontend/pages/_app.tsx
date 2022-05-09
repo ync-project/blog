@@ -22,7 +22,7 @@ const App: NextPage<AppAuthProps> = ({
   return (
     <ApolloProvider client={apolloClient}>
       <SessionProvider session={session} refetchInterval={0}>
-        <ChakraProvider theme={theme}>
+        <ChakraProvider resetCSS theme={theme}>
           {Component.auth ? (
             <Auth>
               <Component {...pageProps} />
