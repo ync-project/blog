@@ -1,45 +1,37 @@
-import Layout from '../components/sys/Layout'
-import InfoBox from '../components/etc/InfoBox'
+import * as React from 'react';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Link from '../components/mui/Link';
+import ProTip from '../components/mui/ProTip';
+import Copyright from '../components/mui/Copyright';
 
-const AboutPage = () => (
-  <Layout>
-    <article>
-      <InfoBox>about </InfoBox>
-      <h1>The Idea Behind This Example</h1>
-      <p>
-        <a href="https://www.apollographql.com/client/">Apollo</a> is a GraphQL
-        client that allows you to easily query the exact data you need from a
-        GraphQL server. In addition to fetching and mutating data, Apollo
-        analyzes your queries and their results to construct a client-side cache
-        of your data, which is kept up to date as further queries and mutations
-        are run, fetching more results from the server.
-      </p>
-      <p>
-        In this simple example, we integrate Apollo seamlessly with{' '}
-        <a href="https://github.com/vercel/next.js">Next</a> by calling{' '}
-        <a href="https://nextjs.org/docs/basic-features/data-fetching/get-static-props">
-          getStaticProps
-        </a>{' '}
-        at our Page component. This approach lets us opt out of getInitialProps
-        and let us use all the niceties provided by{' '}
-        <a href="https://github.com/vercel/next.js">Next</a>.
-      </p>
-      <p>
-        On initial page load, while on the server and inside{' '}
-        <a href="https://nextjs.org/docs/basic-features/data-fetching/get-static-props">
-          getStaticProps
-        </a>
-        , we fetch the query used to get the list of posts. At the point in
-        which the query promise resolves, our Apollo Client store is completely
-        initialized. Then we serve the initial HTML with the fetched data and
-        hydrate Apollo in the browser.
-      </p>
-      <p>
-        This example relies on <a href="http://graph.cool">graph.cool</a> for
-        its GraphQL backend.
-      </p>
-    </article>
-  </Layout>
-)
+const About = () => {
+  return (
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          my: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="h4" component="h1" gutterBottom>
+          MUI v5 + Next.js with TypeScript example
+        </Typography>
+        <Box maxWidth="sm">
+          <Button variant="contained" component={Link} noLinkStyle href="/">
+            Go to the home page
+          </Button>
+        </Box>
+        <ProTip />
+        <Copyright />
+      </Box>
+    </Container>
+  );
+};
 
-export default AboutPage
+export default About;

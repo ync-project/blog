@@ -5,34 +5,42 @@ import { useApollo } from '../lib/apolloClient'
 import { SessionProvider } from "next-auth/react"
 import { useSession } from "next-auth/react"
 import AccessDenied from '../components/sys/access-denied'
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import createEmotionCache from '../components/mui/createEmotionCache';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../components/mui/theme'
+import CssBaseline from '@mui/material/CssBaseline';
 
-import { ChakraProvider } from '@chakra-ui/react'
-import theme from '../theme'
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache();
 
 type AppAuthProps = AppProps & {
   Component: NextComponentType<NextPageContext, any, {}> & {auth: boolean};
+  emotionCache?: EmotionCache;
 };
 
-const App: NextPage<AppAuthProps> = ({ 
-  Component, 
-  pageProps: { session, ...pageProps },
-}) => {
+const App: NextPage<AppAuthProps> = (props) => {
+  const { Component, emotionCache = clientSideEmotionCache, pageProps: { session, ...pageProps } } = props;
   const apolloClient = useApollo(pageProps);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <SessionProvider session={session} refetchInterval={0}>
-        <ChakraProvider resetCSS theme={theme}>
-          {Component.auth ? (
-            <Auth>
-              <Component {...pageProps} />
-            </Auth>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </ChakraProvider>
-      </SessionProvider>
-    </ApolloProvider>
+    <CacheProvider value={emotionCache}>
+      <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        <ApolloProvider client={apolloClient}>
+          <SessionProvider session={session} refetchInterval={0}>
+              {Component.auth ? (
+                <Auth>
+                  <Component {...pageProps} />
+                </Auth>
+              ) : (
+                <Component {...pageProps} />
+              )}
+          </SessionProvider>
+        </ApolloProvider>
+      </ThemeProvider>  
+    </CacheProvider>  
   );
 };
 
