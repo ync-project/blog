@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import type { NextPage, NextComponentType, NextPageContext } from 'next';
 import type { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
@@ -26,6 +27,10 @@ const App: NextPage<AppAuthProps> = (props) => {
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
+      <Head>
+        <title>My page</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <ApolloProvider client={apolloClient}>

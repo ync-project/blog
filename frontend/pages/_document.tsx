@@ -11,7 +11,6 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
 
           <link rel="shortcut icon" href="/static/favicon.ico" />
           {/* google Roboto font */}
