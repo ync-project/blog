@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import {FC} from 'react'
 
 interface IButtonProps { 
     backgroundColor: string;
@@ -17,7 +16,7 @@ const StyledButton = styled.button<IButtonProps>`
     },
 `
 
-const StyledEmotionButton: FC = () => {
+const StyledEmotionButton = () => {
     return (
         <StyledButton backgroundColor='green'>
             This is my button component.
