@@ -1,6 +1,5 @@
 import NextHead from 'next/head'
 import Header from './Header'
-
 import Button from '@mui/material/Button';
 
 interface Props {
