@@ -15,12 +15,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-type AppAuthProps = AppProps & {
+type AppAuthProps =  AppProps & {
   Component: NextComponentType<NextPageContext, any, {}> & {auth: boolean};
   emotionCache?: EmotionCache;
 };
 
-const App: NextPage<AppAuthProps> = (props) => {
+const App = (props: { Component: any; emotionCache?: EmotionCache | undefined; pageProps: { [x: string]: any; session: any; }; }) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps: { session, ...pageProps } } = props;
   const apolloClient = useApollo(pageProps);
 

@@ -19,7 +19,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
-    "incremental": true
+    "incremental": true,
+    "allowSyntheticDefaultImports": true,
   },
   "exclude": [
     "node_modules"
